@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma-jira-database/jira-database-client-types"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("SQLITE_JIRA_DATABASE_URL")
+}
+
+enum Role {
+  Admin
+  Member
+}
+
+enum Priority {
+  High
+  Medium
+  Low
+}
+
+enum TaskSatus {
+  Backlog
+  InProcess
+  InReview
+  Done
+}
+
+model Workspace {
+  id         Int       @id @default(autoincrement())
+  name       String
+  userId     String
+  imageUrl   String
+  inviteCode String
+  members    Member[]
+  projects   Project[]
+  tasks      Task[]
+}
+
+model Project {
+  id          Int       @id @default(autoincrement())
+  name        String
+  workspaceId Int
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  Task        Task[]
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  name        String
+  workspaceId Int
+  Workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  projectId   Int?
+  Project     Project?  @relation(fields: [workspaceId], references: [id])
+  AssigneeId  Int?
+  Assignee    Member?   @relation(fields: [AssigneeId], references: [id])
+}
+
+model Member {
+  id          Int       @id @default(autoincrement())
+  userId      String
+  workspaceId Int
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  role        Role
+  tasks       Task[]
+}

@@ -2,9 +2,12 @@ import { Hono } from "hono";
 import { handle } from "hono/vercel";
 import jiraWorkspaces from "@/modules/jira/features/workspaces/server/router";
 
-const app = new Hono().basePath("/api");
+const app = new Hono();
 
-const routes = app.route("/jira/workspaces", jiraWorkspaces);
+const jira = app.basePath("/api/jira")
+  .route("", jiraWorkspaces);
+
+const routes = jira;
 
 export const GET = handle(app);
 export const POST = handle(app);

@@ -6,7 +6,10 @@ export const useGetWorkspaces = () => {
     queryKey: ["workspaces"],
     queryFn: async () => {
       const response = await client.api.jira.workspaces.$get();
-      return await response.json();
+      if (!response.ok) {
+        throw new Error("Failed to update workspace");
+      }
+      return (await response.json()).workspaces;
     },
   });
 

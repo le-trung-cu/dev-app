@@ -1,6 +1,24 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AppSidebar } from "@/modules/jira/components/app-sidebar";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import "./globals.css";
+import { Providers } from "@/components/providers/provider";
+import { CreateFirstWorkspace } from "@/modules/jira/features/workspaces/ui/components/create-first-workspace";
+import { CreateWorkspaceModal } from "@/modules/jira/features/workspaces/ui/components/create-workspace-modal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +45,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Providers>
+          {children}
+          <CreateWorkspaceModal />
+        </Providers>
       </body>
     </html>
   );
