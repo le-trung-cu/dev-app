@@ -55,14 +55,15 @@ export const Priority: {
 export type Priority = (typeof Priority)[keyof typeof Priority]
 
 
-export const TaskSatus: {
+export const TaskStatus: {
   Backlog: 'Backlog',
+  Todo: 'Todo',
   InProcess: 'InProcess',
   InReview: 'InReview',
   Done: 'Done'
 };
 
-export type TaskSatus = (typeof TaskSatus)[keyof typeof TaskSatus]
+export type TaskStatus = (typeof TaskStatus)[keyof typeof TaskStatus]
 
 }
 
@@ -74,9 +75,9 @@ export type Priority = $Enums.Priority
 
 export const Priority: typeof $Enums.Priority
 
-export type TaskSatus = $Enums.TaskSatus
+export type TaskStatus = $Enums.TaskStatus
 
-export const TaskSatus: typeof $Enums.TaskSatus
+export const TaskStatus: typeof $Enums.TaskStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1235,11 +1236,11 @@ export namespace Prisma {
    */
 
   export type ProjectCountOutputType = {
-    Task: number
+    task: number
   }
 
   export type ProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Task?: boolean | ProjectCountOutputTypeCountTaskArgs
+    task?: boolean | ProjectCountOutputTypeCountTaskArgs
   }
 
   // Custom InputTypes
@@ -1322,6 +1323,8 @@ export namespace Prisma {
     userId: string | null
     imageUrl: string | null
     inviteCode: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type WorkspaceMaxAggregateOutputType = {
@@ -1330,6 +1333,8 @@ export namespace Prisma {
     userId: string | null
     imageUrl: string | null
     inviteCode: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type WorkspaceCountAggregateOutputType = {
@@ -1338,6 +1343,8 @@ export namespace Prisma {
     userId: number
     imageUrl: number
     inviteCode: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -1356,6 +1363,8 @@ export namespace Prisma {
     userId?: true
     imageUrl?: true
     inviteCode?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type WorkspaceMaxAggregateInputType = {
@@ -1364,6 +1373,8 @@ export namespace Prisma {
     userId?: true
     imageUrl?: true
     inviteCode?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type WorkspaceCountAggregateInputType = {
@@ -1372,6 +1383,8 @@ export namespace Prisma {
     userId?: true
     imageUrl?: true
     inviteCode?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -1467,6 +1480,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt: Date
+    updatedAt: Date
     _count: WorkspaceCountAggregateOutputType | null
     _avg: WorkspaceAvgAggregateOutputType | null
     _sum: WorkspaceSumAggregateOutputType | null
@@ -1494,6 +1509,8 @@ export namespace Prisma {
     userId?: boolean
     imageUrl?: boolean
     inviteCode?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     members?: boolean | Workspace$membersArgs<ExtArgs>
     projects?: boolean | Workspace$projectsArgs<ExtArgs>
     tasks?: boolean | Workspace$tasksArgs<ExtArgs>
@@ -1506,6 +1523,8 @@ export namespace Prisma {
     userId?: boolean
     imageUrl?: boolean
     inviteCode?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["workspace"]>
 
   export type WorkspaceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1514,6 +1533,8 @@ export namespace Prisma {
     userId?: boolean
     imageUrl?: boolean
     inviteCode?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }, ExtArgs["result"]["workspace"]>
 
   export type WorkspaceSelectScalar = {
@@ -1522,9 +1543,11 @@ export namespace Prisma {
     userId?: boolean
     imageUrl?: boolean
     inviteCode?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type WorkspaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userId" | "imageUrl" | "inviteCode", ExtArgs["result"]["workspace"]>
+  export type WorkspaceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "userId" | "imageUrl" | "inviteCode" | "createdAt" | "updatedAt", ExtArgs["result"]["workspace"]>
   export type WorkspaceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | Workspace$membersArgs<ExtArgs>
     projects?: boolean | Workspace$projectsArgs<ExtArgs>
@@ -1547,6 +1570,8 @@ export namespace Prisma {
       userId: string
       imageUrl: string
       inviteCode: string
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["workspace"]>
     composites: {}
   }
@@ -1978,6 +2003,8 @@ export namespace Prisma {
     readonly userId: FieldRef<"Workspace", 'String'>
     readonly imageUrl: FieldRef<"Workspace", 'String'>
     readonly inviteCode: FieldRef<"Workspace", 'String'>
+    readonly createdAt: FieldRef<"Workspace", 'DateTime'>
+    readonly updatedAt: FieldRef<"Workspace", 'DateTime'>
   }
     
 
@@ -2480,18 +2507,24 @@ export namespace Prisma {
     id: number | null
     name: string | null
     workspaceId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ProjectMaxAggregateOutputType = {
     id: number | null
     name: string | null
     workspaceId: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type ProjectCountAggregateOutputType = {
     id: number
     name: number
     workspaceId: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -2510,18 +2543,24 @@ export namespace Prisma {
     id?: true
     name?: true
     workspaceId?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type ProjectMaxAggregateInputType = {
     id?: true
     name?: true
     workspaceId?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type ProjectCountAggregateInputType = {
     id?: true
     name?: true
     workspaceId?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -2615,6 +2654,8 @@ export namespace Prisma {
     id: number
     name: string
     workspaceId: number
+    createdAt: Date
+    updatedAt: Date
     _count: ProjectCountAggregateOutputType | null
     _avg: ProjectAvgAggregateOutputType | null
     _sum: ProjectSumAggregateOutputType | null
@@ -2640,8 +2681,10 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     workspaceId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    Task?: boolean | Project$TaskArgs<ExtArgs>
+    task?: boolean | Project$taskArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -2649,6 +2692,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     workspaceId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -2656,6 +2701,8 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     workspaceId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
 
@@ -2663,12 +2710,14 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     workspaceId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "workspaceId", ExtArgs["result"]["project"]>
+  export type ProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["project"]>
   export type ProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    Task?: boolean | Project$TaskArgs<ExtArgs>
+    task?: boolean | Project$taskArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2682,12 +2731,14 @@ export namespace Prisma {
     name: "Project"
     objects: {
       workspace: Prisma.$WorkspacePayload<ExtArgs>
-      Task: Prisma.$TaskPayload<ExtArgs>[]
+      task: Prisma.$TaskPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
       workspaceId: number
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["project"]>
     composites: {}
   }
@@ -3083,7 +3134,7 @@ export namespace Prisma {
   export interface Prisma__ProjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    Task<T extends Project$TaskArgs<ExtArgs> = {}>(args?: Subset<T, Project$TaskArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    task<T extends Project$taskArgs<ExtArgs> = {}>(args?: Subset<T, Project$taskArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3116,6 +3167,8 @@ export namespace Prisma {
     readonly id: FieldRef<"Project", 'Int'>
     readonly name: FieldRef<"Project", 'String'>
     readonly workspaceId: FieldRef<"Project", 'Int'>
+    readonly createdAt: FieldRef<"Project", 'DateTime'>
+    readonly updatedAt: FieldRef<"Project", 'DateTime'>
   }
     
 
@@ -3510,9 +3563,9 @@ export namespace Prisma {
   }
 
   /**
-   * Project.Task
+   * Project.task
    */
-  export type Project$TaskArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Project$taskArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Task
      */
@@ -3568,38 +3621,58 @@ export namespace Prisma {
     id: number | null
     workspaceId: number | null
     projectId: number | null
-    AssigneeId: number | null
+    assigneeId: number | null
+    position: number | null
   }
 
   export type TaskSumAggregateOutputType = {
     id: number | null
     workspaceId: number | null
     projectId: number | null
-    AssigneeId: number | null
+    assigneeId: number | null
+    position: number | null
   }
 
   export type TaskMinAggregateOutputType = {
     id: number | null
     name: string | null
+    endDate: Date | null
     workspaceId: number | null
     projectId: number | null
-    AssigneeId: number | null
+    assigneeId: number | null
+    status: $Enums.TaskStatus | null
+    priority: $Enums.Priority | null
+    position: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type TaskMaxAggregateOutputType = {
     id: number | null
     name: string | null
+    endDate: Date | null
     workspaceId: number | null
     projectId: number | null
-    AssigneeId: number | null
+    assigneeId: number | null
+    status: $Enums.TaskStatus | null
+    priority: $Enums.Priority | null
+    position: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type TaskCountAggregateOutputType = {
     id: number
     name: number
+    endDate: number
     workspaceId: number
     projectId: number
-    AssigneeId: number
+    assigneeId: number
+    status: number
+    priority: number
+    position: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -3608,38 +3681,58 @@ export namespace Prisma {
     id?: true
     workspaceId?: true
     projectId?: true
-    AssigneeId?: true
+    assigneeId?: true
+    position?: true
   }
 
   export type TaskSumAggregateInputType = {
     id?: true
     workspaceId?: true
     projectId?: true
-    AssigneeId?: true
+    assigneeId?: true
+    position?: true
   }
 
   export type TaskMinAggregateInputType = {
     id?: true
     name?: true
+    endDate?: true
     workspaceId?: true
     projectId?: true
-    AssigneeId?: true
+    assigneeId?: true
+    status?: true
+    priority?: true
+    position?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type TaskMaxAggregateInputType = {
     id?: true
     name?: true
+    endDate?: true
     workspaceId?: true
     projectId?: true
-    AssigneeId?: true
+    assigneeId?: true
+    status?: true
+    priority?: true
+    position?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type TaskCountAggregateInputType = {
     id?: true
     name?: true
+    endDate?: true
     workspaceId?: true
     projectId?: true
-    AssigneeId?: true
+    assigneeId?: true
+    status?: true
+    priority?: true
+    position?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -3732,9 +3825,15 @@ export namespace Prisma {
   export type TaskGroupByOutputType = {
     id: number
     name: string
+    endDate: Date | null
     workspaceId: number
     projectId: number | null
-    AssigneeId: number | null
+    assigneeId: number | null
+    status: $Enums.TaskStatus | null
+    priority: $Enums.Priority | null
+    position: number
+    createdAt: Date
+    updatedAt: Date
     _count: TaskCountAggregateOutputType | null
     _avg: TaskAvgAggregateOutputType | null
     _sum: TaskSumAggregateOutputType | null
@@ -3759,74 +3858,104 @@ export namespace Prisma {
   export type TaskSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    endDate?: boolean
     workspaceId?: boolean
     projectId?: boolean
-    AssigneeId?: boolean
-    Workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    Project?: boolean | Task$ProjectArgs<ExtArgs>
-    Assignee?: boolean | Task$AssigneeArgs<ExtArgs>
+    assigneeId?: boolean
+    status?: boolean
+    priority?: boolean
+    position?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    project?: boolean | Task$projectArgs<ExtArgs>
+    assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
   export type TaskSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    endDate?: boolean
     workspaceId?: boolean
     projectId?: boolean
-    AssigneeId?: boolean
-    Workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    Project?: boolean | Task$ProjectArgs<ExtArgs>
-    Assignee?: boolean | Task$AssigneeArgs<ExtArgs>
+    assigneeId?: boolean
+    status?: boolean
+    priority?: boolean
+    position?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    project?: boolean | Task$projectArgs<ExtArgs>
+    assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
   export type TaskSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    endDate?: boolean
     workspaceId?: boolean
     projectId?: boolean
-    AssigneeId?: boolean
-    Workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    Project?: boolean | Task$ProjectArgs<ExtArgs>
-    Assignee?: boolean | Task$AssigneeArgs<ExtArgs>
+    assigneeId?: boolean
+    status?: boolean
+    priority?: boolean
+    position?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    project?: boolean | Task$projectArgs<ExtArgs>
+    assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }, ExtArgs["result"]["task"]>
 
   export type TaskSelectScalar = {
     id?: boolean
     name?: boolean
+    endDate?: boolean
     workspaceId?: boolean
     projectId?: boolean
-    AssigneeId?: boolean
+    assigneeId?: boolean
+    status?: boolean
+    priority?: boolean
+    position?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "workspaceId" | "projectId" | "AssigneeId", ExtArgs["result"]["task"]>
+  export type TaskOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "endDate" | "workspaceId" | "projectId" | "assigneeId" | "status" | "priority" | "position" | "createdAt" | "updatedAt", ExtArgs["result"]["task"]>
   export type TaskInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    Project?: boolean | Task$ProjectArgs<ExtArgs>
-    Assignee?: boolean | Task$AssigneeArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    project?: boolean | Task$projectArgs<ExtArgs>
+    assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }
   export type TaskIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    Project?: boolean | Task$ProjectArgs<ExtArgs>
-    Assignee?: boolean | Task$AssigneeArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    project?: boolean | Task$projectArgs<ExtArgs>
+    assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }
   export type TaskIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    Workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
-    Project?: boolean | Task$ProjectArgs<ExtArgs>
-    Assignee?: boolean | Task$AssigneeArgs<ExtArgs>
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+    project?: boolean | Task$projectArgs<ExtArgs>
+    assignee?: boolean | Task$assigneeArgs<ExtArgs>
   }
 
   export type $TaskPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Task"
     objects: {
-      Workspace: Prisma.$WorkspacePayload<ExtArgs>
-      Project: Prisma.$ProjectPayload<ExtArgs> | null
-      Assignee: Prisma.$MemberPayload<ExtArgs> | null
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+      project: Prisma.$ProjectPayload<ExtArgs> | null
+      assignee: Prisma.$MemberPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       name: string
+      endDate: Date | null
       workspaceId: number
       projectId: number | null
-      AssigneeId: number | null
+      assigneeId: number | null
+      status: $Enums.TaskStatus | null
+      priority: $Enums.Priority | null
+      position: number
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["task"]>
     composites: {}
   }
@@ -4221,9 +4350,9 @@ export namespace Prisma {
    */
   export interface Prisma__TaskClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    Workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    Project<T extends Task$ProjectArgs<ExtArgs> = {}>(args?: Subset<T, Task$ProjectArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    Assignee<T extends Task$AssigneeArgs<ExtArgs> = {}>(args?: Subset<T, Task$AssigneeArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    project<T extends Task$projectArgs<ExtArgs> = {}>(args?: Subset<T, Task$projectArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    assignee<T extends Task$assigneeArgs<ExtArgs> = {}>(args?: Subset<T, Task$assigneeArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4255,9 +4384,15 @@ export namespace Prisma {
   interface TaskFieldRefs {
     readonly id: FieldRef<"Task", 'Int'>
     readonly name: FieldRef<"Task", 'String'>
+    readonly endDate: FieldRef<"Task", 'DateTime'>
     readonly workspaceId: FieldRef<"Task", 'Int'>
     readonly projectId: FieldRef<"Task", 'Int'>
-    readonly AssigneeId: FieldRef<"Task", 'Int'>
+    readonly assigneeId: FieldRef<"Task", 'Int'>
+    readonly status: FieldRef<"Task", 'TaskStatus'>
+    readonly priority: FieldRef<"Task", 'Priority'>
+    readonly position: FieldRef<"Task", 'Int'>
+    readonly createdAt: FieldRef<"Task", 'DateTime'>
+    readonly updatedAt: FieldRef<"Task", 'DateTime'>
   }
     
 
@@ -4652,9 +4787,9 @@ export namespace Prisma {
   }
 
   /**
-   * Task.Project
+   * Task.project
    */
-  export type Task$ProjectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Task$projectArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Project
      */
@@ -4671,9 +4806,9 @@ export namespace Prisma {
   }
 
   /**
-   * Task.Assignee
+   * Task.assignee
    */
-  export type Task$AssigneeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type Task$assigneeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the Member
      */
@@ -4735,6 +4870,9 @@ export namespace Prisma {
     userId: string | null
     workspaceId: number | null
     role: $Enums.Role | null
+    joined: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type MemberMaxAggregateOutputType = {
@@ -4742,6 +4880,9 @@ export namespace Prisma {
     userId: string | null
     workspaceId: number | null
     role: $Enums.Role | null
+    joined: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type MemberCountAggregateOutputType = {
@@ -4749,6 +4890,9 @@ export namespace Prisma {
     userId: number
     workspaceId: number
     role: number
+    joined: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -4768,6 +4912,9 @@ export namespace Prisma {
     userId?: true
     workspaceId?: true
     role?: true
+    joined?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type MemberMaxAggregateInputType = {
@@ -4775,6 +4922,9 @@ export namespace Prisma {
     userId?: true
     workspaceId?: true
     role?: true
+    joined?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type MemberCountAggregateInputType = {
@@ -4782,6 +4932,9 @@ export namespace Prisma {
     userId?: true
     workspaceId?: true
     role?: true
+    joined?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -4876,6 +5029,9 @@ export namespace Prisma {
     userId: string
     workspaceId: number
     role: $Enums.Role
+    joined: boolean
+    createdAt: Date
+    updatedAt: Date
     _count: MemberCountAggregateOutputType | null
     _avg: MemberAvgAggregateOutputType | null
     _sum: MemberSumAggregateOutputType | null
@@ -4902,6 +5058,9 @@ export namespace Prisma {
     userId?: boolean
     workspaceId?: boolean
     role?: boolean
+    joined?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     tasks?: boolean | Member$tasksArgs<ExtArgs>
     _count?: boolean | MemberCountOutputTypeDefaultArgs<ExtArgs>
@@ -4912,6 +5071,9 @@ export namespace Prisma {
     userId?: boolean
     workspaceId?: boolean
     role?: boolean
+    joined?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["member"]>
 
@@ -4920,6 +5082,9 @@ export namespace Prisma {
     userId?: boolean
     workspaceId?: boolean
     role?: boolean
+    joined?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["member"]>
 
@@ -4928,9 +5093,12 @@ export namespace Prisma {
     userId?: boolean
     workspaceId?: boolean
     role?: boolean
+    joined?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type MemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "workspaceId" | "role", ExtArgs["result"]["member"]>
+  export type MemberOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "workspaceId" | "role" | "joined" | "createdAt" | "updatedAt", ExtArgs["result"]["member"]>
   export type MemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     tasks?: boolean | Member$tasksArgs<ExtArgs>
@@ -4954,6 +5122,9 @@ export namespace Prisma {
       userId: string
       workspaceId: number
       role: $Enums.Role
+      joined: boolean
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["member"]>
     composites: {}
   }
@@ -5383,6 +5554,9 @@ export namespace Prisma {
     readonly userId: FieldRef<"Member", 'String'>
     readonly workspaceId: FieldRef<"Member", 'Int'>
     readonly role: FieldRef<"Member", 'Role'>
+    readonly joined: FieldRef<"Member", 'Boolean'>
+    readonly createdAt: FieldRef<"Member", 'DateTime'>
+    readonly updatedAt: FieldRef<"Member", 'DateTime'>
   }
     
 
@@ -5835,7 +6009,9 @@ export namespace Prisma {
     name: 'name',
     userId: 'userId',
     imageUrl: 'imageUrl',
-    inviteCode: 'inviteCode'
+    inviteCode: 'inviteCode',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type WorkspaceScalarFieldEnum = (typeof WorkspaceScalarFieldEnum)[keyof typeof WorkspaceScalarFieldEnum]
@@ -5844,7 +6020,9 @@ export namespace Prisma {
   export const ProjectScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    workspaceId: 'workspaceId'
+    workspaceId: 'workspaceId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -5853,9 +6031,15 @@ export namespace Prisma {
   export const TaskScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    endDate: 'endDate',
     workspaceId: 'workspaceId',
     projectId: 'projectId',
-    AssigneeId: 'AssigneeId'
+    assigneeId: 'assigneeId',
+    status: 'status',
+    priority: 'priority',
+    position: 'position',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
@@ -5865,7 +6049,10 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     workspaceId: 'workspaceId',
-    role: 'role'
+    role: 'role',
+    joined: 'joined',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -5907,9 +6094,37 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'DateTime'
+   */
+  export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+  /**
+   * Reference to a field of type 'TaskStatus'
+   */
+  export type EnumTaskStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TaskStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'Priority'
+   */
+  export type EnumPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Priority'>
+    
+
+
+  /**
    * Reference to a field of type 'Role'
    */
   export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -5932,6 +6147,8 @@ export namespace Prisma {
     userId?: StringFilter<"Workspace"> | string
     imageUrl?: StringFilter<"Workspace"> | string
     inviteCode?: StringFilter<"Workspace"> | string
+    createdAt?: DateTimeFilter<"Workspace"> | Date | string
+    updatedAt?: DateTimeFilter<"Workspace"> | Date | string
     members?: MemberListRelationFilter
     projects?: ProjectListRelationFilter
     tasks?: TaskListRelationFilter
@@ -5943,6 +6160,8 @@ export namespace Prisma {
     userId?: SortOrder
     imageUrl?: SortOrder
     inviteCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     members?: MemberOrderByRelationAggregateInput
     projects?: ProjectOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
@@ -5957,6 +6176,8 @@ export namespace Prisma {
     userId?: StringFilter<"Workspace"> | string
     imageUrl?: StringFilter<"Workspace"> | string
     inviteCode?: StringFilter<"Workspace"> | string
+    createdAt?: DateTimeFilter<"Workspace"> | Date | string
+    updatedAt?: DateTimeFilter<"Workspace"> | Date | string
     members?: MemberListRelationFilter
     projects?: ProjectListRelationFilter
     tasks?: TaskListRelationFilter
@@ -5968,6 +6189,8 @@ export namespace Prisma {
     userId?: SortOrder
     imageUrl?: SortOrder
     inviteCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: WorkspaceCountOrderByAggregateInput
     _avg?: WorkspaceAvgOrderByAggregateInput
     _max?: WorkspaceMaxOrderByAggregateInput
@@ -5984,6 +6207,8 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"Workspace"> | string
     imageUrl?: StringWithAggregatesFilter<"Workspace"> | string
     inviteCode?: StringWithAggregatesFilter<"Workspace"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Workspace"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Workspace"> | Date | string
   }
 
   export type ProjectWhereInput = {
@@ -5993,16 +6218,20 @@ export namespace Prisma {
     id?: IntFilter<"Project"> | number
     name?: StringFilter<"Project"> | string
     workspaceId?: IntFilter<"Project"> | number
+    createdAt?: DateTimeFilter<"Project"> | Date | string
+    updatedAt?: DateTimeFilter<"Project"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
-    Task?: TaskListRelationFilter
+    task?: TaskListRelationFilter
   }
 
   export type ProjectOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
     workspaceId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
-    Task?: TaskOrderByRelationAggregateInput
+    task?: TaskOrderByRelationAggregateInput
   }
 
   export type ProjectWhereUniqueInput = Prisma.AtLeast<{
@@ -6012,14 +6241,18 @@ export namespace Prisma {
     NOT?: ProjectWhereInput | ProjectWhereInput[]
     name?: StringFilter<"Project"> | string
     workspaceId?: IntFilter<"Project"> | number
+    createdAt?: DateTimeFilter<"Project"> | Date | string
+    updatedAt?: DateTimeFilter<"Project"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
-    Task?: TaskListRelationFilter
+    task?: TaskListRelationFilter
   }, "id">
 
   export type ProjectOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     workspaceId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _avg?: ProjectAvgOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
@@ -6034,6 +6267,8 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Project"> | number
     name?: StringWithAggregatesFilter<"Project"> | string
     workspaceId?: IntWithAggregatesFilter<"Project"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Project"> | Date | string
   }
 
   export type TaskWhereInput = {
@@ -6042,23 +6277,35 @@ export namespace Prisma {
     NOT?: TaskWhereInput | TaskWhereInput[]
     id?: IntFilter<"Task"> | number
     name?: StringFilter<"Task"> | string
+    endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     workspaceId?: IntFilter<"Task"> | number
     projectId?: IntNullableFilter<"Task"> | number | null
-    AssigneeId?: IntNullableFilter<"Task"> | number | null
-    Workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
-    Project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
-    Assignee?: XOR<MemberNullableScalarRelationFilter, MemberWhereInput> | null
+    assigneeId?: IntNullableFilter<"Task"> | number | null
+    status?: EnumTaskStatusNullableFilter<"Task"> | $Enums.TaskStatus | null
+    priority?: EnumPriorityNullableFilter<"Task"> | $Enums.Priority | null
+    position?: IntFilter<"Task"> | number
+    createdAt?: DateTimeFilter<"Task"> | Date | string
+    updatedAt?: DateTimeFilter<"Task"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    assignee?: XOR<MemberNullableScalarRelationFilter, MemberWhereInput> | null
   }
 
   export type TaskOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    endDate?: SortOrderInput | SortOrder
     workspaceId?: SortOrder
     projectId?: SortOrderInput | SortOrder
-    AssigneeId?: SortOrderInput | SortOrder
-    Workspace?: WorkspaceOrderByWithRelationInput
-    Project?: ProjectOrderByWithRelationInput
-    Assignee?: MemberOrderByWithRelationInput
+    assigneeId?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    priority?: SortOrderInput | SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+    project?: ProjectOrderByWithRelationInput
+    assignee?: MemberOrderByWithRelationInput
   }
 
   export type TaskWhereUniqueInput = Prisma.AtLeast<{
@@ -6067,20 +6314,32 @@ export namespace Prisma {
     OR?: TaskWhereInput[]
     NOT?: TaskWhereInput | TaskWhereInput[]
     name?: StringFilter<"Task"> | string
+    endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     workspaceId?: IntFilter<"Task"> | number
     projectId?: IntNullableFilter<"Task"> | number | null
-    AssigneeId?: IntNullableFilter<"Task"> | number | null
-    Workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
-    Project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
-    Assignee?: XOR<MemberNullableScalarRelationFilter, MemberWhereInput> | null
+    assigneeId?: IntNullableFilter<"Task"> | number | null
+    status?: EnumTaskStatusNullableFilter<"Task"> | $Enums.TaskStatus | null
+    priority?: EnumPriorityNullableFilter<"Task"> | $Enums.Priority | null
+    position?: IntFilter<"Task"> | number
+    createdAt?: DateTimeFilter<"Task"> | Date | string
+    updatedAt?: DateTimeFilter<"Task"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+    project?: XOR<ProjectNullableScalarRelationFilter, ProjectWhereInput> | null
+    assignee?: XOR<MemberNullableScalarRelationFilter, MemberWhereInput> | null
   }, "id">
 
   export type TaskOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    endDate?: SortOrderInput | SortOrder
     workspaceId?: SortOrder
     projectId?: SortOrderInput | SortOrder
-    AssigneeId?: SortOrderInput | SortOrder
+    assigneeId?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
+    priority?: SortOrderInput | SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: TaskCountOrderByAggregateInput
     _avg?: TaskAvgOrderByAggregateInput
     _max?: TaskMaxOrderByAggregateInput
@@ -6094,9 +6353,15 @@ export namespace Prisma {
     NOT?: TaskScalarWhereWithAggregatesInput | TaskScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Task"> | number
     name?: StringWithAggregatesFilter<"Task"> | string
+    endDate?: DateTimeNullableWithAggregatesFilter<"Task"> | Date | string | null
     workspaceId?: IntWithAggregatesFilter<"Task"> | number
     projectId?: IntNullableWithAggregatesFilter<"Task"> | number | null
-    AssigneeId?: IntNullableWithAggregatesFilter<"Task"> | number | null
+    assigneeId?: IntNullableWithAggregatesFilter<"Task"> | number | null
+    status?: EnumTaskStatusNullableWithAggregatesFilter<"Task"> | $Enums.TaskStatus | null
+    priority?: EnumPriorityNullableWithAggregatesFilter<"Task"> | $Enums.Priority | null
+    position?: IntWithAggregatesFilter<"Task"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Task"> | Date | string
   }
 
   export type MemberWhereInput = {
@@ -6107,6 +6372,9 @@ export namespace Prisma {
     userId?: StringFilter<"Member"> | string
     workspaceId?: IntFilter<"Member"> | number
     role?: EnumRoleFilter<"Member"> | $Enums.Role
+    joined?: BoolFilter<"Member"> | boolean
+    createdAt?: DateTimeFilter<"Member"> | Date | string
+    updatedAt?: DateTimeFilter<"Member"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     tasks?: TaskListRelationFilter
   }
@@ -6116,6 +6384,9 @@ export namespace Prisma {
     userId?: SortOrder
     workspaceId?: SortOrder
     role?: SortOrder
+    joined?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     workspace?: WorkspaceOrderByWithRelationInput
     tasks?: TaskOrderByRelationAggregateInput
   }
@@ -6128,6 +6399,9 @@ export namespace Prisma {
     userId?: StringFilter<"Member"> | string
     workspaceId?: IntFilter<"Member"> | number
     role?: EnumRoleFilter<"Member"> | $Enums.Role
+    joined?: BoolFilter<"Member"> | boolean
+    createdAt?: DateTimeFilter<"Member"> | Date | string
+    updatedAt?: DateTimeFilter<"Member"> | Date | string
     workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
     tasks?: TaskListRelationFilter
   }, "id">
@@ -6137,6 +6411,9 @@ export namespace Prisma {
     userId?: SortOrder
     workspaceId?: SortOrder
     role?: SortOrder
+    joined?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: MemberCountOrderByAggregateInput
     _avg?: MemberAvgOrderByAggregateInput
     _max?: MemberMaxOrderByAggregateInput
@@ -6152,6 +6429,9 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"Member"> | string
     workspaceId?: IntWithAggregatesFilter<"Member"> | number
     role?: EnumRoleWithAggregatesFilter<"Member"> | $Enums.Role
+    joined?: BoolWithAggregatesFilter<"Member"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Member"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Member"> | Date | string
   }
 
   export type WorkspaceCreateInput = {
@@ -6159,6 +6439,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     members?: MemberCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskCreateNestedManyWithoutWorkspaceInput
@@ -6170,6 +6452,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     members?: MemberUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskUncheckedCreateNestedManyWithoutWorkspaceInput
@@ -6180,6 +6464,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUpdateManyWithoutWorkspaceNestedInput
@@ -6191,6 +6477,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutWorkspaceNestedInput
@@ -6202,6 +6490,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type WorkspaceUpdateManyMutationInput = {
@@ -6209,6 +6499,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkspaceUncheckedUpdateManyInput = {
@@ -6217,106 +6509,164 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectCreateInput = {
     name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
-    Task?: TaskCreateNestedManyWithoutProjectInput
+    task?: TaskCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
     id?: number
     name: string
     workspaceId: number
-    Task?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    task?: TaskUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
-    Task?: TaskUpdateManyWithoutProjectNestedInput
+    task?: TaskUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     workspaceId?: IntFieldUpdateOperationsInput | number
-    Task?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
     id?: number
     name: string
     workspaceId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProjectUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     workspaceId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskCreateInput = {
     name: string
-    projectId?: number | null
-    Workspace: WorkspaceCreateNestedOneWithoutTasksInput
-    Project?: ProjectCreateNestedOneWithoutTaskInput
-    Assignee?: MemberCreateNestedOneWithoutTasksInput
+    endDate?: Date | string | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTasksInput
+    project?: ProjectCreateNestedOneWithoutTaskInput
+    assignee?: MemberCreateNestedOneWithoutTasksInput
   }
 
   export type TaskUncheckedCreateInput = {
     id?: number
     name: string
+    endDate?: Date | string | null
     workspaceId: number
     projectId?: number | null
-    AssigneeId?: number | null
+    assigneeId?: number | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TaskUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
-    projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    Workspace?: WorkspaceUpdateOneRequiredWithoutTasksNestedInput
-    Project?: ProjectUpdateOneWithoutTaskNestedInput
-    Assignee?: MemberUpdateOneWithoutTasksNestedInput
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTasksNestedInput
+    project?: ProjectUpdateOneWithoutTaskNestedInput
+    assignee?: MemberUpdateOneWithoutTasksNestedInput
   }
 
   export type TaskUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspaceId?: IntFieldUpdateOperationsInput | number
     projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    AssigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    assigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskCreateManyInput = {
     id?: number
     name: string
+    endDate?: Date | string | null
     workspaceId: number
     projectId?: number | null
-    AssigneeId?: number | null
+    assigneeId?: number | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TaskUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
-    projectId?: NullableIntFieldUpdateOperationsInput | number | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspaceId?: IntFieldUpdateOperationsInput | number
     projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    AssigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    assigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MemberCreateInput = {
     userId: string
     role: $Enums.Role
+    joined?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
     tasks?: TaskCreateNestedManyWithoutAssigneeInput
   }
@@ -6326,12 +6676,18 @@ export namespace Prisma {
     userId: string
     workspaceId: number
     role: $Enums.Role
+    joined?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
     tasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type MemberUpdateInput = {
     userId?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    joined?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
     tasks?: TaskUpdateManyWithoutAssigneeNestedInput
   }
@@ -6341,6 +6697,9 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     workspaceId?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    joined?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
@@ -6349,11 +6708,17 @@ export namespace Prisma {
     userId: string
     workspaceId: number
     role: $Enums.Role
+    joined?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type MemberUpdateManyMutationInput = {
     userId?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    joined?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MemberUncheckedUpdateManyInput = {
@@ -6361,6 +6726,9 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     workspaceId?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    joined?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -6386,6 +6754,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type MemberListRelationFilter = {
@@ -6424,6 +6803,8 @@ export namespace Prisma {
     userId?: SortOrder
     imageUrl?: SortOrder
     inviteCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WorkspaceAvgOrderByAggregateInput = {
@@ -6436,6 +6817,8 @@ export namespace Prisma {
     userId?: SortOrder
     imageUrl?: SortOrder
     inviteCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WorkspaceMinOrderByAggregateInput = {
@@ -6444,6 +6827,8 @@ export namespace Prisma {
     userId?: SortOrder
     imageUrl?: SortOrder
     inviteCode?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type WorkspaceSumOrderByAggregateInput = {
@@ -6483,6 +6868,20 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
   export type WorkspaceScalarRelationFilter = {
     is?: WorkspaceWhereInput
     isNot?: WorkspaceWhereInput
@@ -6492,6 +6891,8 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     workspaceId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProjectAvgOrderByAggregateInput = {
@@ -6503,17 +6904,32 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     workspaceId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProjectMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     workspaceId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type ProjectSumOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -6525,6 +6941,20 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type EnumTaskStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TaskStatus[] | null
+    notIn?: $Enums.TaskStatus[] | null
+    not?: NestedEnumTaskStatusNullableFilter<$PrismaModel> | $Enums.TaskStatus | null
+  }
+
+  export type EnumPriorityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Priority | EnumPriorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Priority[] | null
+    notIn?: $Enums.Priority[] | null
+    not?: NestedEnumPriorityNullableFilter<$PrismaModel> | $Enums.Priority | null
   }
 
   export type ProjectNullableScalarRelationFilter = {
@@ -6545,39 +6975,73 @@ export namespace Prisma {
   export type TaskCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    endDate?: SortOrder
     workspaceId?: SortOrder
     projectId?: SortOrder
-    AssigneeId?: SortOrder
+    assigneeId?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type TaskAvgOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
     projectId?: SortOrder
-    AssigneeId?: SortOrder
+    assigneeId?: SortOrder
+    position?: SortOrder
   }
 
   export type TaskMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    endDate?: SortOrder
     workspaceId?: SortOrder
     projectId?: SortOrder
-    AssigneeId?: SortOrder
+    assigneeId?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type TaskMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    endDate?: SortOrder
     workspaceId?: SortOrder
     projectId?: SortOrder
-    AssigneeId?: SortOrder
+    assigneeId?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type TaskSumOrderByAggregateInput = {
     id?: SortOrder
     workspaceId?: SortOrder
     projectId?: SortOrder
-    AssigneeId?: SortOrder
+    assigneeId?: SortOrder
+    position?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -6596,6 +7060,26 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type EnumTaskStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TaskStatus[] | null
+    notIn?: $Enums.TaskStatus[] | null
+    not?: NestedEnumTaskStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumTaskStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumTaskStatusNullableFilter<$PrismaModel>
+  }
+
+  export type EnumPriorityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Priority | EnumPriorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Priority[] | null
+    notIn?: $Enums.Priority[] | null
+    not?: NestedEnumPriorityNullableWithAggregatesFilter<$PrismaModel> | $Enums.Priority | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumPriorityNullableFilter<$PrismaModel>
+    _max?: NestedEnumPriorityNullableFilter<$PrismaModel>
+  }
+
   export type EnumRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[]
@@ -6603,11 +7087,19 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type MemberCountOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     workspaceId?: SortOrder
     role?: SortOrder
+    joined?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type MemberAvgOrderByAggregateInput = {
@@ -6620,6 +7112,9 @@ export namespace Prisma {
     userId?: SortOrder
     workspaceId?: SortOrder
     role?: SortOrder
+    joined?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type MemberMinOrderByAggregateInput = {
@@ -6627,6 +7122,9 @@ export namespace Prisma {
     userId?: SortOrder
     workspaceId?: SortOrder
     role?: SortOrder
+    joined?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type MemberSumOrderByAggregateInput = {
@@ -6642,6 +7140,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRoleFilter<$PrismaModel>
     _max?: NestedEnumRoleFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type MemberCreateNestedManyWithoutWorkspaceInput = {
@@ -6688,6 +7194,10 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type MemberUpdateManyWithoutWorkspaceNestedInput = {
@@ -6856,12 +7366,16 @@ export namespace Prisma {
     connect?: MemberWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type NullableEnumTaskStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TaskStatus | null
+  }
+
+  export type NullableEnumPriorityFieldUpdateOperationsInput = {
+    set?: $Enums.Priority | null
   }
 
   export type WorkspaceUpdateOneRequiredWithoutTasksNestedInput = {
@@ -6892,6 +7406,14 @@ export namespace Prisma {
     update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutTasksInput, MemberUpdateWithoutTasksInput>, MemberUncheckedUpdateWithoutTasksInput>
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type WorkspaceCreateNestedOneWithoutMembersInput = {
     create?: XOR<WorkspaceCreateWithoutMembersInput, WorkspaceUncheckedCreateWithoutMembersInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutMembersInput
@@ -6914,6 +7436,10 @@ export namespace Prisma {
 
   export type EnumRoleFieldUpdateOperationsInput = {
     set?: $Enums.Role
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type WorkspaceUpdateOneRequiredWithoutMembersNestedInput = {
@@ -6977,6 +7503,17 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -7021,6 +7558,31 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[]
+    notIn?: Date[] | string[]
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedIntNullableFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | null
@@ -7030,6 +7592,34 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumTaskStatusNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TaskStatus[] | null
+    notIn?: $Enums.TaskStatus[] | null
+    not?: NestedEnumTaskStatusNullableFilter<$PrismaModel> | $Enums.TaskStatus | null
+  }
+
+  export type NestedEnumPriorityNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.Priority | EnumPriorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Priority[] | null
+    notIn?: $Enums.Priority[] | null
+    not?: NestedEnumPriorityNullableFilter<$PrismaModel> | $Enums.Priority | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | null
+    notIn?: Date[] | string[] | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -7059,11 +7649,36 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedEnumTaskStatusNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TaskStatus | EnumTaskStatusFieldRefInput<$PrismaModel> | null
+    in?: $Enums.TaskStatus[] | null
+    notIn?: $Enums.TaskStatus[] | null
+    not?: NestedEnumTaskStatusNullableWithAggregatesFilter<$PrismaModel> | $Enums.TaskStatus | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumTaskStatusNullableFilter<$PrismaModel>
+    _max?: NestedEnumTaskStatusNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPriorityNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Priority | EnumPriorityFieldRefInput<$PrismaModel> | null
+    in?: $Enums.Priority[] | null
+    notIn?: $Enums.Priority[] | null
+    not?: NestedEnumPriorityNullableWithAggregatesFilter<$PrismaModel> | $Enums.Priority | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumPriorityNullableFilter<$PrismaModel>
+    _max?: NestedEnumPriorityNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.Role | EnumRoleFieldRefInput<$PrismaModel>
     in?: $Enums.Role[]
     notIn?: $Enums.Role[]
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedEnumRoleWithAggregatesFilter<$PrismaModel = never> = {
@@ -7076,9 +7691,20 @@ export namespace Prisma {
     _max?: NestedEnumRoleFilter<$PrismaModel>
   }
 
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type MemberCreateWithoutWorkspaceInput = {
     userId: string
     role: $Enums.Role
+    joined?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
     tasks?: TaskCreateNestedManyWithoutAssigneeInput
   }
 
@@ -7086,6 +7712,9 @@ export namespace Prisma {
     id?: number
     userId: string
     role: $Enums.Role
+    joined?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
     tasks?: TaskUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
@@ -7100,13 +7729,17 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutWorkspaceInput = {
     name: string
-    Task?: TaskCreateNestedManyWithoutProjectInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    task?: TaskCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutWorkspaceInput = {
     id?: number
     name: string
-    Task?: TaskUncheckedCreateNestedManyWithoutProjectInput
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    task?: TaskUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutWorkspaceInput = {
@@ -7120,16 +7753,27 @@ export namespace Prisma {
 
   export type TaskCreateWithoutWorkspaceInput = {
     name: string
-    projectId?: number | null
-    Project?: ProjectCreateNestedOneWithoutTaskInput
-    Assignee?: MemberCreateNestedOneWithoutTasksInput
+    endDate?: Date | string | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project?: ProjectCreateNestedOneWithoutTaskInput
+    assignee?: MemberCreateNestedOneWithoutTasksInput
   }
 
   export type TaskUncheckedCreateWithoutWorkspaceInput = {
     id?: number
     name: string
+    endDate?: Date | string | null
     projectId?: number | null
-    AssigneeId?: number | null
+    assigneeId?: number | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TaskCreateOrConnectWithoutWorkspaceInput = {
@@ -7165,6 +7809,9 @@ export namespace Prisma {
     userId?: StringFilter<"Member"> | string
     workspaceId?: IntFilter<"Member"> | number
     role?: EnumRoleFilter<"Member"> | $Enums.Role
+    joined?: BoolFilter<"Member"> | boolean
+    createdAt?: DateTimeFilter<"Member"> | Date | string
+    updatedAt?: DateTimeFilter<"Member"> | Date | string
   }
 
   export type ProjectUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -7190,6 +7837,8 @@ export namespace Prisma {
     id?: IntFilter<"Project"> | number
     name?: StringFilter<"Project"> | string
     workspaceId?: IntFilter<"Project"> | number
+    createdAt?: DateTimeFilter<"Project"> | Date | string
+    updatedAt?: DateTimeFilter<"Project"> | Date | string
   }
 
   export type TaskUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -7214,9 +7863,15 @@ export namespace Prisma {
     NOT?: TaskScalarWhereInput | TaskScalarWhereInput[]
     id?: IntFilter<"Task"> | number
     name?: StringFilter<"Task"> | string
+    endDate?: DateTimeNullableFilter<"Task"> | Date | string | null
     workspaceId?: IntFilter<"Task"> | number
     projectId?: IntNullableFilter<"Task"> | number | null
-    AssigneeId?: IntNullableFilter<"Task"> | number | null
+    assigneeId?: IntNullableFilter<"Task"> | number | null
+    status?: EnumTaskStatusNullableFilter<"Task"> | $Enums.TaskStatus | null
+    priority?: EnumPriorityNullableFilter<"Task"> | $Enums.Priority | null
+    position?: IntFilter<"Task"> | number
+    createdAt?: DateTimeFilter<"Task"> | Date | string
+    updatedAt?: DateTimeFilter<"Task"> | Date | string
   }
 
   export type WorkspaceCreateWithoutProjectsInput = {
@@ -7224,6 +7879,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     members?: MemberCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskCreateNestedManyWithoutWorkspaceInput
   }
@@ -7234,6 +7891,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     members?: MemberUncheckedCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskUncheckedCreateNestedManyWithoutWorkspaceInput
   }
@@ -7245,16 +7904,27 @@ export namespace Prisma {
 
   export type TaskCreateWithoutProjectInput = {
     name: string
-    projectId?: number | null
-    Workspace: WorkspaceCreateNestedOneWithoutTasksInput
-    Assignee?: MemberCreateNestedOneWithoutTasksInput
+    endDate?: Date | string | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTasksInput
+    assignee?: MemberCreateNestedOneWithoutTasksInput
   }
 
   export type TaskUncheckedCreateWithoutProjectInput = {
     id?: number
     name: string
-    projectId?: number | null
-    AssigneeId?: number | null
+    endDate?: Date | string | null
+    workspaceId: number
+    assigneeId?: number | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TaskCreateOrConnectWithoutProjectInput = {
@@ -7282,6 +7952,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUpdateManyWithoutWorkspaceNestedInput
   }
@@ -7292,6 +7964,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUncheckedUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
@@ -7317,6 +7991,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     members?: MemberCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
   }
@@ -7327,6 +8003,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     members?: MemberUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
   }
@@ -7338,6 +8016,8 @@ export namespace Prisma {
 
   export type ProjectCreateWithoutTaskInput = {
     name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutProjectsInput
   }
 
@@ -7345,6 +8025,8 @@ export namespace Prisma {
     id?: number
     name: string
     workspaceId: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProjectCreateOrConnectWithoutTaskInput = {
@@ -7355,6 +8037,9 @@ export namespace Prisma {
   export type MemberCreateWithoutTasksInput = {
     userId: string
     role: $Enums.Role
+    joined?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutMembersInput
   }
 
@@ -7363,6 +8048,9 @@ export namespace Prisma {
     userId: string
     workspaceId: number
     role: $Enums.Role
+    joined?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type MemberCreateOrConnectWithoutTasksInput = {
@@ -7386,6 +8074,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
   }
@@ -7396,6 +8086,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
@@ -7413,6 +8105,8 @@ export namespace Prisma {
 
   export type ProjectUpdateWithoutTaskInput = {
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutProjectsNestedInput
   }
 
@@ -7420,6 +8114,8 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     workspaceId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MemberUpsertWithoutTasksInput = {
@@ -7436,6 +8132,9 @@ export namespace Prisma {
   export type MemberUpdateWithoutTasksInput = {
     userId?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    joined?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutMembersNestedInput
   }
 
@@ -7444,6 +8143,9 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     workspaceId?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    joined?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type WorkspaceCreateWithoutMembersInput = {
@@ -7451,6 +8153,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskCreateNestedManyWithoutWorkspaceInput
   }
@@ -7461,6 +8165,8 @@ export namespace Prisma {
     userId: string
     imageUrl: string
     inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskUncheckedCreateNestedManyWithoutWorkspaceInput
   }
@@ -7472,16 +8178,27 @@ export namespace Prisma {
 
   export type TaskCreateWithoutAssigneeInput = {
     name: string
-    projectId?: number | null
-    Workspace: WorkspaceCreateNestedOneWithoutTasksInput
-    Project?: ProjectCreateNestedOneWithoutTaskInput
+    endDate?: Date | string | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutTasksInput
+    project?: ProjectCreateNestedOneWithoutTaskInput
   }
 
   export type TaskUncheckedCreateWithoutAssigneeInput = {
     id?: number
     name: string
+    endDate?: Date | string | null
     workspaceId: number
     projectId?: number | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TaskCreateOrConnectWithoutAssigneeInput = {
@@ -7509,6 +8226,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUpdateManyWithoutWorkspaceNestedInput
   }
@@ -7519,6 +8238,8 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
     inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
@@ -7543,23 +8264,37 @@ export namespace Prisma {
     id?: number
     userId: string
     role: $Enums.Role
+    joined?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type ProjectCreateManyWorkspaceInput = {
     id?: number
     name: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TaskCreateManyWorkspaceInput = {
     id?: number
     name: string
+    endDate?: Date | string | null
     projectId?: number | null
-    AssigneeId?: number | null
+    assigneeId?: number | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type MemberUpdateWithoutWorkspaceInput = {
     userId?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    joined?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUpdateManyWithoutAssigneeNestedInput
   }
 
@@ -7567,6 +8302,9 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    joined?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     tasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
@@ -7574,99 +8312,171 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    joined?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProjectUpdateWithoutWorkspaceInput = {
     name?: StringFieldUpdateOperationsInput | string
-    Task?: TaskUpdateManyWithoutProjectNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutWorkspaceInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    Task?: TaskUncheckedUpdateManyWithoutProjectNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    task?: TaskUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutWorkspaceInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskUpdateWithoutWorkspaceInput = {
     name?: StringFieldUpdateOperationsInput | string
-    projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    Project?: ProjectUpdateOneWithoutTaskNestedInput
-    Assignee?: MemberUpdateOneWithoutTasksNestedInput
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneWithoutTaskNestedInput
+    assignee?: MemberUpdateOneWithoutTasksNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutWorkspaceInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    AssigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    assigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskUncheckedUpdateManyWithoutWorkspaceInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    AssigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    assigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskCreateManyProjectInput = {
     id?: number
     name: string
-    projectId?: number | null
-    AssigneeId?: number | null
+    endDate?: Date | string | null
+    workspaceId: number
+    assigneeId?: number | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TaskUpdateWithoutProjectInput = {
     name?: StringFieldUpdateOperationsInput | string
-    projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    Workspace?: WorkspaceUpdateOneRequiredWithoutTasksNestedInput
-    Assignee?: MemberUpdateOneWithoutTasksNestedInput
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTasksNestedInput
+    assignee?: MemberUpdateOneWithoutTasksNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutProjectInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    AssigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: IntFieldUpdateOperationsInput | number
+    assigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskUncheckedUpdateManyWithoutProjectInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
-    projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    AssigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    workspaceId?: IntFieldUpdateOperationsInput | number
+    assigneeId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskCreateManyAssigneeInput = {
     id?: number
     name: string
+    endDate?: Date | string | null
     workspaceId: number
     projectId?: number | null
+    status?: $Enums.TaskStatus | null
+    priority?: $Enums.Priority | null
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type TaskUpdateWithoutAssigneeInput = {
     name?: StringFieldUpdateOperationsInput | string
-    projectId?: NullableIntFieldUpdateOperationsInput | number | null
-    Workspace?: WorkspaceUpdateOneRequiredWithoutTasksNestedInput
-    Project?: ProjectUpdateOneWithoutTaskNestedInput
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutTasksNestedInput
+    project?: ProjectUpdateOneWithoutTaskNestedInput
   }
 
   export type TaskUncheckedUpdateWithoutAssigneeInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspaceId?: IntFieldUpdateOperationsInput | number
     projectId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type TaskUncheckedUpdateManyWithoutAssigneeInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     workspaceId?: IntFieldUpdateOperationsInput | number
     projectId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
+    priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

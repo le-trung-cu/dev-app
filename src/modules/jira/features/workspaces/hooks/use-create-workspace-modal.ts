@@ -1,6 +1,6 @@
 import {useQueryState, parseAsBoolean} from "nuqs";
 
-export const useCreateWorkspaceDialog = () => {
+export const useCreateWorkspaceModal = () => {
   const [open, setOpen] = useQueryState('create-workspace', parseAsBoolean.withDefault(false));
 
   return {

@@ -6,6 +6,5 @@ import { WorkspaceSwitcher } from "@/modules/jira/features/workspaces/ui/compone
 export default function HomePage() {
 
   return <div>
-    <WorkspaceSwitcher/>
   </div>
 }

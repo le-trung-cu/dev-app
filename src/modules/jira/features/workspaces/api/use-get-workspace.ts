@@ -14,7 +14,7 @@ export const useGetWorkspace = ({
         param: { workspaceId: workspaceId as string },
       });
       if (!response.ok) {
-        throw new Error("Failed to update workspace");
+        throw new Error("Failed to get workspace");
       }
 
       return (await response.json()).workspace;

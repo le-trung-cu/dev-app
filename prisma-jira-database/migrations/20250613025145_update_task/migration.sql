@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Task" ADD COLUMN "endDate" DATETIME;
+ALTER TABLE "Task" ADD COLUMN "priority" TEXT;
+ALTER TABLE "Task" ADD COLUMN "status" TEXT;

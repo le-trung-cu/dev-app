@@ -122,28 +122,41 @@ exports.Prisma.WorkspaceScalarFieldEnum = {
   name: 'name',
   userId: 'userId',
   imageUrl: 'imageUrl',
-  inviteCode: 'inviteCode'
+  inviteCode: 'inviteCode',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ProjectScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  workspaceId: 'workspaceId'
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.TaskScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  endDate: 'endDate',
   workspaceId: 'workspaceId',
   projectId: 'projectId',
-  AssigneeId: 'AssigneeId'
+  assigneeId: 'assigneeId',
+  status: 'status',
+  priority: 'priority',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.MemberScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   workspaceId: 'workspaceId',
-  role: 'role'
+  role: 'role',
+  joined: 'joined',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {
@@ -155,6 +168,20 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.TaskStatus = exports.$Enums.TaskStatus = {
+  Backlog: 'Backlog',
+  Todo: 'Todo',
+  InProcess: 'InProcess',
+  InReview: 'InReview',
+  Done: 'Done'
+};
+
+exports.Priority = exports.$Enums.Priority = {
+  High: 'High',
+  Medium: 'Medium',
+  Low: 'Low'
+};
+
 exports.Role = exports.$Enums.Role = {
   Admin: 'Admin',
   Member: 'Member'

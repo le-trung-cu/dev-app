@@ -15,6 +15,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { CreateWorkspaceModal } from "@/modules/jira/features/workspaces/ui/components/create-workspace-modal";
+import { CreateProjectModal } from "@/modules/jira/features/projects/ui/components/create-project-modal";
+import { CreateTaskModal } from "@/modules/jira/features/tasks/ui/components/create-task-modal";
+import { EditTaskModal } from "@/modules/jira/features/tasks/ui/components/edit-task-modal";
+import { MenuApps } from "@/components/menu-apps";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -43,21 +48,17 @@ export default function Layout({
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-4"
             />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">All Inboxes</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Inbox</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            <div className="ml-auto">
+              <MenuApps />
+            </div>
           </header>
           <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
         </SidebarInset>
       </SidebarProvider>
+      <CreateWorkspaceModal />
+      <CreateProjectModal />
+      <CreateTaskModal />
+      <EditTaskModal />
     </>
   );
 }

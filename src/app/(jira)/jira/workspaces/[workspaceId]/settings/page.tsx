@@ -1,5 +1,5 @@
-import { SettingsWorkspace } from "@/modules/jira/features/workspaces/ui/components/settings";
+import { SettingsView } from "@/modules/jira/features/workspaces/ui/views/settings-view";
 
 export default function SettignsPage() {
-  return <SettingsWorkspace />;
+  return <SettingsView />;
 }

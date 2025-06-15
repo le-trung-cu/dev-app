@@ -6,10 +6,8 @@ import { Role } from "@/generated/prisma-jira-database/jira-database-client-type
 import { headers } from "next/headers";
 import { createProjectSchema } from "../schema";
 
-const app = new Hono();
-
-app
-  .get("/:workspaceId/projects", async (c) => {
+const app = new Hono()
+  .get("/workspaces/:workspaceId/projects", async (c) => {
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -37,7 +35,7 @@ app
     return c.json({ isSuccess: true, projects: workspace.projects });
   })
   .post(
-    "/:workspaceId/projects",
+    "/workspaces/:workspaceId/projects",
     zValidator("form", createProjectSchema),
     async (c) => {
       const session = await auth.api.getSession({

@@ -6,7 +6,7 @@ import { EditWorkspace } from "./edit-workspace";
 import { InviteCodeMember } from "./invite-code-member";
 import { DeleteWorkspace } from "./delete-workspace";
 
-export const SettingsWorkspace = () => {
+export const SettingsView = () => {
   const workspaceId = useWorkspaceId();
   const { data: workspace, isLoading } = useGetWorkspace({ workspaceId });
 
@@ -18,9 +18,8 @@ export const SettingsWorkspace = () => {
     );
   }
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 max-w-2xl">
       <EditWorkspace initialValues={workspace!} />
-      <InviteCodeMember initialValues={workspace!}/>
       <DeleteWorkspace />
     </div>
   );

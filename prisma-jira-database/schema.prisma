@@ -19,8 +19,9 @@ enum Priority {
   Low
 }
 
-enum TaskSatus {
+enum TaskStatus {
   Backlog
+  Todo
   InProcess
   InReview
   Done
@@ -35,6 +36,8 @@ model Workspace {
   members    Member[]
   projects   Project[]
   tasks      Task[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model Project {
@@ -42,18 +45,26 @@ model Project {
   name        String
   workspaceId Int
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  Task        Task[]
+  task        Task[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Task {
-  id          Int       @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
+  endDate     DateTime?
   workspaceId Int
-  Workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  workspace   Workspace   @relation(fields: [workspaceId], references: [id])
   projectId   Int?
-  Project     Project?  @relation(fields: [workspaceId], references: [id])
-  AssigneeId  Int?
-  Assignee    Member?   @relation(fields: [AssigneeId], references: [id])
+  project     Project?    @relation(fields: [projectId], references: [id])
+  assigneeId  Int?
+  assignee    Member?     @relation(fields: [assigneeId], references: [id])
+  status      TaskStatus?
+  priority    Priority?
+  position    Int         @default(1)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
 model Member {
@@ -63,4 +74,7 @@ model Member {
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   role        Role
   tasks       Task[]
+  joined      Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }

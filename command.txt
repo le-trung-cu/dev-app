@@ -1,0 +1,18 @@
+"script":{
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "npx prisma generate --schema ./prisma-user-database/schema.prisma --no-engine && npx prisma generate --schema ./prisma-post-database/schema.prisma --no-engine",
+    "generate": "npx prisma generate --schema ./prisma-user-database/schema.prisma --no-engine && npx prisma generate --schema ./prisma-post-database/schema.prisma --no-engine",
+    "migrate": "npx prisma migrate dev --schema ./prisma-user-database/schema.prisma && npx prisma migrate dev --schema ./prisma-post-database/schema.prisma",
+    "deploy": "npx prisma migrate deploy --schema ./prisma-user-database/schema.prisma && npx prisma migrate deploy --schema ./prisma-post-database/schema.prisma",
+    "studio": "npx prisma studio --schema ./prisma-user-database/schema.prisma --port 5555 & npx prisma studio --schema ./prisma-post-database/schema.prisma --port 5556"
+}
+
+bunx prisma generate --schema ./prisma-user-database/schema.prisma
+bunx prisma generate --schema ./prisma-jira-database/schema.prisma
+
+
+bunx prisma migrate dev --schema ./prisma-user-database/schema.prisma
+bunx prisma migrate dev --schema ./prisma-jira-database/schema.prisma

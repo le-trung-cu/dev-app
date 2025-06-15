@@ -48,6 +48,10 @@ import { WorkspaceAvatar } from "../features/workspaces/ui/components/workspace-
 import { DropdownMenuArrow } from "@radix-ui/react-dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { Workspace } from "@/generated/prisma-jira-database/jira-database-client-types";
+import { useCreateProjectModal } from "../features/projects/hooks/use-create-project-modal";
+import { useGetProjects } from "../features/projects/api/use-get-projects";
+import { ProjectAvatar } from "../features/projects/ui/components/project-avatar";
+import { useGetCurrentMember } from "../features/members/api/use-get-current-member";
 
 const menus = [
   {
@@ -55,7 +59,7 @@ const menus = [
     title: "Home",
     href: "",
   },
-  { icon: Notebook, title: "My tasks", href: "my-task" },
+  { icon: Notebook, title: "My tasks", href: "tasks" },
   {
     icon: Settings,
     title: "Cài đặt",
@@ -66,13 +70,16 @@ const menus = [
     title: "Thành viên",
     href: "members",
   },
-];
+] as const;
 export const JiraSidebar = ({
   workspace,
 }: {
-  workspace: Workspace;
-  workspaces: Workspace[];
+  workspace: Omit<Workspace, "createdAt" | "updatedAt">;
+  workspaces: Omit<Workspace, "createdAt" | "updatedAt">[];
 }) => {
+  const { setOpen } = useCreateProjectModal();
+  const { data: projects } = useGetProjects({ workspaceId: workspace.id });
+  const { data: member } = useGetCurrentMember({ workspaceId: workspace.id });
   return (
     <div>
       <SidebarHeader className="gap-3.5 border-b p-4">
@@ -95,11 +102,6 @@ export const JiraSidebar = ({
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className="text-foreground text-base font-medium"></div>
-          <Label className="flex items-center gap-2 text-sm">
-            <span>Unreads</span>
-            <Switch className="shadow-none" />
-          </Label>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -108,7 +110,10 @@ export const JiraSidebar = ({
           <SidebarGroupContent className="">
             <SidebarMenu>
               {menus.map((item) => {
-                const fullPath = `/jira/workspaces/${workspace.id}/${item.href}`;
+                let fullPath = `/jira/workspaces/${workspace.id}/${item.href}`;
+                if (item.title === "My tasks") {
+                  fullPath = `/jira/workspaces/${workspace.id}/${item.href}?assigneeId=${member?.id ?? ""}`;
+                }
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
@@ -124,10 +129,26 @@ export const JiraSidebar = ({
         </SidebarGroup>
         <SidebarGroup className="px-0">
           <SidebarGroupLabel>Dự án</SidebarGroupLabel>
-          <SidebarGroupAction>
+          <SidebarGroupAction onClick={() => setOpen(true)}>
             <Plus /> <span className="sr-only">Thêm dự án</span>
           </SidebarGroupAction>
-          <SidebarGroupContent></SidebarGroupContent>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {projects?.map((item) => {
+                const fullPath = `/jira/workspaces/${workspace.id}/projects/${item.id}?projectId=${item.id}`;
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton asChild>
+                      <Link href={fullPath}>
+                        <ProjectAvatar name={item.name} />
+                        {item.name}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
     </div>

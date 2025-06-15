@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useCreateWorkspaceDialog } from "../../hooks/use-create-workspace-dialog";
+import { useCreateWorkspaceModal } from "../../hooks/use-create-workspace-modal";
 import {
   Form,
   FormControl,
@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import { useCreateWorkspace } from "../../api/use-create-workspace";
 
 export const CreateWorkspaceModal = () => {
-  const { open, setOpen } = useCreateWorkspaceDialog();
+  const { open, setOpen } = useCreateWorkspaceModal();
   const form = useForm({
     resolver: zodResolver(createWorkspaceSchema),
     defaultValues: {
