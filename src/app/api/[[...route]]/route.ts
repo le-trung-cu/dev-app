@@ -5,15 +5,17 @@ import jiraMembers from "@/modules/jira/features/members/server/router";
 import jiraProjects from "@/modules/jira/features/projects/server/router";
 import jiraTasks from "@/modules/jira/features/tasks/server/router";
 import auth from "@/modules/auth/server/router";
+import images from "@/modules/images/server/route";
 
 const app = new Hono();
 
-const jira = app.basePath("/api/jira")
-  .route("", jiraWorkspaces)
-  .route("", jiraMembers)
-  .route("", jiraProjects)
-  .route("", jiraTasks)
-  .route("", auth);
+const jira = app.basePath("/api")
+  .route("/jira", jiraWorkspaces)
+  .route("/jira", jiraMembers)
+  .route("/jira", jiraProjects)
+  .route("/jira", jiraTasks)
+  .route("/jira", auth)
+  .route("/images", images);
 
 const routes = jira;
 
