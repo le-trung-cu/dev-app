@@ -16,18 +16,47 @@ export default function EditorPage() {
     setElementType(e.target.value);
   }
 
+  useEffect(() => {
+    function handleKeypress(e: KeyboardEvent) {
+      console.log("handleKeypress", e.key, e.keyCode);
+
+      // if (e.defaultPrevented) {
+      //   return;
+      // }
+      switch (e.key) {
+        case "Backspace":
+          // elements.current = elements.current.filter(x => !x.isSelected);
+          for(let i = elements.current.length - 1; i >=0; i--) {
+            if(elements.current[i].isSelected) {
+              elements.current.splice(i, 1);
+            }
+          }
+          draw();
+          break;
+      }
+    }
+    document.addEventListener("keydown", handleKeypress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeypress);
+    };
+  }, []);
+
   function draw() {
     if (!canvas.current) return;
     const rc = rough.canvas(canvas.current);
     const context = canvas.current.getContext("2d")!;
-    context?.clearRect(0, 0, canvas.current?.width, canvas.current?.height);
 
+    context?.clearRect(0, 0, canvas.current?.width, canvas.current?.height);
+    context.save();
+    // This translation ensures that 1px lines are rendered sharply on the canvas,
+    // preventing blurry or double-width lines due to subpixel rendering.
+    context.translate(0.5, 0.5);
     elements.current.forEach((element) => {
       element.draw(rc, context);
     });
 
     const padding = 5;
-    context.save();
     context.strokeStyle = "blue";
     context.setLineDash([6, 6]);
     elements.current.forEach((element) => {
