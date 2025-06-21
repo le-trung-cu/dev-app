@@ -13,6 +13,7 @@ export default function EditorPage() {
   const elements = useRef<Element[]>([]);
 
   function onRadioChange(e: any) {
+    clearSelected();
     setElementType(e.target.value);
   }
 
@@ -91,6 +92,12 @@ export default function EditorPage() {
     context.restore();
   }
 
+  function clearSelected() {
+    elements.current.forEach((element) => {
+      element.isSelected = false;
+    });
+  }
+
   useEffect(() => {
     draw();
   });
@@ -133,6 +140,11 @@ export default function EditorPage() {
             className=""
             ref={canvas}
             onMouseDown={(e) => {
+              // edge case when poiter mouseout then mousein into document
+              if (draggingElement.current?.type === "selection") {
+                setSelected(draggingElement.current, elements.current);
+                return;
+              }
               const { left, top } = (
                 e.target as HTMLCanvasElement
               ).getBoundingClientRect();
@@ -142,6 +154,19 @@ export default function EditorPage() {
               const element = newElement(elementType, x, y);
               elements.current.push(element);
               draggingElement.current = element;
+              draw();
+            }}
+            onMouseUp={(e) => {
+              if (!draggingElement.current) return;
+
+              if (draggingElement.current.type === "selection") {
+                elements.current.pop();
+                setSelected(draggingElement.current, elements.current);
+              }else {
+                draggingElement.current.isSelected = true;
+              }
+              draggingElement.current = null;
+              setElementType("selection");
               draw();
             }}
             onMouseMove={(e) => {
@@ -159,15 +184,6 @@ export default function EditorPage() {
                   setSelected(draggingElement.current, elements.current);
                 }
                 generateShape(draggingElement.current);
-                draw();
-              }
-            }}
-            onMouseUp={(e) => {
-              if (!!draggingElement.current) {
-                if (draggingElement.current.type === "selection") {
-                  elements.current.pop();
-                }
-                draggingElement.current = null;
                 draw();
               }
             }}
