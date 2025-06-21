@@ -140,11 +140,6 @@ export default function EditorPage() {
             className=""
             ref={canvas}
             onMouseDown={(e) => {
-              // edge case when poiter mouseout then mousein into document
-              if (draggingElement.current?.type === "selection") {
-                setSelected(draggingElement.current, elements.current);
-                return;
-              }
               const { left, top } = (
                 e.target as HTMLCanvasElement
               ).getBoundingClientRect();
@@ -154,38 +149,45 @@ export default function EditorPage() {
               const element = newElement(elementType, x, y);
               elements.current.push(element);
               draggingElement.current = element;
-              draw();
-            }}
-            onMouseUp={(e) => {
-              if (!draggingElement.current) return;
 
-              if (draggingElement.current.type === "selection") {
-                elements.current.pop();
-                setSelected(draggingElement.current, elements.current);
-              }else {
-                draggingElement.current.isSelected = true;
-              }
-              draggingElement.current = null;
-              setElementType("selection");
-              draw();
-            }}
-            onMouseMove={(e) => {
-              if (!!draggingElement.current) {
-                const { left, top } = (
-                  e.target as HTMLCanvasElement
-                ).getBoundingClientRect();
+              const onMouseMove = (e: MouseEvent) => {
+                if (!!draggingElement.current) {
+                  const { left, top } = (
+                    e.target as HTMLCanvasElement
+                  ).getBoundingClientRect();
 
-                const width = e.clientX - left - draggingElement.current.x;
-                const height = e.clientY - top - draggingElement.current.y;
-                draggingElement.current.width = width;
-                draggingElement.current.height = height;
+                  const width = e.clientX - left - draggingElement.current.x;
+                  const height = e.clientY - top - draggingElement.current.y;
+                  draggingElement.current.width = width;
+                  draggingElement.current.height = height;
+
+                  if (draggingElement.current.type === "selection") {
+                    setSelected(draggingElement.current, elements.current);
+                  }
+                  generateShape(draggingElement.current);
+                  draw();
+                }
+              };
+
+              const onMouseUp = (e: MouseEvent) => {
+                window.removeEventListener("mousemove", onMouseMove);
+                window.removeEventListener("mouseup", onMouseUp);
+                if (!draggingElement.current) return;
 
                 if (draggingElement.current.type === "selection") {
+                  elements.current.pop();
                   setSelected(draggingElement.current, elements.current);
+                } else {
+                  draggingElement.current.isSelected = true;
                 }
-                generateShape(draggingElement.current);
+                draggingElement.current = null;
+                setElementType("selection");
                 draw();
-              }
+              };
+
+              window.addEventListener("mousemove", onMouseMove);
+              window.addEventListener("mouseup", onMouseUp);
+              draw();
             }}
           />
         </div>
