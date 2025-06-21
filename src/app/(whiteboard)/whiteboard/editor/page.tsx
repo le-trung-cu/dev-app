@@ -18,22 +18,40 @@ export default function EditorPage() {
 
   useEffect(() => {
     function handleKeypress(e: KeyboardEvent) {
-      console.log("handleKeypress", e.key, e.keyCode);
+      console.log("handleKeypress", e.key, { shiftKey: e.shiftKey }, e.keyCode);
 
       // if (e.defaultPrevented) {
       //   return;
       // }
-      switch (e.key) {
-        case "Backspace":
-          // elements.current = elements.current.filter(x => !x.isSelected);
-          for(let i = elements.current.length - 1; i >=0; i--) {
-            if(elements.current[i].isSelected) {
-              elements.current.splice(i, 1);
-            }
+      if (e.key === "Backspace") {
+        for (let i = elements.current.length - 1; i >= 0; i--) {
+          if (elements.current[i].isSelected) {
+            elements.current.splice(i, 1);
           }
-          draw();
-          break;
+        }
       }
+      if (["ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight"].includes(e.key)) {
+        const step = e.shiftKey ? 5 : 1;
+        const direct = ["ArrowDown", "ArrowRight"].includes(e.key) ? 1 : -1;
+        const offset = direct * step;
+
+        if (["ArrowUp", "ArrowDown"].includes(e.key)) {
+          elements.current.forEach((element) => {
+            if (element.isSelected) {
+              element.y += offset;
+              generateShape(element);
+            }
+          });
+        } else {
+          elements.current.forEach((element) => {
+            if (element.isSelected) {
+              element.x += offset;
+              generateShape(element);
+            }
+          });
+        }
+      }
+      draw();
     }
     document.addEventListener("keydown", handleKeypress);
 
@@ -181,19 +199,16 @@ type Element = ReturnType<typeof newElement>;
 function generateShape(element: Element) {
   if (element.type === "selection") {
     element.draw = (rc: RoughCanvas, context: CanvasRenderingContext2D) => {
-      console.log("ttttt");
       context.fillStyle = "rgba(0, 0, 255, 0.10)";
       context.fillRect(element.x, element.y, element.width, element.height);
     };
   } else if (element.type === "rectangle") {
-    const shape = generator.rectangle(
-      element.x,
-      element.y,
-      element.width,
-      element.height
-    );
+    const shape = generator.rectangle(0, 0, element.width, element.height);
+
     element.draw = (rc: RoughCanvas, context: CanvasRenderingContext2D) => {
+      context.translate(element.x, element.y);
       rc.draw(shape);
+      context.translate(-element.x, -element.y);
     };
   }
 }
@@ -209,7 +224,6 @@ function generateShape(element: Element) {
  * @param elements - An array of `Element` objects to be checked and updated for selection status.
  */
 function setSelected(selection: Element, elements: Element[]) {
-  console.log(JSON.stringify(elements));
   /**
    * if element was draw from right to left then the width was negative.
    * it was the same with height
