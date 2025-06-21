@@ -1,4 +1,3 @@
-
 "use client";
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
@@ -10,26 +9,44 @@ export default function EditorPage() {
   const [elementType, setElementType] = useState("");
   const canvas = useRef<HTMLCanvasElement>(null);
   const container = useRef<HTMLDivElement>(null);
-  const draggingElement = useRef<ReturnType<typeof newElement>>(null);
-  const elements = useRef<ReturnType<typeof newElement>[]>([]);
+  const draggingElement = useRef<Element>(null);
+  const elements = useRef<Element[]>([]);
 
   function onRadioChange(e: any) {
     setElementType(e.target.value);
   }
 
   function draw() {
+    if (!canvas.current) return;
     const rc = rough.canvas(canvas.current);
-    const context = canvas.current?.getContext("2d");
+    const context = canvas.current.getContext("2d")!;
     context?.clearRect(0, 0, canvas.current?.width, canvas.current?.height);
 
     elements.current.forEach((element) => {
       element.draw(rc, context);
     });
+
+    const padding = 5;
+    context.save();
+    context.strokeStyle = "blue";
+    context.setLineDash([6, 6]);
+    elements.current.forEach((element) => {
+      if (element.isSelected) {
+        const elementNormal = normalize(element);
+        context.strokeRect(
+          elementNormal.x - padding,
+          elementNormal.y - padding,
+          elementNormal.width + 2 * padding,
+          elementNormal.height + 2 * padding
+        );
+      }
+    });
+    context.restore();
   }
 
   useEffect(() => {
     draw();
-  })
+  });
 
   return (
     <div className="h-screen w-screen flex flex-col">
@@ -91,7 +108,7 @@ export default function EditorPage() {
                 draggingElement.current.width = width;
                 draggingElement.current.height = height;
 
-                if(draggingElement.current.type === "selection") {
+                if (draggingElement.current.type === "selection") {
                   setSelected(draggingElement.current, elements.current);
                 }
                 generateShape(draggingElement.current);
@@ -116,6 +133,7 @@ export default function EditorPage() {
 
 function newElement(type: string, x: number, y: number) {
   const element = {
+    isSelected: false,
     type,
     x,
     y,
@@ -129,14 +147,9 @@ function newElement(type: string, x: number, y: number) {
   return element;
 }
 
-function generateShape(element: {
-  type: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  draw: (rc: RoughCanvas, context: CanvasRenderingContext2D) => void;
-}) {
+type Element = ReturnType<typeof newElement>;
+
+function generateShape(element: Element) {
   if (element.type === "selection") {
     element.draw = (rc: RoughCanvas, context: CanvasRenderingContext2D) => {
       console.log("ttttt");
@@ -156,8 +169,50 @@ function generateShape(element: {
   }
 }
 
+/**
+ * Updates the `isSelected` property of each element in the provided array based on whether
+ * the element is inside the given selection area.
+ *
+ * The function accounts for elements that may have negative width or height, which can occur
+ * if they were drawn from right to left or bottom to top.
+ *
+ * @param selection - The selection area, represented as an `Element`, used to determine which elements are selected.
+ * @param elements - An array of `Element` objects to be checked and updated for selection status.
+ */
+function setSelected(selection: Element, elements: Element[]) {
+  console.log(JSON.stringify(elements));
+  /**
+   * if element was draw from right to left then the width was negative.
+   * it was the same with height
+   */
+  const selectionNormal = normalize(selection);
 
-
-  function setSelected(current: { type: string; x: number; y: number; width: number; height: number; draw: (rc: RoughCanvas, context: CanvasRenderingContext2D) => void; }, current1: { type: string; x: number; y: number; width: number; height: number; draw: (rc: RoughCanvas, context: CanvasRenderingContext2D) => void; }[]) {
-    console.log(JSON.stringify(current))
+  for (const element of elements) {
+    if (element.type !== "selection") {
+      const elementNormal = normalize(element);
+      element.isSelected = isInside(elementNormal, selectionNormal);
+    }
   }
+}
+
+function isInside(
+  element: Pick<Element, "x" | "y" | "width" | "height">,
+  container: Pick<Element, "x" | "y" | "width" | "height">
+) {
+  return (
+    element.x >= container.x &&
+    element.y >= container.y &&
+    element.x + element.width <= container.x + container.width &&
+    element.y + element.height <= container.y + container.height
+  );
+}
+
+function normalize(element: Element) {
+  const top = element.height >= 0 ? element.y : element.y + element.height;
+  const left = element.width >= 0 ? element.x : element.x + element.width;
+
+  const width = Math.abs(element.width);
+  const height = Math.abs(element.height);
+
+  return { x: left, y: top, width, height };
+}
