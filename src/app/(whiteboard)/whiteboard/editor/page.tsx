@@ -6,7 +6,7 @@ import { RoughCanvas } from "roughjs/bin/canvas";
 const generator = rough.generator();
 
 export default function EditorPage() {
-  const [elementType, setElementType] = useState("");
+  const [elementType, setElementType] = useState("rectangle");
   const canvas = useRef<HTMLCanvasElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const draggingElement = useRef<Element>(null);
@@ -140,24 +140,45 @@ export default function EditorPage() {
             className=""
             ref={canvas}
             onMouseDown={(e) => {
+              if (!canvas.current) return;
               const { left, top } = (
                 e.target as HTMLCanvasElement
               ).getBoundingClientRect();
               const x = e.clientX - left;
               const y = e.clientY - top;
-
               const element = newElement(elementType, x, y);
-              elements.current.push(element);
-              draggingElement.current = element;
 
+              let isDraggingElements = false;
+              const cursorStyle = document.documentElement.style.cursor;
+
+              if (elementType === "selection") {
+                isDraggingElements = elements.current.some((container) => {
+                  const normal = normalize(container);
+                  return container.isSelected && isInside(element, normal);
+                });
+              }
+              if (isDraggingElements) {
+                document.documentElement.style.cursor = "auto";
+              } else {
+                elements.current.push(element);
+                draggingElement.current = element;
+                document.documentElement.style.cursor = cursorStyle;
+              }
+              let lastX = x;
+              let lastY = y;
+
+              console.log({ isDraggingElements });
               const onMouseMove = (e: MouseEvent) => {
-                if (!!draggingElement.current) {
-                  const { left, top } = (
-                    e.target as HTMLCanvasElement
-                  ).getBoundingClientRect();
+                console.log("onMouseMove");
 
-                  const width = e.clientX - left - draggingElement.current.x;
-                  const height = e.clientY - top - draggingElement.current.y;
+                const { left, top } = (
+                  e.target as HTMLCanvasElement
+                ).getBoundingClientRect();
+                const x = e.clientX - left;
+                const y = e.clientY - top;
+                if (!!draggingElement.current) {
+                  const width = x - draggingElement.current.x;
+                  const height = y - draggingElement.current.y;
                   draggingElement.current.width = width;
                   draggingElement.current.height = height;
 
@@ -165,13 +186,28 @@ export default function EditorPage() {
                     setSelected(draggingElement.current, elements.current);
                   }
                   generateShape(draggingElement.current);
-                  draw();
+                } else if (isDraggingElements) {
+                  console.log("moving");
+                  elements.current.forEach((element) => {
+                    if (element.isSelected) {
+                      element.x += x - lastX;
+                      element.y += y - lastY;
+                      generateShape(element);
+                    }
+                  });
+                  lastX = x;
+                  lastY = y;
                 }
+                draw();
               };
 
               const onMouseUp = (e: MouseEvent) => {
                 window.removeEventListener("mousemove", onMouseMove);
                 window.removeEventListener("mouseup", onMouseUp);
+                isDraggingElements = false;
+                if (canvas.current?.style.cursor === "move") {
+                  canvas.current.style.cursor = "auto";
+                }
                 if (!draggingElement.current) return;
 
                 if (draggingElement.current.type === "selection") {
