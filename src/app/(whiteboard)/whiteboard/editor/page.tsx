@@ -19,11 +19,6 @@ export default function EditorPage() {
 
   useEffect(() => {
     function handleKeypress(e: KeyboardEvent) {
-      console.log("handleKeypress", e.key, { shiftKey: e.shiftKey }, e.keyCode);
-
-      // if (e.defaultPrevented) {
-      //   return;
-      // }
       if (e.key === "Backspace") {
         for (let i = elements.current.length - 1; i >= 0; i--) {
           if (elements.current[i].isSelected) {
@@ -80,7 +75,7 @@ export default function EditorPage() {
     context.setLineDash([6, 6]);
     elements.current.forEach((element) => {
       if (element.isSelected) {
-        const elementNormal = normalize(element);
+        const elementNormal = getBoundingBox(element);
         context.strokeRect(
           elementNormal.x - padding,
           elementNormal.y - padding,
@@ -141,78 +136,103 @@ export default function EditorPage() {
             ref={canvas}
             onMouseDown={(e) => {
               if (!canvas.current) return;
-              const { left, top } = (
-                e.target as HTMLCanvasElement
-              ).getBoundingClientRect();
-              const x = e.clientX - left;
-              const y = e.clientY - top;
+              const { x, y } = getMousePosition(e);
               const element = newElement(elementType, x, y);
-
               let isDraggingElements = false;
               const cursorStyle = document.documentElement.style.cursor;
 
               if (elementType === "selection") {
-                isDraggingElements = elements.current.some((container) => {
-                  const normal = normalize(container);
-                  return container.isSelected && isInside(element, normal);
+                const selectedElement = elements.current.find((container) => {
+                  const normal = getBoundingBox(container);
+                  const isSelected = isInside(element, normal);
+                  if (isSelected) {
+                    container.isSelected = true;
+                  }
+                  return isSelected;
                 });
+                // deselect everything except target element to-be-selected
+                elements.current.forEach((element) => {
+                  if (element === selectedElement) return;
+                  element.isSelected = false;
+                });
+
+                if (selectedElement) {
+                  // draggingElement.current = selectedElement;
+                }
+
+                isDraggingElements = elements.current.some((element) => {
+                  return element.isSelected && isInsideAnElement(x, y)(element);
+                });
+                if (isDraggingElements) {
+                  document.documentElement.style.cursor = "move";
+                }
               }
-              if (isDraggingElements) {
-                document.documentElement.style.cursor = "auto";
-              } else {
-                elements.current.push(element);
-                draggingElement.current = element;
-                document.documentElement.style.cursor = cursorStyle;
-              }
+
+              generateShape(element);
+              elements.current.push(element);
+              draggingElement.current = element;
+
               let lastX = x;
               let lastY = y;
 
-              console.log({ isDraggingElements });
               const onMouseMove = (e: MouseEvent) => {
-                console.log("onMouseMove");
+                const target = e.target;
+                if (!(target instanceof HTMLElement)) {
+                  return;
+                }
+                const { x, y } = getMousePosition(e);
 
-                const { left, top } = (
-                  e.target as HTMLCanvasElement
-                ).getBoundingClientRect();
-                const x = e.clientX - left;
-                const y = e.clientY - top;
-                if (!!draggingElement.current) {
-                  const width = x - draggingElement.current.x;
-                  const height = y - draggingElement.current.y;
-                  draggingElement.current.width = width;
-                  draggingElement.current.height = height;
-
-                  if (draggingElement.current.type === "selection") {
-                    setSelected(draggingElement.current, elements.current);
-                  }
-                  generateShape(draggingElement.current);
-                } else if (isDraggingElements) {
-                  console.log("moving");
-                  elements.current.forEach((element) => {
-                    if (element.isSelected) {
+                if (isDraggingElements) {
+                  const selectedElements = elements.current.filter(
+                    (el) => el.isSelected
+                  );
+                  if (selectedElements.length) {
+                    selectedElements.forEach((element) => {
                       element.x += x - lastX;
                       element.y += y - lastY;
-                      generateShape(element);
-                    }
-                  });
-                  lastX = x;
-                  lastY = y;
+                    });
+
+                    lastX = x;
+                    lastY = y;
+                    draw();
+                    return;
+                  }
+                }
+                if (!draggingElement.current) return;
+
+                let width = x - draggingElement.current.x;
+                let height = y - draggingElement.current.y;
+                draggingElement.current.width = width;
+                // Make a perfect square or circle when shift is enabled
+                draggingElement.current.height = e.shiftKey ? width : height;
+                generateShape(draggingElement.current);
+
+                if (elementType === "selection") {
+                  setSelected(draggingElement.current, elements.current);
                 }
                 draw();
               };
 
               const onMouseUp = (e: MouseEvent) => {
+                if (!canvas.current) return;
+
                 window.removeEventListener("mousemove", onMouseMove);
                 window.removeEventListener("mouseup", onMouseUp);
-                isDraggingElements = false;
-                if (canvas.current?.style.cursor === "move") {
-                  canvas.current.style.cursor = "auto";
-                }
-                if (!draggingElement.current) return;
 
-                if (draggingElement.current.type === "selection") {
+                document.documentElement.style.cursor = cursorStyle;
+
+                // if no element is clicked, clear the selection and redraw
+                if (!draggingElement.current) {
+                  clearSelected();
+                  draw();
+                  return;
+                }
+
+                if (elementType === "selection") {
+                  if (isDraggingElements) {
+                    isDraggingElements = false;
+                  }
                   elements.current.pop();
-                  setSelected(draggingElement.current, elements.current);
                 } else {
                   draggingElement.current.isSelected = true;
                 }
@@ -230,6 +250,16 @@ export default function EditorPage() {
       </div>
     </div>
   );
+}
+
+function getMousePosition(
+  e: MouseEvent | React.MouseEvent<HTMLCanvasElement, MouseEvent>
+) {
+  const { left, top } = (e.target as HTMLCanvasElement).getBoundingClientRect();
+  const x = e.clientX - left;
+  const y = e.clientY - top;
+
+  return { x, y };
 }
 
 function newElement(type: string, x: number, y: number) {
@@ -282,20 +312,28 @@ function setSelected(selection: Element, elements: Element[]) {
    * if element was draw from right to left then the width was negative.
    * it was the same with height
    */
-  const selectionNormal = normalize(selection);
+  const selectionNormal = getBoundingBox(selection);
 
   for (const element of elements) {
     if (element.type !== "selection") {
-      const elementNormal = normalize(element);
+      const elementNormal = getBoundingBox(element);
       element.isSelected = isInside(elementNormal, selectionNormal);
     }
   }
 }
 
-function isInside(
-  element: Pick<Element, "x" | "y" | "width" | "height">,
-  container: Pick<Element, "x" | "y" | "width" | "height">
-) {
+function getBoundingBox(element: Element) {
+  const top = element.height >= 0 ? element.y : element.y + element.height;
+  const left = element.width >= 0 ? element.x : element.x + element.width;
+
+  const width = Math.abs(element.width);
+  const height = Math.abs(element.height);
+
+  return { x: left, y: top, width, height };
+}
+type BoundingBox = ReturnType<typeof getBoundingBox>;
+
+function isInside(element: BoundingBox, container: BoundingBox) {
   return (
     element.x >= container.x &&
     element.y >= container.y &&
@@ -304,12 +342,15 @@ function isInside(
   );
 }
 
-function normalize(element: Element) {
-  const top = element.height >= 0 ? element.y : element.y + element.height;
-  const left = element.width >= 0 ? element.x : element.x + element.width;
+function isInsideAnElement(x: number, y: number) {
+  return (element: Element) => {
+    const box = getBoundingBox(element);
 
-  const width = Math.abs(element.width);
-  const height = Math.abs(element.height);
-
-  return { x: left, y: top, width, height };
+    return (
+      x >= box.x &&
+      x <= box.x + box.width &&
+      y >= box.y &&
+      y <= box.y + box.height
+    );
+  };
 }
