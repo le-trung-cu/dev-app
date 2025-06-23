@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughCanvas } from "roughjs/bin/canvas";
+import { toast } from "sonner";
 
 const generator = rough.generator();
 
@@ -49,10 +50,47 @@ export default function EditorPage() {
       }
       draw();
     }
+
+    async function handleCopy() {
+      const selectedElements = elements.current.filter((el) => el.isSelected);
+
+      await navigator.clipboard.writeText(
+        JSON.stringify({ elements: selectedElements })
+      );
+    }
+    async function handleCut() {
+      const selectedElements = elements.current.filter((el) => el.isSelected);
+      await navigator.clipboard.writeText(
+        JSON.stringify({ elements: selectedElements })
+      );
+      for (let i = elements.current.length - 1; i >= 0; --i) {
+        if (elements.current[i].isSelected) elements.current.splice(i, 1);
+      }
+      draw();
+    }
+
+    async function handlePaste() {
+      const elementStr = await navigator.clipboard.readText();
+      const _elements = JSON.parse(elementStr);
+      _elements.elements?.forEach((element: Element) => {
+        element.x += 10;
+        element.y += 10;
+        generateShape(element);
+      });
+      elements.current.push(..._elements.elements);
+      draw();
+    }
     document.addEventListener("keydown", handleKeypress);
+
+    document.addEventListener("copy", handleCopy);
+    document.addEventListener("cut", handleCut);
+    document.addEventListener("paste", handlePaste);
 
     return () => {
       document.removeEventListener("keydown", handleKeypress);
+      document.removeEventListener("copy", handleCopy);
+      document.removeEventListener("cut", handleCut);
+      document.removeEventListener("paste", handlePaste);
     };
   }, []);
 
@@ -121,7 +159,7 @@ export default function EditorPage() {
           selection
         </label>
       </div>
-      <div className="flex-1 relative">
+      <div className="flex-1 relative" onCopy={(e) => console.log("Copy...")}>
         <div
           ref={(elem) => {
             if (elem) {
