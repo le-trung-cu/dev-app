@@ -142,26 +142,28 @@ export default function EditorPage() {
               const cursorStyle = document.documentElement.style.cursor;
 
               if (elementType === "selection") {
-                const selectedElement = elements.current.find((container) => {
-                  const normal = getBoundingBox(container);
-                  const isSelected = isInside(element, normal);
-                  if (isSelected) {
-                    container.isSelected = true;
-                  }
-                  return isSelected;
-                });
-                // deselect everything except target element to-be-selected
-                elements.current.forEach((element) => {
-                  if (element === selectedElement) return;
-                  element.isSelected = false;
+                const hitElement = elements.current.find((element) => {
+                  return hitTest(element, x, y);
                 });
 
-                if (selectedElement) {
-                  // draggingElement.current = selectedElement;
+                //If we click on something
+                if (hitElement) {
+                  if (hitElement.isSelected) {
+                    // If that element is already selected, do nothing,
+                    // we're likely going to drag it
+                  } else {
+                    // We unselect every other elements unless shift is pressed
+                    if (!e.shiftKey) {
+                      clearSelected();
+                    }
+                    hitElement.isSelected = true;
+                  }
+                } else {
+                  clearSelected();
                 }
 
                 isDraggingElements = elements.current.some((element) => {
-                  return element.isSelected && isInsideAnElement(x, y)(element);
+                  return element.isSelected;
                 });
                 if (isDraggingElements) {
                   document.documentElement.style.cursor = "move";
@@ -353,4 +355,68 @@ function isInsideAnElement(x: number, y: number) {
       y <= box.y + box.height
     );
   };
+}
+
+// https://stackoverflow.com/a/6853926/232122
+function distanceBetweenPointAndSegment(
+  x: number,
+  y: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
+) {
+  const A = x - x1;
+  const B = y - y1;
+  const C = x2 - x1;
+  const D = y2 - y1;
+
+  const dot = A * C + B * D;
+  const lenSquare = C * C + D * D;
+  let param = -1;
+  if (lenSquare !== 0) {
+    // in case of 0 length line
+    param = dot / lenSquare;
+  }
+
+  let xx, yy;
+  if (param < 0) {
+    xx = x1;
+    yy = y1;
+  } else if (param > 1) {
+    xx = x2;
+    yy = y2;
+  } else {
+    xx = x1 + param * C;
+    yy = y1 + param * D;
+  }
+
+  const dx = x - xx;
+  const dy = y - yy;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function hitTest(element: Element, x: number, y: number) {
+  // For shapes that are composed of lines, we only enable point-selection when the distance
+  // of the click is less than x pixels of any of the lines that the shape is composed of
+  const lineThreshold = 10;
+
+  if (element.type === "rectangle") {
+    const box = getBoundingBox(element);
+    const x1 = box.x;
+    const x2 = box.x + box.width;
+    const y1 = box.y;
+    const y2 = box.y + box.height;
+
+    // (x1, y1) --A-- (x2, y1)
+    //    |D             |B
+    // (x1, y2) --C-- (x2, y2)
+    return (
+      distanceBetweenPointAndSegment(x, y, x1, y1, x2, y1) < lineThreshold || //A
+      distanceBetweenPointAndSegment(x, y, x2, y1, x2, y2) < lineThreshold || // B
+      distanceBetweenPointAndSegment(x, y, x1, y2, x2, y2) < lineThreshold || // C
+      distanceBetweenPointAndSegment(x, y, x1, y1, x1, y2) < lineThreshold // D
+    ); // D
+  }
+  throw new Error("Unimplemented type " + element.type);
 }
