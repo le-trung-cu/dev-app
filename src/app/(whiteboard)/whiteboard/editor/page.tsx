@@ -196,6 +196,7 @@ export default function EditorPage() {
               });
             }}
             onMouseDown={(e) => {
+              e.preventDefault();
               if (!canvas.current) return;
               const { x, y } = getMousePosition(e, state.current);
               const element = newElement(elementType, x, y);
