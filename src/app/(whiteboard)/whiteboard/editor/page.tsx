@@ -132,6 +132,38 @@ export default function EditorPage() {
       }
     });
     context.restore();
+
+    console.log(
+      state.current,
+      canvas.current.width - 200,
+      -state.current.scrollX / (1 + Math.pow(state.current.scrollX, 2))
+    );
+
+    // draw scrollbar
+    const width = canvas.current.width;
+    const height = canvas.current.height;
+    const { scrollX, scrollY } = state.current;
+    context.save();
+    context.fillStyle = SCROLLBAR_COLOR;
+    const { vertical, horizontal } = getScrollbars(
+      width,
+      height,
+      scrollX,
+      scrollY
+    );
+    context.fillRect(
+      vertical.x,
+      vertical.y,
+      vertical.width,
+      vertical.height
+    );
+    context.fillRect(
+      horizontal.x,
+      horizontal.y,
+      horizontal.width,
+      horizontal.height
+    );
+    context.restore();
   }
 
   function clearSelected() {
@@ -485,4 +517,42 @@ function hitTest(element: Element, x: number, y: number) {
     ); // D
   }
   throw new Error("Unimplemented type " + element.type);
+}
+
+const SCROLLBAR_WIDTH = 6;
+const SCROLLBAR_MARGIN = 4;
+const SCROLLBAR_COLOR = "rgba(0,0,0,0.3)";
+
+function getScrollbars(
+  canvasWidth: number,
+  canvasHeight: number,
+  scrollX: number,
+  scrollY: number
+) {
+  // horizontal scrollbar
+  const sceneWidth = canvasWidth + Math.abs(scrollX);
+  const scrollWidth = (canvasWidth * canvasWidth) / sceneWidth;
+  const scrollBarX = scrollX > 0 ? 0 : canvasWidth - scrollWidth;
+  const horizontalScrollBar = {
+    x: scrollBarX + SCROLLBAR_MARGIN,
+    y: canvasHeight - SCROLLBAR_WIDTH - SCROLLBAR_MARGIN,
+    width: scrollWidth,
+    height: SCROLLBAR_WIDTH,
+  } 
+
+  // vertical scrollbar
+  const sceneHeight = canvasHeight + Math.abs(scrollY);
+  const scrollBarHeight = (canvasHeight * canvasHeight) / sceneHeight;
+  const scrollBarY = scrollY > 0 ? 0 : canvasHeight - scrollBarHeight;
+  const verticalScrollBar = {
+    x: canvasWidth - SCROLLBAR_WIDTH - SCROLLBAR_MARGIN,
+    y: scrollBarY + SCROLLBAR_MARGIN,
+    width: SCROLLBAR_WIDTH,
+    height: scrollBarHeight - SCROLLBAR_WIDTH * 2,
+  };
+
+  return {
+    horizontal: horizontalScrollBar,
+    vertical: verticalScrollBar,
+  };
 }
