@@ -180,14 +180,20 @@ export default function EditorPage() {
         >
           <canvas
             className="touch-none"
-            ref={canvas}
-            onWheelCapture={(e) => {
-              e.preventDefault();
-              console.log("wheel");
-              const { deltaX, deltaY } = e;
-              state.current.scrollX -= deltaX;
-              state.current.scrollY -= deltaY;
-              draw();
+            ref={(elem) => {
+              canvas.current = elem;
+              const onWheel = (e: WheelEvent) => {
+                e.preventDefault();
+                const { deltaX, deltaY } = e;
+                state.current.scrollX -=
+                  Math.sign(deltaX) * Math.min(20, Math.abs(deltaX * 0.5));
+                state.current.scrollY -=
+                  Math.sign(deltaY) * Math.min(20, Math.abs(deltaY * 0.5));
+                draw();
+              };
+              canvas.current?.addEventListener("wheel", onWheel, {
+                passive: false,
+              });
             }}
             onMouseDown={(e) => {
               if (!canvas.current) return;
