@@ -20,6 +20,8 @@ export default function EditorPage() {
 
   useEffect(() => {
     function handleKeypress(e: KeyboardEvent) {
+      console.log(e);
+      e.preventDefault();
       if (e.key === "Backspace") {
         for (let i = elements.current.length - 1; i >= 0; i--) {
           if (elements.current[i].isSelected) {
@@ -48,6 +50,9 @@ export default function EditorPage() {
           });
         }
       }
+      if (e.key === "a" && e.metaKey) {
+        elements.current.forEach((el) => (el.isSelected = true));
+      }
       draw();
     }
 
@@ -58,6 +63,7 @@ export default function EditorPage() {
         JSON.stringify({ elements: selectedElements })
       );
     }
+
     async function handleCut() {
       const selectedElements = elements.current.filter((el) => el.isSelected);
       await navigator.clipboard.writeText(
@@ -80,6 +86,7 @@ export default function EditorPage() {
       elements.current.push(..._elements.elements);
       draw();
     }
+
     document.addEventListener("keydown", handleKeypress);
 
     document.addEventListener("copy", handleCopy);
