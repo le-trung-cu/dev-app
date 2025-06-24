@@ -4,7 +4,7 @@ import rough from "roughjs";
 import { RoughCanvas } from "roughjs/bin/canvas";
 import { toast } from "sonner";
 
-const generator = rough.generator();
+var generator = rough.generator();
 
 export default function EditorPage() {
   const [elementType, setElementType] = useState("rectangle");
@@ -12,6 +12,10 @@ export default function EditorPage() {
   const container = useRef<HTMLDivElement>(null);
   const draggingElement = useRef<Element>(null);
   const elements = useRef<Element[]>([]);
+  const state = useRef<{
+    scrollX: number;
+    scrollY: number;
+  }>({ scrollX: 0, scrollY: 0 });
 
   function onRadioChange(e: any) {
     clearSelected();
@@ -38,14 +42,12 @@ export default function EditorPage() {
           elements.current.forEach((element) => {
             if (element.isSelected) {
               element.y += offset;
-              generateShape(element);
             }
           });
         } else {
           elements.current.forEach((element) => {
             if (element.isSelected) {
               element.x += offset;
-              generateShape(element);
             }
           });
         }
@@ -106,13 +108,13 @@ export default function EditorPage() {
     const rc = rough.canvas(canvas.current);
     const context = canvas.current.getContext("2d")!;
 
-    context?.clearRect(0, 0, canvas.current?.width, canvas.current?.height);
+    context?.clearRect(0.5, 0.5, canvas.current?.width, canvas.current?.height);
     context.save();
     // This translation ensures that 1px lines are rendered sharply on the canvas,
     // preventing blurry or double-width lines due to subpixel rendering.
     context.translate(0.5, 0.5);
     elements.current.forEach((element) => {
-      element.draw(rc, context);
+      element.draw(rc, context, state.current);
     });
 
     const padding = 5;
@@ -122,8 +124,8 @@ export default function EditorPage() {
       if (element.isSelected) {
         const elementNormal = getBoundingBox(element);
         context.strokeRect(
-          elementNormal.x - padding,
-          elementNormal.y - padding,
+          elementNormal.x - padding + state.current.scrollX,
+          elementNormal.y - padding + state.current.scrollY,
           elementNormal.width + 2 * padding,
           elementNormal.height + 2 * padding
         );
@@ -177,11 +179,19 @@ export default function EditorPage() {
           className="h-full absolute inset-0"
         >
           <canvas
-            className=""
+            className="touch-none"
             ref={canvas}
+            onWheelCapture={(e) => {
+              e.preventDefault();
+              console.log("wheel");
+              const { deltaX, deltaY } = e;
+              state.current.scrollX -= deltaX;
+              state.current.scrollY -= deltaY;
+              draw();
+            }}
             onMouseDown={(e) => {
               if (!canvas.current) return;
-              const { x, y } = getMousePosition(e);
+              const { x, y } = getMousePosition(e, state.current);
               const element = newElement(elementType, x, y);
               let isDraggingElements = false;
               const cursorStyle = document.documentElement.style.cursor;
@@ -227,7 +237,7 @@ export default function EditorPage() {
                 if (!(target instanceof HTMLElement)) {
                   return;
                 }
-                const { x, y } = getMousePosition(e);
+                const { x, y } = getMousePosition(e, state.current);
 
                 if (isDraggingElements) {
                   const selectedElements = elements.current.filter(
@@ -300,14 +310,22 @@ export default function EditorPage() {
 }
 
 function getMousePosition(
-  e: MouseEvent | React.MouseEvent<HTMLCanvasElement, MouseEvent>
+  e: MouseEvent | React.MouseEvent<HTMLCanvasElement, MouseEvent>,
+  { scrollX, scrollY }: { scrollX: number; scrollY: number }
 ) {
   const { left, top } = (e.target as HTMLCanvasElement).getBoundingClientRect();
-  const x = e.clientX - left;
-  const y = e.clientY - top;
+  const x = e.clientX - left - scrollX;
+  const y = e.clientY - top - scrollY;
 
   return { x, y };
 }
+
+type SceneState = {
+  scrollX: number;
+  scrollY: number;
+  // null indicates transparent bg
+  // viewBackgroundColor: string | null;
+};
 
 function newElement(type: string, x: number, y: number) {
   const element = {
@@ -317,7 +335,11 @@ function newElement(type: string, x: number, y: number) {
     y,
     width: 0,
     height: 0,
-    draw: (rc: RoughCanvas, context: CanvasRenderingContext2D) => {},
+    draw: (
+      rc: RoughCanvas,
+      context: CanvasRenderingContext2D,
+      sceneState: SceneState
+    ) => {},
   };
 
   generateShape(element);
@@ -329,17 +351,22 @@ type Element = ReturnType<typeof newElement>;
 
 function generateShape(element: Element) {
   if (element.type === "selection") {
-    element.draw = (rc: RoughCanvas, context: CanvasRenderingContext2D) => {
+    element.draw = (rc, context, { scrollX, scrollY }) => {
       context.fillStyle = "rgba(0, 0, 255, 0.10)";
-      context.fillRect(element.x, element.y, element.width, element.height);
+      context.fillRect(
+        element.x + scrollX,
+        element.y + scrollY,
+        element.width,
+        element.height
+      );
     };
   } else if (element.type === "rectangle") {
     const shape = generator.rectangle(0, 0, element.width, element.height);
 
-    element.draw = (rc: RoughCanvas, context: CanvasRenderingContext2D) => {
-      context.translate(element.x, element.y);
+    element.draw = (rc, context, { scrollX, scrollY }) => {
+      context.translate(element.x + scrollX, element.y + scrollY);
       rc.draw(shape);
-      context.translate(-element.x, -element.y);
+      context.translate(-element.x - scrollX, -element.y - scrollY);
     };
   }
 }
@@ -387,19 +414,6 @@ function isInside(element: BoundingBox, container: BoundingBox) {
     element.x + element.width <= container.x + container.width &&
     element.y + element.height <= container.y + container.height
   );
-}
-
-function isInsideAnElement(x: number, y: number) {
-  return (element: Element) => {
-    const box = getBoundingBox(element);
-
-    return (
-      x >= box.x &&
-      x <= box.x + box.width &&
-      y >= box.y &&
-      y <= box.y + box.height
-    );
-  };
 }
 
 // https://stackoverflow.com/a/6853926/232122
