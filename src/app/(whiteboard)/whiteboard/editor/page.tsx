@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughCanvas } from "roughjs/bin/canvas";
 import { toast } from "sonner";
-import { moveAllLeft, moveOneLeft } from "./zindex";
+import { moveAllLeft, moveAllRight, moveOneLeft, moveOneRight } from "./zindex";
 
 var generator = rough.generator();
 
@@ -53,7 +53,7 @@ export default function EditorPage() {
           });
         }
       }
-      
+
       // Send backwards: Cmd-Shift-Alt-B
       if (e.metaKey && e.shiftKey && e.altKey && e.code === "KeyB") {
         const indicates = getIndicates();
@@ -62,10 +62,19 @@ export default function EditorPage() {
       } else if (e.metaKey && e.shiftKey && e.code === "KeyB") {
         const indicates = getIndicates();
         moveAllLeft(elements.current, indicates);
-      // Select all: Cmd-A
-      }else if (e.metaKey  && e.code === "KeyA") {
+        // Send forwards: Cmd-Shift-Alt-F
+      } else if (e.metaKey && e.shiftKey && e.altKey && e.code === "KeyF") {
+        const indicates = getIndicates();
+        moveOneRight(elements.current, indicates);
+        // Send to back: Cmd-Shift-F
+      } else if (e.metaKey && e.shiftKey && e.code === "KeyF") {
+        const indicates = getIndicates();
+        moveAllRight(elements.current, indicates);
+        // Select all: Cmd-A
+      } else if (e.metaKey && e.code === "KeyA") {
         elements.current.forEach((el) => (el.isSelected = true));
       }
+
       draw();
 
       function getIndicates() {
@@ -129,8 +138,7 @@ export default function EditorPage() {
     if (!canvas.current) return;
     const rc = rough.canvas(canvas.current);
     const context = canvas.current.getContext("2d")!;
-
-    context?.clearRect(0.5, 0.5, canvas.current?.width, canvas.current?.height);
+    context?.clearRect(0, 0, canvas.current?.width, canvas.current?.height);
     context.save();
     // This translation ensures that 1px lines are rendered sharply on the canvas,
     // preventing blurry or double-width lines due to subpixel rendering.
@@ -141,6 +149,7 @@ export default function EditorPage() {
 
     const padding = 5;
     context.strokeStyle = "blue";
+    context.lineWidth = 1;
     context.setLineDash([6, 6]);
     elements.current.forEach((element) => {
       if (element.isSelected) {
@@ -155,15 +164,9 @@ export default function EditorPage() {
     });
     context.restore();
 
-    console.log(
-      state.current,
-      canvas.current.width - 200,
-      -state.current.scrollX / (1 + Math.pow(state.current.scrollX, 2))
-    );
-
     // draw scrollbar
-    const width = canvas.current.width;
-    const height = canvas.current.height;
+    const width = canvas.current.width/window.devicePixelRatio;
+    const height = canvas.current.height/window.devicePixelRatio;
     const { scrollX, scrollY } = state.current;
     context.save();
     context.fillStyle = SCROLLBAR_COLOR;
@@ -221,8 +224,14 @@ export default function EditorPage() {
         <div
           ref={(elem) => {
             if (elem) {
-              canvas.current!.width = elem.clientWidth;
-              canvas.current!.height = elem.clientHeight;
+              canvas.current!.width =
+                elem.clientWidth * window.devicePixelRatio;
+              canvas.current!.height =
+                elem.clientHeight * window.devicePixelRatio;
+
+              canvas
+                .current!.getContext("2d")
+                ?.scale(window.devicePixelRatio, window.devicePixelRatio);
             }
           }}
           className="h-full absolute inset-0"
