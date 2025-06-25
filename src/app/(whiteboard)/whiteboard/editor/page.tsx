@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughCanvas } from "roughjs/bin/canvas";
 import { toast } from "sonner";
+import { moveAllLeft, moveOneLeft } from "./zindex";
 
 var generator = rough.generator();
 
@@ -52,10 +53,31 @@ export default function EditorPage() {
           });
         }
       }
-      if (e.key === "a" && e.metaKey) {
+      
+      // Send backwards: Cmd-Shift-Alt-B
+      if (e.metaKey && e.shiftKey && e.altKey && e.code === "KeyB") {
+        const indicates = getIndicates();
+        moveOneLeft(elements.current, indicates);
+        // Send to back: Cmd-Shift-B
+      } else if (e.metaKey && e.shiftKey && e.code === "KeyB") {
+        const indicates = getIndicates();
+        moveAllLeft(elements.current, indicates);
+      // Select all: Cmd-A
+      }else if (e.metaKey  && e.code === "KeyA") {
         elements.current.forEach((el) => (el.isSelected = true));
       }
       draw();
+
+      function getIndicates() {
+        const indicates = new Array<number>();
+        elements.current.forEach((el, idx) => {
+          if (el.isSelected) {
+            indicates.push(idx);
+          }
+        });
+
+        return indicates;
+      }
     }
 
     async function handleCopy() {
@@ -151,12 +173,7 @@ export default function EditorPage() {
       scrollX,
       scrollY
     );
-    context.fillRect(
-      vertical.x,
-      vertical.y,
-      vertical.width,
-      vertical.height
-    );
+    context.fillRect(vertical.x, vertical.y, vertical.width, vertical.height);
     context.fillRect(
       horizontal.x,
       horizontal.y,
@@ -400,7 +417,10 @@ function generateShape(element: Element) {
       );
     };
   } else if (element.type === "rectangle") {
-    const shape = generator.rectangle(0, 0, element.width, element.height);
+    const shape = generator.rectangle(0, 0, element.width, element.height, {
+      fill: "red",
+      fillStyle: "zigzag",
+    });
 
     element.draw = (rc, context, { scrollX, scrollY }) => {
       context.translate(element.x + scrollX, element.y + scrollY);
@@ -538,7 +558,7 @@ function getScrollbars(
     y: canvasHeight - SCROLLBAR_WIDTH - SCROLLBAR_MARGIN,
     width: scrollWidth,
     height: SCROLLBAR_WIDTH,
-  } 
+  };
 
   // vertical scrollbar
   const sceneHeight = canvasHeight + Math.abs(scrollY);
