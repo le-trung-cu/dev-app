@@ -332,6 +332,18 @@ export default function EditorPage() {
               if (!canvas.current) return;
 
               const { x, y } = getMousePosition(e, state.current);
+
+              const canvasWidth = canvas.current.width;
+              const canvasHeight = canvas.current.height;
+              const { isOverHorizontalScrollBar, isOverVerticalScrollBar } =
+                isOverScrollBars(
+                  x + state.current.scrollX,
+                  y + state.current.scrollY,
+                  canvasWidth,
+                  canvasHeight,
+                  state.current.scrollX,
+                  state.current.scrollY
+                );
               const element = newElement(elementType, x, y);
               let resizeHandle: string | boolean = false;
               let isDraggingElements = false;
@@ -391,12 +403,39 @@ export default function EditorPage() {
               let lastX = x;
               let lastY = y;
 
+              if (isOverHorizontalScrollBar || isOverVerticalScrollBar) {
+                lastX = x + state.current.scrollX;
+                lastY = y + state.current.scrollY;
+              }
+
               const onMouseMove = (e: MouseEvent) => {
                 const target = e.target;
                 if (!(target instanceof HTMLElement)) {
                   return;
                 }
                 const { x, y } = getMousePosition(e, state.current);
+
+                if (isOverHorizontalScrollBar) {
+                  const _x = x + state.current.scrollX;
+                  const dx = _x - lastX;
+                  state.current.scrollX -= dx;
+                  lastX = _x;
+                  // We don't want to save history when scroll
+                  skipHistory.current = true;
+                  draw();
+                  return;
+                }
+
+                if (isOverVerticalScrollBar) {
+                  const _y = y + state.current.scrollY;
+                  const dy = _y - lastY;
+                  state.current.scrollY -= dy;
+                  lastY = _y;
+                  // We don't want to save history when scroll
+                  skipHistory.current = true;
+                  draw();
+                  return;
+                }
 
                 if (isResizingElements && resizingElement) {
                   const el = resizingElement;
@@ -780,6 +819,33 @@ function getScrollbars(
   return {
     horizontal: horizontalScrollBar,
     vertical: verticalScrollBar,
+  };
+}
+
+function isOverScrollBars(
+  x: number,
+  y: number,
+  canvasWidth: number,
+  canvasHeight: number,
+  scrollX: number,
+  scrollY: number
+) {
+  const scrollbars = getScrollbars(canvasWidth, canvasHeight, scrollX, scrollY);
+  const [isOverHorizontalScrollBar, isOverVerticalScrollBar] = [
+    scrollbars.horizontal,
+    scrollbars.vertical,
+  ].map((scrollbar) => {
+    return (
+      scrollbar.x <= x &&
+      x <= scrollbar.x + scrollbar.width &&
+      scrollbar.y <= y &&
+      y <= scrollbar.y + scrollbar.height
+    );
+  });
+
+  return {
+    isOverHorizontalScrollBar,
+    isOverVerticalScrollBar,
   };
 }
 
