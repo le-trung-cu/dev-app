@@ -1,11 +1,20 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import rough from "roughjs";
 import { RoughCanvas } from "roughjs/bin/canvas";
 import { toast } from "sonner";
 import { moveAllLeft, moveAllRight, moveOneLeft, moveOneRight } from "./zindex";
 
-var generator = rough.generator();
+const generator = rough.generator();
+const KEYS = {
+  ARROW_LEFT: "ArrowLeft",
+  ARROW_RIGHT: "ArrowRight",
+  ARROW_DOWN: "ArrowDown",
+  ARROW_UP: "ArrowUp",
+  ESCAPE: "Escape",
+  DELETE: "Delete",
+  BACKSPACE: "Backspace",
+};
 
 export default function EditorPage() {
   const [elementType, setElementType] = useState("rectangle");
@@ -18,23 +27,66 @@ export default function EditorPage() {
     scrollY: number;
   }>({ scrollX: 0, scrollY: 0 });
 
+  let skipHistory = useRef(false);
+  const stateHistory = useRef<string[]>([]);
+
+  function generateHistoryCurrentEntry() {
+    return JSON.stringify(
+      elements.current.map((element) => ({ ...element, isSelected: false }))
+    );
+  }
+
+  function pushHistoryEntry(newEntry: string) {
+    if (
+      stateHistory.current.length > 0 &&
+      stateHistory.current[stateHistory.current.length - 1] === newEntry
+    ) {
+      // If the last entry is the same as this one, ignore it
+      return;
+    }
+    stateHistory.current.push(newEntry);
+  }
+
+  function restoreHistoryEntry(entry: string) {
+    const newElements = JSON.parse(entry);
+    elements.current.splice(0, elements.current.length);
+    newElements.forEach((newElement: Element) => {
+      generateShape(newElement);
+      elements.current.push(newElement);
+    });
+    // when restoreing, we shouldn't add an history entry otherwise we'll be stuck with it and can't go back
+    skipHistory.current = true;
+  }
+
   function onRadioChange(e: any) {
     clearSelected();
     setElementType(e.target.value);
   }
 
+  const deleteSelectedElement = useCallback(() => {
+    for (let i = elements.current.length - 1; i >= 0; --i) {
+      if (elements.current[i].isSelected) {
+        elements.current.splice(i, 1);
+      }
+    }
+  }, []);
+
   useEffect(() => {
-    function handleKeypress(e: KeyboardEvent) {
+    function onKeyDown(e: KeyboardEvent) {
       console.log(e);
-      e.preventDefault();
-      if (e.key === "Backspace") {
+      if (e.key === KEYS.ESCAPE) {
+        e.preventDefault();
+        clearSelected();
+      } else if (e.key === KEYS.BACKSPACE || e.key === KEYS.DELETE) {
+        deleteSelectedElement();
+        e.preventDefault();
         for (let i = elements.current.length - 1; i >= 0; i--) {
           if (elements.current[i].isSelected) {
             elements.current.splice(i, 1);
           }
         }
-      }
-      if (["ArrowUp", "ArrowLeft", "ArrowDown", "ArrowRight"].includes(e.key)) {
+      } else if (isArrowKey(e.key)) {
+        e.preventDefault();
         const step = e.shiftKey ? 5 : 1;
         const direct = ["ArrowDown", "ArrowRight"].includes(e.key) ? 1 : -1;
         const offset = direct * step;
@@ -52,41 +104,55 @@ export default function EditorPage() {
             }
           });
         }
-      }
 
-      // Send backwards: Cmd-Shift-Alt-B
-      if (e.metaKey && e.shiftKey && e.altKey && e.code === "KeyB") {
-        const indicates = getIndicates();
+        // Send backwards: Cmd-Shift-Alt-B
+      } else if (e.metaKey && e.shiftKey && e.altKey && e.code === "KeyB") {
+        e.preventDefault();
+        const indicates = getSelectedIndicates();
         moveOneLeft(elements.current, indicates);
         // Send to back: Cmd-Shift-B
       } else if (e.metaKey && e.shiftKey && e.code === "KeyB") {
-        const indicates = getIndicates();
+        e.preventDefault();
+        const indicates = getSelectedIndicates();
         moveAllLeft(elements.current, indicates);
         // Send forwards: Cmd-Shift-Alt-F
       } else if (e.metaKey && e.shiftKey && e.altKey && e.code === "KeyF") {
-        const indicates = getIndicates();
+        e.preventDefault();
+        const indicates = getSelectedIndicates();
         moveOneRight(elements.current, indicates);
         // Send to back: Cmd-Shift-F
       } else if (e.metaKey && e.shiftKey && e.code === "KeyF") {
-        const indicates = getIndicates();
+        e.preventDefault();
+        const indicates = getSelectedIndicates();
         moveAllRight(elements.current, indicates);
         // Select all: Cmd-A
       } else if (e.metaKey && e.code === "KeyA") {
+        e.preventDefault();
         elements.current.forEach((el) => (el.isSelected = true));
+      } else if (e.metaKey && e.code === "KeyZ") {
+        e.preventDefault();
+        let lastEntry = stateHistory.current.pop();
+        // If nothing was changed sinece last, take the previous one
+        if (generateHistoryCurrentEntry() === lastEntry) {
+          lastEntry = stateHistory.current.pop();
+        }
+        if (lastEntry !== undefined) {
+          restoreHistoryEntry(lastEntry);
+        }
       }
 
       draw();
+    }
 
-      function getIndicates() {
-        const indicates = new Array<number>();
-        elements.current.forEach((el, idx) => {
-          if (el.isSelected) {
-            indicates.push(idx);
-          }
-        });
+    function getSelectedIndicates() {
+      const indicates = new Array<number>();
+      elements.current.forEach((el, idx) => {
+        if (el.isSelected) {
+          indicates.push(idx);
+        }
+      });
 
-        return indicates;
-      }
+      return indicates;
     }
 
     async function handleCopy() {
@@ -120,19 +186,19 @@ export default function EditorPage() {
       draw();
     }
 
-    document.addEventListener("keydown", handleKeypress);
+    document.addEventListener("keydown", onKeyDown);
 
     document.addEventListener("copy", handleCopy);
     document.addEventListener("cut", handleCut);
     document.addEventListener("paste", handlePaste);
 
     return () => {
-      document.removeEventListener("keydown", handleKeypress);
+      document.removeEventListener("keydown", onKeyDown);
       document.removeEventListener("copy", handleCopy);
       document.removeEventListener("cut", handleCut);
       document.removeEventListener("paste", handlePaste);
     };
-  }, []);
+  }, [deleteSelectedElement]);
 
   function draw() {
     if (!canvas.current) return;
@@ -165,8 +231,8 @@ export default function EditorPage() {
     context.restore();
 
     // draw scrollbar
-    const width = canvas.current.width/window.devicePixelRatio;
-    const height = canvas.current.height/window.devicePixelRatio;
+    const width = canvas.current.width / window.devicePixelRatio;
+    const height = canvas.current.height / window.devicePixelRatio;
     const { scrollX, scrollY } = state.current;
     context.save();
     context.fillStyle = SCROLLBAR_COLOR;
@@ -184,6 +250,11 @@ export default function EditorPage() {
       horizontal.height
     );
     context.restore();
+
+    if (!skipHistory.current) {
+      pushHistoryEntry(generateHistoryCurrentEntry());
+    }
+    skipHistory.current = false;
   }
 
   function clearSelected() {
@@ -247,6 +318,8 @@ export default function EditorPage() {
                   Math.sign(deltaX) * Math.min(20, Math.abs(deltaX * 0.5));
                 state.current.scrollY -=
                   Math.sign(deltaY) * Math.min(20, Math.abs(deltaY * 0.5));
+                // We don't want to save history when mouse wheel
+                skipHistory.current = true;
                 draw();
               };
               canvas.current?.addEventListener("wheel", onWheel, {
@@ -316,6 +389,8 @@ export default function EditorPage() {
 
                     lastX = x;
                     lastY = y;
+                    // We don't want to save history when dragging an element to initially size it
+                    skipHistory.current = true;
                     draw();
                     return;
                   }
@@ -332,6 +407,8 @@ export default function EditorPage() {
                 if (elementType === "selection") {
                   setSelected(draggingElement.current, elements.current);
                 }
+                // We don't want to save history when moving an element
+                skipHistory.current = true; 
                 draw();
               };
 
@@ -365,12 +442,22 @@ export default function EditorPage() {
 
               window.addEventListener("mousemove", onMouseMove);
               window.addEventListener("mouseup", onMouseUp);
+              skipHistory.current = true;
               draw();
             }}
           />
         </div>
       </div>
     </div>
+  );
+}
+
+function isArrowKey(keyCode: string) {
+  return (
+    keyCode === KEYS.ARROW_LEFT ||
+    keyCode === KEYS.ARROW_RIGHT ||
+    keyCode === KEYS.ARROW_DOWN ||
+    keyCode === KEYS.ARROW_UP
   );
 }
 
