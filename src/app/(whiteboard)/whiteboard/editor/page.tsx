@@ -73,7 +73,6 @@ export default function EditorPage() {
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
-      console.log(e);
       if (e.key === KEYS.ESCAPE) {
         e.preventDefault();
         clearSelected();
@@ -291,7 +290,7 @@ export default function EditorPage() {
           selection
         </label>
       </div>
-      <div className="flex-1 relative" onCopy={(e) => console.log("Copy...")}>
+      <div className="flex-1 relative">
         <div
           ref={(elem) => {
             if (elem) {
@@ -327,39 +326,61 @@ export default function EditorPage() {
               });
             }}
             onMouseDown={(e) => {
+              // only handle left mouse button
+              if (e.button !== 0) return;
               e.preventDefault();
               if (!canvas.current) return;
+
               const { x, y } = getMousePosition(e, state.current);
               const element = newElement(elementType, x, y);
+              let resizeHandle: string | boolean = false;
               let isDraggingElements = false;
+              let isResizingElements = false;
+              let resizingElement: Element | null = null;
               const cursorStyle = document.documentElement.style.cursor;
-
               if (elementType === "selection") {
-                const hitElement = elements.current.find((element) => {
-                  return hitTest(element, x, y);
+                const resizeElement = elements.current.find((element) => {
+                  return resizeTest(element, x, y, {
+                    scrollX: state.current.scrollX,
+                    scrollY: state.current.scrollY,
+                  });
                 });
 
-                //If we click on something
-                if (hitElement) {
-                  if (hitElement.isSelected) {
-                    // If that element is already selected, do nothing,
-                    // we're likely going to drag it
-                  } else {
-                    // We unselect every other elements unless shift is pressed
-                    if (!e.shiftKey) {
-                      clearSelected();
-                    }
-                    hitElement.isSelected = true;
-                  }
+                resizingElement = resizeElement ?? null;
+                if (resizeElement) {
+                  resizeHandle = resizeTest(resizeElement, x, y, state.current);
+                  document.documentElement.style.cursor = `${resizeHandle}-resize`;
+                  isResizingElements = true;
                 } else {
-                  clearSelected();
-                }
-
-                isDraggingElements = elements.current.some((element) => {
-                  return element.isSelected;
-                });
-                if (isDraggingElements) {
-                  document.documentElement.style.cursor = "move";
+                  let hitElement = null;
+                  // We need to to hit testing from front (end of the array) to back (beginning of the array)
+                  for (let i = elements.current.length - 1; i >= 0; --i) {
+                    if (hitTest(elements.current[i], x, y)) {
+                      hitElement = elements.current[i];
+                      break;
+                    }
+                  }
+                  //If we click on something
+                  if (hitElement) {
+                    if (hitElement.isSelected) {
+                      // If that element is already selected, do nothing,
+                      // we're likely going to drag it
+                    } else {
+                      // We unselect every other elements unless shift is pressed
+                      if (!e.shiftKey) {
+                        clearSelected();
+                      }
+                      hitElement.isSelected = true;
+                    }
+                  } else {
+                    clearSelected();
+                  }
+                  isDraggingElements = elements.current.some((element) => {
+                    return element.isSelected;
+                  });
+                  if (isDraggingElements) {
+                    document.documentElement.style.cursor = "move";
+                  }
                 }
               }
 
@@ -376,6 +397,67 @@ export default function EditorPage() {
                   return;
                 }
                 const { x, y } = getMousePosition(e, state.current);
+
+                if (isResizingElements && resizingElement) {
+                  const el = resizingElement;
+                  const selectedElements = elements.current.filter(
+                    (el) => el.isSelected
+                  );
+                  if (selectedElements.length === 1) {
+                    selectedElements.forEach((element) => {
+                      switch (resizeHandle) {
+                        case "nw":
+                          element.width += element.x - lastX;
+                          element.height += element.y - lastY;
+                          element.x = lastX;
+                          element.y = lastY;
+                          break;
+                        case "ne":
+                          element.width = lastX - element.x;
+                          element.height += element.y - lastY;
+                          element.y = lastY;
+                          break;
+                        case "sw":
+                          element.width += element.x - lastX;
+                          element.x = lastX;
+                          element.height = lastY - element.y;
+                          break;
+                        case "se":
+                          element.width += x - lastX;
+                          if (e.shiftKey) {
+                            element.height = element.width;
+                          } else {
+                            element.height += y - lastY;
+                          }
+                          break;
+                        case "n":
+                          element.height += element.y - lastY;
+                          element.y = lastY;
+                          break;
+                        case "w":
+                          element.width += element.x - lastX;
+                          element.x = lastX;
+                          break;
+                        case "s":
+                          element.height = lastY - element.y;
+                          break;
+                        case "e":
+                          element.width = lastX - element.x;
+                          break;
+                      }
+
+                      el.x = element.x;
+                      el.y = element.y;
+                      generateShape(el);
+                    });
+                    lastX = x;
+                    lastY = y;
+                    // We don't want to save history when resizing an element
+                    skipHistory.current = true;
+                    draw();
+                    return;
+                  }
+                }
 
                 if (isDraggingElements) {
                   const selectedElements = elements.current.filter(
@@ -408,7 +490,7 @@ export default function EditorPage() {
                   setSelected(draggingElement.current, elements.current);
                 }
                 // We don't want to save history when moving an element
-                skipHistory.current = true; 
+                skipHistory.current = true;
                 draw();
               };
 
@@ -635,6 +717,34 @@ function hitTest(element: Element, x: number, y: number) {
   throw new Error("Unimplemented type " + element.type);
 }
 
+function resizeTest(
+  element: Element,
+  x: number,
+  y: number,
+  sceneState: SceneState
+) {
+  if (element.type === "text" || element.type === "arrow") return false;
+
+  const handlers = handlerRectangles(element, sceneState);
+
+  const filter = Object.keys(handlers).filter((key) => {
+    const handler = handlers[key];
+
+    return (
+      x + sceneState.scrollX >= handler[0] &&
+      x + sceneState.scrollX <= handler[0] + handler[2] &&
+      y + sceneState.scrollY >= handler[1] &&
+      y + sceneState.scrollY <= handler[1] + handler[3]
+    );
+  });
+
+  if (filter.length > 0) {
+    return filter[0];
+  }
+
+  return false;
+}
+
 const SCROLLBAR_WIDTH = 6;
 const SCROLLBAR_MARGIN = 4;
 const SCROLLBAR_COLOR = "rgba(0,0,0,0.3)";
@@ -671,4 +781,77 @@ function getScrollbars(
     horizontal: horizontalScrollBar,
     vertical: verticalScrollBar,
   };
+}
+
+function handlerRectangles(element: Element, sceneState: SceneState) {
+  const elementX1 = element.x;
+  const elementX2 = element.x + element.width;
+  const elementY1 = element.y;
+  const elementY2 = element.y + element.height;
+
+  const margin = 4;
+  const minimumSize = 40;
+  const handlers: { [handler: string]: number[] } = {};
+
+  const marginX = element.width < 0 ? 8 : -8;
+  const marginY = element.height < 0 ? 8 : -8;
+
+  if (Math.abs(elementX2 - elementX1) > minimumSize) {
+    handlers["n"] = [
+      elementX1 + (elementX2 - elementX1) / 2 + sceneState.scrollX - 4,
+      elementY1 - margin + sceneState.scrollY + marginY,
+      8,
+      8,
+    ];
+
+    handlers["s"] = [
+      elementX1 + (elementX2 - elementX1) / 2 + sceneState.scrollX - 4,
+      elementY2 - margin + sceneState.scrollY - marginY,
+      8,
+      8,
+    ];
+  }
+
+  if (Math.abs(elementY2 - elementY1) > minimumSize) {
+    handlers["w"] = [
+      elementX1 - margin + sceneState.scrollX + marginX,
+      elementY1 + (elementY2 - elementY1) / 2 + sceneState.scrollY - 4,
+      8,
+      8,
+    ];
+
+    handlers["e"] = [
+      elementX2 - margin + sceneState.scrollX - marginX,
+      elementY1 + (elementY2 - elementY1) / 2 + sceneState.scrollY - 4,
+      8,
+      8,
+    ];
+  }
+
+  handlers["nw"] = [
+    elementX1 - margin + sceneState.scrollX + marginX,
+    elementY1 - margin + sceneState.scrollY + marginY,
+    8,
+    8,
+  ]; // nw
+  handlers["ne"] = [
+    elementX2 - margin + sceneState.scrollX - marginX,
+    elementY1 - margin + sceneState.scrollY + marginY,
+    8,
+    8,
+  ]; // ne
+  handlers["sw"] = [
+    elementX1 - margin + sceneState.scrollX + marginX,
+    elementY2 - margin + sceneState.scrollY - marginY,
+    8,
+    8,
+  ]; // sw
+  handlers["se"] = [
+    elementX2 - margin + sceneState.scrollX - marginX,
+    elementY2 - margin + sceneState.scrollY - marginY,
+    8,
+    8,
+  ]; // se
+
+  return handlers;
 }
