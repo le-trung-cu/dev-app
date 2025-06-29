@@ -14,6 +14,7 @@ import { useClipboard } from "./use-clipboard";
 import { HistoryType, useHistory } from "./use-history";
 import { createFilter } from "../utils";
 import { nanoid } from "nanoid";
+import { useHotKeys } from "./use-hotkeys";
 
 interface Props {
   defaultHeight: number;
@@ -180,6 +181,15 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
   const history = useHistory({ canvas });
 
   const { copy, paste } = useClipboard({ canvas });
+
+  useHotKeys({
+    canvas,
+    undo: history.undo,
+    redo: history.redo,
+    copy,
+    paste,
+    save: history.save,
+  });
 
   const { autoZoom } = useAutoResize({ canvas, container });
 

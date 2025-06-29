@@ -12,10 +12,10 @@ export const useHistory = ({ canvas }: { canvas?: fabric.Canvas | null }) => {
       if (!canvas) return;
       const value = canvas.toJSON(JSON_KEYS);
       const json = JSON.stringify(value);
-      if (!isOff.current) {
-        historyStack.current.push(json);
-        setHistoryIndex(historyStack.current.length - 1);
-      }
+      if (offHistory || isOff.current) return;
+
+      historyStack.current.push(json);
+      setHistoryIndex(historyStack.current.length - 1);
     },
     [canvas]
   );
