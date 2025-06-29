@@ -12,6 +12,8 @@ import { useAutoResize } from "./use-auto-resize";
 import { useCanvasEvents } from "./use-canvas-events";
 import { useClipboard } from "./use-clipboard";
 import { HistoryType, useHistory } from "./use-history";
+import { createFilter } from "../utils";
+import { nanoid } from "nanoid";
 
 interface Props {
   defaultHeight: number;
@@ -29,10 +31,16 @@ export interface EditorProperties {
   fontFamily?: string;
   fontSize?: number;
   fontStyle?: "" | "normal" | "italic" | "oblique";
+  textAlign?: string;
   linethrough?: boolean;
   underline?: boolean;
-  objectType?: "textbox";
+  objectType?: "textbox" | "image";
   top?: number;
+  width?: number;
+  height?: number;
+  scaleX?: number;
+  scaleY?: number;
+  filters?: fabric.IBaseFilter[];
 }
 export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
@@ -76,16 +84,7 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
 
   const setSelectedObjects = useCallback((objects: fabric.Object[]) => {
     const selectedObject = objects.length > 0 ? objects[0] : null;
-    const newProperties: EditorProperties = {
-      fill: undefined,
-      stroke: undefined,
-      objectType: undefined,
-      text: undefined,
-      fontWeight: undefined,
-      fontFamily: undefined,
-      strokeWidth: undefined,
-      fontStyle: undefined,
-    };
+    const newProperties: EditorProperties = {};
 
     if (selectedObject) {
       newProperties.fill =
@@ -93,9 +92,14 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
       newProperties.stroke = selectedObject.get("stroke") || "rgba(0, 0, 0, 1)";
       newProperties.strokeWidth = selectedObject.get("strokeWidth") || 0;
       newProperties.top = selectedObject.get("top");
+      newProperties.width = selectedObject.get("width");
+      newProperties.height = selectedObject.get("height");
+      newProperties.scaleX = selectedObject.get("scaleX");
+      newProperties.scaleY = selectedObject.get("scaleY");
     }
 
     const textbox = selectedObject as fabric.Textbox;
+    const image = selectedObject as fabric.Image;
     if (objects.length === 1 && textbox && textbox.get("text") !== undefined) {
       newProperties.objectType = "textbox";
       newProperties.text = textbox.get("text");
@@ -105,6 +109,10 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
       newProperties.fontSize = textbox.get("fontSize");
       newProperties.linethrough = textbox.get("linethrough");
       newProperties.underline = textbox.get("underline");
+      newProperties.textAlign = textbox.get("textAlign");
+    } else if (objects.length === 1 && image && image.isType("image")) {
+      newProperties.objectType = "image";
+      newProperties.filters = image.get("filters");
     }
 
     console.log({ fill: newProperties.fill, ff: selectedObject?.get("fill") });
@@ -114,13 +122,19 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
     setEditorProperty("objectType", newProperties.objectType);
     setEditorProperty("text", newProperties.text);
     setEditorProperty("strokeWidth", newProperties.strokeWidth);
-    setEditorProperty("top", newProperties.top);
+    setEditorProperty("width", newProperties.width);
+    setEditorProperty("height", newProperties.height);
+    setEditorProperty("scaleX", newProperties.scaleX);
+    setEditorProperty("scaleY", newProperties.scaleY);
     setEditorProperty("fontWeight", newProperties.fontWeight);
     setEditorProperty("fontFamily", newProperties.fontFamily);
     setEditorProperty("fontStyle", newProperties.fontStyle);
     setEditorProperty("fontSize", newProperties.fontSize);
     setEditorProperty("linethrough", newProperties.linethrough);
     setEditorProperty("underline", newProperties.underline);
+
+    setEditorProperty("filters", newProperties.filters);
+
     setEditorProperty("selectedObjects", objects);
   }, []);
 
@@ -379,6 +393,44 @@ function buildEditor({
       setEditorProperty("linethrough", value);
       canvas.renderAll();
     },
+    changeTextAlign: (value: EditorProperties["textAlign"]) => {
+      canvas.getActiveObjects().forEach((object) => {
+        const textbox = object as fabric.Textbox;
+        if (textbox.get("text") !== undefined) {
+          textbox.set({ textAlign: value });
+        }
+      });
+      setEditorProperty("textAlign", value);
+      canvas.renderAll();
+    },
+    changeWidth: (value: number) => {
+      canvas.getActiveObjects().forEach((object) => {
+        object.set({ width: value });
+      });
+      setEditorProperty("width", value);
+      canvas.renderAll();
+    },
+    changeHeight: (value: number) => {
+      canvas.getActiveObjects().forEach((object) => {
+        object.set({ height: value });
+      });
+      setEditorProperty("height", value);
+      canvas.renderAll();
+    },
+    changeScaleX: (value: number) => {
+      canvas.getActiveObjects().forEach((object) => {
+        object.set({ scaleX: value });
+      });
+      setEditorProperty("scaleX", value);
+      canvas.renderAll();
+    },
+    changeScaleY: (value: number) => {
+      canvas.getActiveObjects().forEach((object) => {
+        object.set({ scaleY: value });
+      });
+      setEditorProperty("scaleY", value);
+      canvas.renderAll();
+    },
     addRectangle: () => {
       const color = "rgba(0, 0, 0, 1)";
       const object = new fabric.Rect({
@@ -628,6 +680,58 @@ function buildEditor({
         },
         { crossOrigin: "anonymous" }
       );
+    },
+    addFilter: (value: string) => {
+      const filter = createFilter(value);
+      if (filter) {
+        const object = canvas.getActiveObject() as fabric.Image;
+        if (!object.filters) {
+          object.filters = [];
+        }
+        filter.setOptions({ id: nanoid(), name: value });
+        object.filters.push(filter);
+        const filters = [...object.filters];
+        object.applyFilters();
+        setEditorProperty("filters", filters);
+        canvas.renderAll();
+      }
+    },
+    changeFilter: (id: string, value: string) => {
+      const filter = createFilter(value);
+      const object = canvas.getActiveObject() as fabric.Image;
+      const filterIdx = object.filters?.findIndex(
+        (item) => (item as any).id === id
+      );
+
+      if (
+        filter &&
+        filterIdx !== undefined &&
+        filterIdx >= 0 &&
+        object.filters
+      ) {
+        filter.setOptions({ id: nanoid(), name: value });
+        object.filters.splice(filterIdx, 1, filter);
+        const filters = [...object.filters];
+        object.applyFilters();
+        setEditorProperty("filters", filters);
+        canvas.renderAll();
+      }
+    },
+    deleteFilter: (id: string) => {
+      const object = canvas.getActiveObject() as fabric.Image;
+
+      const filterIdx = object.filters?.findIndex(
+        (item) => (item as any).id === id
+      );
+
+      if (filterIdx !== undefined && filterIdx >= 0 && object.filters) {
+        object.filters?.splice(filterIdx, 1);
+        object.applyFilters();
+        const filters = [...object.filters];
+        object.applyFilters();
+        setEditorProperty("filters", filters);
+        canvas.renderAll();
+      }
     },
     addText: (value: string = "Text") => {
       const object = new fabric.Textbox(value, {

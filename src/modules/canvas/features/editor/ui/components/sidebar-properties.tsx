@@ -7,7 +7,21 @@ import {
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { cn, rgbaObjectToString, stringToRGBObject } from "@/lib/utils";
-import { Bold, Italic, PinIcon, Strikethrough, Underline } from "lucide-react";
+import {
+  AlignCenter,
+  AlignJustifyIcon,
+  AlignLeft,
+  AlignRight,
+  Bold,
+  Italic,
+  PinIcon,
+  Plus,
+  PlusCircle,
+  Strikethrough,
+  Trash2Icon,
+  Underline,
+  XIcon,
+} from "lucide-react";
 import { useState } from "react";
 import { ChromePicker } from "react-color";
 import { Editor } from "../../hooks/use-editor";
@@ -20,7 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { fonts } from "../../types";
+import { filters, fonts } from "../../types";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface Props {
@@ -60,35 +74,8 @@ export const SidebarProperties = ({ editor, open, onOpenChange }: Props) => {
         <FontSize editor={editor} />
         <FillInput editor={editor} />
         <StrokeInput editor={editor} />
-        {top && (
-          <>
-            <Separator className="my-2" />
-            <div className="px-2 space-y-2">
-              <div>
-                <h6 className="font-semibold text-sm text-gray-700">Top</h6>
-              </div>
-              <div className="">
-                <h6 className=" text-xs text-gray-700">weight</h6>
-                <div className="flex border border-gray-300 h-[26px] rounded-sm items-center overflow-clip">
-                  <MdLineWeight className="size-6" />
-                  <Input
-                    className="border-none px-0 w-full h-full focus-visible:border-none focus-visible:ring-0 text-left"
-                    type="number"
-                    value={top}
-                    onChange={(e) => {
-                      const value = parseInt(e.target.value);
-                      if (isNaN(value)) {
-                        editor.changeStrokeWidth(0);
-                      } else {
-                        editor.changeStrokeWidth(value);
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+        <DimensionInput editor={editor} />
+        <ImageFilter editor={editor} />
       </div>
     </div>
   );
@@ -194,6 +181,8 @@ const FontStyles = ({ editor }: { editor: Editor }) => {
   const underline = editor.useWatch("underline");
   const linethrough = editor.useWatch("linethrough");
   const objectType = editor.useWatch("objectType");
+  const textAlign = editor.useWatch("textAlign") ?? "left";
+
   if (objectType !== "textbox") return null;
 
   const values = [];
@@ -209,53 +198,79 @@ const FontStyles = ({ editor }: { editor: Editor }) => {
   if (linethrough === true) {
     values.push("linethrough");
   }
+
   return (
     <div className="p-2">
       <h6 className="font-semibold text-sm text-gray-700">Font style</h6>
-      <ToggleGroup
-        value={values}
-        variant="outline"
-        type="multiple"
-        onValueChange={(values) => {
-          console.log({ values, fontWeight });
-          if (values.includes("italic")) {
-            editor.changeFontStyle("italic");
-          } else {
-            editor.changeFontStyle("normal");
-          }
+      <div className="flex items-center gap-10">
+        <ToggleGroup
+          value={values}
+          variant="outline"
+          type="multiple"
+          onValueChange={(values) => {
+            console.log({ values, fontWeight });
+            if (values.includes("italic")) {
+              editor.changeFontStyle("italic");
+            } else {
+              editor.changeFontStyle("normal");
+            }
 
-          if (values.includes("bold") && (fontWeight as number) <= 500) {
-            editor.changeFontWeight("700");
-          } else if (!values.includes("bold") && (fontWeight as number) > 500) {
-            editor.changeFontWeight("400");
-          }
+            if (values.includes("bold") && (fontWeight as number) <= 500) {
+              editor.changeFontWeight("700");
+            } else if (
+              !values.includes("bold") &&
+              (fontWeight as number) > 500
+            ) {
+              editor.changeFontWeight("400");
+            }
 
-          if (values.includes("underline")) {
-            editor.changeUnderline(true);
-          } else {
-            editor.changeUnderline(false);
-          }
+            if (values.includes("underline")) {
+              editor.changeUnderline(true);
+            } else {
+              editor.changeUnderline(false);
+            }
 
-          if (values.includes("linethrough")) {
-            editor.changeLinethrough(true);
-          } else {
-            editor.changeLinethrough(false);
-          }
-        }}
-      >
-        <ToggleGroupItem value="bold" aria-label="Toggle bold">
-          <Bold className="h-4 w-4" />
-        </ToggleGroupItem>
-        <ToggleGroupItem value="italic" aria-label="Toggle italic">
-          <Italic className="h-4 w-4" />
-        </ToggleGroupItem>
-        <ToggleGroupItem value="underline" aria-label="Toggle underline">
-          <Underline className="h-4 w-4" />
-        </ToggleGroupItem>
-        <ToggleGroupItem value="linethrough" aria-label="Toggle linethrough">
-          <Strikethrough className="h-4 w-4" />
-        </ToggleGroupItem>
-      </ToggleGroup>
+            if (values.includes("linethrough")) {
+              editor.changeLinethrough(true);
+            } else {
+              editor.changeLinethrough(false);
+            }
+          }}
+        >
+          <ToggleGroupItem value="bold" aria-label="Toggle bold">
+            <Bold className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="italic" aria-label="Toggle italic">
+            <Italic className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="underline" aria-label="Toggle underline">
+            <Underline className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="linethrough" aria-label="Toggle linethrough">
+            <Strikethrough className="h-4 w-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
+
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          value={textAlign}
+          onValueChange={(value) => editor.changeTextAlign(value)}
+        >
+          <ToggleGroupItem value="left" aria-label="Toggle bold">
+            <AlignLeft className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="center" aria-label="Toggle italic">
+            <AlignCenter className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="right" aria-label="Toggle underline">
+            <AlignRight className="h-4 w-4" />
+          </ToggleGroupItem>
+          <ToggleGroupItem value="justify" aria-label="Toggle underline">
+            <AlignJustifyIcon className="h-4 w-4" />
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
     </div>
   );
 };
@@ -373,5 +388,161 @@ const ColorPicker = ({
         <div className="pr-2 text-xs font-semibold">%</div>
       </div>
     </div>
+  );
+};
+
+const DimensionInput = ({ editor }: { editor: Editor }) => {
+  const width = editor.useWatch("width");
+  const height = editor.useWatch("height");
+  const scaleX = editor.useWatch("scaleX");
+  const scaleY = editor.useWatch("scaleY");
+  if (width === undefined) return null;
+  return (
+    <>
+      <Separator className="my-2" />
+      <div className="px-2 space-y-2">
+        <div>
+          <h6 className="font-semibold text-sm text-gray-700">Kích thước</h6>
+        </div>
+        <div className="flex items-center">
+          <div className="">
+            <h6 className=" text-xs text-gray-700">Chiều rộng</h6>
+            <div className="flex border border-gray-300 h-[26px] rounded-sm items-center overflow-clip">
+              <Input
+                className="border-none px-0 w-full h-full focus-visible:border-none focus-visible:ring-0 text-left"
+                type="number"
+                value={width}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (isNaN(value)) {
+                    editor.changeWidth(0);
+                  } else {
+                    editor.changeWidth(value);
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <XIcon className="size-4 text-gray-400 mx-5" />
+          <div className="">
+            <h6 className=" text-xs text-gray-700">Chiều cao</h6>
+            <div className="flex border border-gray-300 h-[26px] rounded-sm items-center overflow-clip">
+              <Input
+                className="border-none px-0 w-full h-full focus-visible:border-none focus-visible:ring-0 text-left"
+                type="number"
+                value={height}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (isNaN(value)) {
+                    editor.changeHeight(0);
+                  } else {
+                    editor.changeHeight(value);
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <div>
+          <h6 className="font-semibold text-sm text-gray-700">Scale</h6>
+        </div>
+        <div className="flex items-center">
+          <div className="">
+            <h6 className=" text-xs text-gray-700">Scale-X</h6>
+            <div className="flex border border-gray-300 h-[26px] rounded-sm items-center overflow-clip">
+              <Input
+                className="border-none px-0 w-full h-full focus-visible:border-none focus-visible:ring-0 text-left"
+                type="number"
+                value={scaleX}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (isNaN(value)) {
+                    editor.changeScaleX(0);
+                  } else {
+                    editor.changeScaleX(value);
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <XIcon className="size-4 text-gray-400 mx-5" />
+          <div className="">
+            <h6 className=" text-xs text-gray-700">Scale-Y</h6>
+            <div className="flex border border-gray-300 h-[26px] rounded-sm items-center overflow-clip">
+              <Input
+                className="border-none px-0 w-full h-full focus-visible:border-none focus-visible:ring-0 text-left"
+                type="number"
+                value={scaleY}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value);
+                  if (isNaN(value)) {
+                    editor.changeScaleY(0);
+                  } else {
+                    editor.changeScaleY(value);
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const ImageFilter = ({ editor }: { editor: Editor }) => {
+  const currentFilters = editor.useWatch("filters");
+  const objectType = editor.useWatch("objectType");
+  if (objectType !== "image") return null;
+
+  return (
+    <>
+      <Separator className="my-2" />
+      <div className="px-2 ">
+        <h6 className="font-semibold text-sm text-gray-700">Filters</h6>
+        <div className="flex flex-col gap-2">
+          {currentFilters?.map((item) => {
+            const currentFilter = item as fabric.IBaseFilter & {
+              id: string;
+              name: string;
+            };
+            return (
+              <div key={currentFilter.id} className="flex items-center gap-4">
+                <Select
+                  value={currentFilter.name}
+                  onValueChange={(value) =>
+                    editor.changeFilter(currentFilter.id, value)
+                  }
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder="" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {filters.map((name) => (
+                      <SelectItem key={name} value={name}>
+                        {name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Trash2Icon
+                  className="size-4 mr-2"
+                  onClick={() => editor.deleteFilter(currentFilter.id)}
+                />
+              </div>
+            );
+          })}
+          <div className="flex justify-end">
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => editor.addFilter("none")}
+            >
+              <PlusCircle />
+            </Button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
