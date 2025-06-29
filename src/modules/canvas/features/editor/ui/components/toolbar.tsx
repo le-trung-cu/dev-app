@@ -120,7 +120,7 @@ export const Toolbar = ({
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Button variant="ghost" size="icon">
+      <Button variant="ghost" size="icon" onClick={() => editor?.addText()}>
         <TypeIcon className="size-6" />
       </Button>
       <Button variant="ghost" size="icon" onClick={onOpenSidebarImages}>

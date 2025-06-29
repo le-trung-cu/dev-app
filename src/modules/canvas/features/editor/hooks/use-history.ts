@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { JSON_KEYS } from "../type";
+import { JSON_KEYS } from "../types";
 
 export const useHistory = ({ canvas }: { canvas?: fabric.Canvas | null }) => {
   const [historyIndex, setHistoryIndex] = useState(0);
@@ -66,8 +66,6 @@ export const useHistory = ({ canvas }: { canvas?: fabric.Canvas | null }) => {
       canRedo,
     };
   }, [init, save, undo, redo, canUndo, canRedo]);
-
-  console.log({ history, historyIndex });
 
   return history;
 };

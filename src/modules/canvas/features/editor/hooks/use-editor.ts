@@ -1,4 +1,12 @@
-import { Ref, RefObject, useCallback, useMemo, useRef, useState } from "react";
+import {
+  Ref,
+  RefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { fabric } from "fabric";
 import { useAutoResize } from "./use-auto-resize";
 import { useCanvasEvents } from "./use-canvas-events";
@@ -13,17 +21,27 @@ interface Props {
 export interface EditorProperties {
   fill?: string;
   stroke?: string;
+  strokeWidth?: number;
   selectedObjects?: fabric.Object[];
   background?: string;
+  text?: string;
+  fontWeight?: string | number;
+  fontFamily?: string;
+  fontSize?: number;
+  fontStyle?: "" | "normal" | "italic" | "oblique";
+  linethrough?: boolean;
+  underline?: boolean;
+  objectType?: "textbox";
+  top?: number;
 }
 export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   // const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
   const editorProperties = useRef<EditorProperties>({
-    fill: "#000",
-    stroke: "#000",
+    // strokeWidth: 0,
     selectedObjects: [],
+    objectType: undefined,
   });
 
   const watchers = useRef<Record<string, Set<() => void>>>({});
@@ -42,30 +60,68 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
       if (!watchers.current[name]) {
         watchers.current[name] = new Set();
       }
-
+      callback();
       watchers.current[name].add(callback);
+      console.log({ watchers });
+    },
+    []
+  );
 
-      return () => {
-        watchers.current[name].delete(callback);
-      };
+  const unregisterWatcher = useCallback(
+    <K extends keyof EditorProperties>(name: K, callback: () => void) => {
+      watchers.current[name]?.delete(callback);
     },
     []
   );
 
   const setSelectedObjects = useCallback((objects: fabric.Object[]) => {
-    editorProperties.current["selectedObjects"] = objects;
-    if (objects.length > 0) {
-      const selectedObject = objects[0];
-      if (!selectedObject) {
-        setEditorProperty("fill", "#000");
-        setEditorProperty("stroke", "#000");
-      } else {
-        const fillValue = (selectedObject.get("fill") as string) || "#000";
-        const strokeValue = (selectedObject.get("stroke") as string) || "#000";
-        setEditorProperty("fill", fillValue);
-        setEditorProperty("stroke", strokeValue);
-      }
+    const selectedObject = objects.length > 0 ? objects[0] : null;
+    const newProperties: EditorProperties = {
+      fill: undefined,
+      stroke: undefined,
+      objectType: undefined,
+      text: undefined,
+      fontWeight: undefined,
+      fontFamily: undefined,
+      strokeWidth: undefined,
+      fontStyle: undefined,
+    };
+
+    if (selectedObject) {
+      newProperties.fill =
+        (selectedObject.get("fill") as string) || "rgba(0, 0, 0, 1)";
+      newProperties.stroke = selectedObject.get("stroke") || "rgba(0, 0, 0, 1)";
+      newProperties.strokeWidth = selectedObject.get("strokeWidth") || 0;
+      newProperties.top = selectedObject.get("top");
     }
+
+    const textbox = selectedObject as fabric.Textbox;
+    if (objects.length === 1 && textbox && textbox.get("text") !== undefined) {
+      newProperties.objectType = "textbox";
+      newProperties.text = textbox.get("text");
+      newProperties.fontWeight = textbox.get("fontWeight");
+      newProperties.fontFamily = textbox.get("fontFamily");
+      newProperties.fontStyle = textbox.get("fontStyle");
+      newProperties.fontSize = textbox.get("fontSize");
+      newProperties.linethrough = textbox.get("linethrough");
+      newProperties.underline = textbox.get("underline");
+    }
+
+    console.log({ fill: newProperties.fill, ff: selectedObject?.get("fill") });
+
+    setEditorProperty("fill", newProperties.fill);
+    setEditorProperty("stroke", newProperties.stroke);
+    setEditorProperty("objectType", newProperties.objectType);
+    setEditorProperty("text", newProperties.text);
+    setEditorProperty("strokeWidth", newProperties.strokeWidth);
+    setEditorProperty("top", newProperties.top);
+    setEditorProperty("fontWeight", newProperties.fontWeight);
+    setEditorProperty("fontFamily", newProperties.fontFamily);
+    setEditorProperty("fontStyle", newProperties.fontStyle);
+    setEditorProperty("fontSize", newProperties.fontSize);
+    setEditorProperty("linethrough", newProperties.linethrough);
+    setEditorProperty("underline", newProperties.underline);
+    setEditorProperty("selectedObjects", objects);
   }, []);
 
   const init = useCallback(
@@ -132,6 +188,7 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
       editorProperties,
       setEditorProperty,
       registerWatcher,
+      unregisterWatcher,
     });
   }, [canvas, setEditorProperty, autoZoom, history]);
 
@@ -143,8 +200,8 @@ interface BuildEditorProps {
   autoZoom: () => void;
   copy: () => void;
   paste: () => void;
-  history: HistoryType,
-  editorProperties: RefObject<Record<string, any>>;
+  history: HistoryType;
+  editorProperties: RefObject<EditorProperties>;
   setEditorProperty: <K extends keyof EditorProperties>(
     name: K,
     value: EditorProperties[K]
@@ -152,7 +209,11 @@ interface BuildEditorProps {
   registerWatcher: <K extends keyof EditorProperties>(
     name: K,
     callback: () => void
-  ) => () => void;
+  ) => void;
+  unregisterWatcher: <K extends keyof EditorProperties>(
+    name: K,
+    callback: () => void
+  ) => void;
 }
 function buildEditor({
   canvas,
@@ -163,6 +224,7 @@ function buildEditor({
   editorProperties,
   setEditorProperty,
   registerWatcher,
+  unregisterWatcher,
 }: BuildEditorProps) {
   const center = (object: fabric.Object) => {
     const workpsace = (canvas as any).xworkspace as fabric.Object;
@@ -238,14 +300,95 @@ function buildEditor({
       setEditorProperty("stroke", value);
       canvas.renderAll();
     },
+    changeStrokeWidth: (value: number) => {
+      canvas.getActiveObjects().forEach((object) => {
+        object.set({ strokeWidth: value });
+      });
+      setEditorProperty("strokeWidth", value);
+      canvas.renderAll();
+    },
+    changeText: (value: string) => {
+      canvas.getActiveObjects().forEach((object) => {
+        const textbox = object as fabric.Textbox;
+        if (textbox.get("text") !== undefined) {
+          textbox.set({ text: value });
+        }
+      });
+      setEditorProperty("text", value);
+      canvas.renderAll();
+    },
+    changeFontWeight: (value: string) => {
+      let fontWeight = 400;
+      if (!isNaN(parseInt(value))) fontWeight = parseInt(value);
+      canvas.getActiveObjects().forEach((object) => {
+        const textbox = object as fabric.Textbox;
+        if (textbox.get("text") !== undefined) {
+          textbox.set({ fontWeight });
+        }
+      });
+      setEditorProperty("fontWeight", fontWeight);
+      canvas.renderAll();
+    },
+    changeFontFamily: (value: string) => {
+      canvas.getActiveObjects().forEach((object) => {
+        const textbox = object as fabric.Textbox;
+        if (textbox.get("text") !== undefined) {
+          textbox.set({ fontFamily: value });
+        }
+      });
+      setEditorProperty("fontFamily", value);
+      canvas.renderAll();
+    },
+    changeFontStyle: (value: EditorProperties["fontStyle"]) => {
+      canvas.getActiveObjects().forEach((object) => {
+        const textbox = object as fabric.Textbox;
+        if (textbox.get("text") !== undefined) {
+          textbox.set({ fontStyle: value });
+        }
+      });
+      setEditorProperty("fontStyle", value);
+      canvas.renderAll();
+    },
+    changeFontSize: (value: EditorProperties["fontSize"]) => {
+      canvas.getActiveObjects().forEach((object) => {
+        const textbox = object as fabric.Textbox;
+        if (textbox.get("text") !== undefined) {
+          textbox.set({ fontSize: value });
+        }
+      });
+      setEditorProperty("fontSize", value);
+      canvas.renderAll();
+    },
+    changeUnderline: (value: EditorProperties["underline"]) => {
+      canvas.getActiveObjects().forEach((object) => {
+        const textbox = object as fabric.Textbox;
+        if (textbox.get("text") !== undefined) {
+          textbox.set({ underline: value });
+        }
+      });
+      setEditorProperty("underline", value);
+      canvas.renderAll();
+    },
+    changeLinethrough: (value: EditorProperties["linethrough"]) => {
+      canvas.getActiveObjects().forEach((object) => {
+        const textbox = object as fabric.Textbox;
+        if (textbox.get("text") !== undefined) {
+          textbox.set({ linethrough: value });
+        }
+      });
+      setEditorProperty("linethrough", value);
+      canvas.renderAll();
+    },
     addRectangle: () => {
+      const color = "rgba(0, 0, 0, 1)";
       const object = new fabric.Rect({
         left: 100,
         top: 100,
         width: 400,
         height: 500,
-        stroke: "black",
-        strokeWidth: 2,
+        strokeWidth: editorProperties.current.strokeWidth ?? 0,
+        stroke: editorProperties.current.stroke ?? color,
+        fill: editorProperties.current.fill ?? color,
       });
 
       addToCanvas(object);
@@ -486,13 +629,35 @@ function buildEditor({
         { crossOrigin: "anonymous" }
       );
     },
+    addText: (value: string = "Text") => {
+      const object = new fabric.Textbox(value, {
+        fill: editorProperties.current.fill ?? "#000",
+        fontFamily: "Arial",
+        fontWeight: 400,
+      });
+      addToCanvas(object);
+    },
     useWatch: <K extends keyof EditorProperties>(
       name: K
     ): EditorProperties[K] => {
       const [value, setValue] = useState<EditorProperties[K]>();
-      registerWatcher(name, () => {
+      const onValueChange = useCallback(() => {
+        console.log("onValueChange", name, editorProperties.current[name]);
         setValue(editorProperties.current[name]);
-      });
+      }, []);
+
+      useEffect(() => {
+        registerWatcher(name, onValueChange);
+        console.log("register", name);
+
+        return () => {
+          unregisterWatcher(name, onValueChange);
+          console.log("unregister", name);
+        };
+        // registerWatcher(name, () => {
+        //   setValue(editorProperties.current[name]);
+        // })
+      }, [registerWatcher, unregisterWatcher]);
       return value;
     },
     setEditorProperty,

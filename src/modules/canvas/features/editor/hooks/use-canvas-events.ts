@@ -26,6 +26,9 @@ export const useCanvasEvents = ({
       function saveHandler() {
         save();
       }
+      canvas.on("after:render", () => {
+        setSelectedObjects(canvas.getActiveObjects())
+      });
       canvas.on("object:added", saveHandler);
       canvas.on("object:modified", saveHandler);
       canvas.on("object:removed", saveHandler);
@@ -39,6 +42,7 @@ export const useCanvasEvents = ({
 
     return () => {
       if (canvas) {
+        canvas.off("after:render");
         canvas.off("object:added");
         canvas.off("object:modified");
         canvas.off("object:removed");
