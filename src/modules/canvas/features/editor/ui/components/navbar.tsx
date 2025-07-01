@@ -13,31 +13,28 @@ import {
 import { ChevronDown, FileJson, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { Editor } from "../../hooks/use-editor";
-import { useRef } from "react";
+import { useFilePicker } from "use-file-picker";
 
 interface NavbarProps {
   editor?: Editor | null;
 }
 export const Navbar = ({ editor }: NavbarProps) => {
-  const importFile = useRef<HTMLInputElement>(null);
-
+  
+  const { openFilePicker } = useFilePicker({
+    accept: ".json",
+    onFilesSuccessfullySelected: ({ plainFiles }: any) => {
+      if (plainFiles && plainFiles.length > 0) {
+        const file = plainFiles[0];
+        const reader = new FileReader();
+        reader.readAsText(file, "UTF-8");
+        reader.onload = () => {
+          editor?.loadJson(reader.result as string);
+        };
+      }
+    },
+  });
   return (
     <nav className="size-[68px] fixed left-5 flex z-50 items-center">
-      <input
-        ref={importFile}
-        type="file"
-        className="hidden"
-        onChange={(e) => {
-          if(editor && e.target.files && e.target.files.length > 0){
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.readAsText(file, "UTF-8");
-            reader.onload = () => {
-              editor.loadJson(reader.result as string);
-            }
-          }
-        }}
-      />
       <Menubar className="border-none p-0 shadow-none bg-transparent hover:bg-black/20">
         <MenubarMenu>
           <MenubarTrigger>
@@ -52,11 +49,7 @@ export const Navbar = ({ editor }: NavbarProps) => {
             </div>
           </MenubarTrigger>
           <MenubarContent>
-            <MenubarItem
-              onClick={() => {
-                importFile.current?.click();
-              }}
-            >
+            <MenubarItem onClick={() => openFilePicker()}>
               <CiFileOn className="size-6" />
               <div>
                 <div>Mở file JSON</div>
