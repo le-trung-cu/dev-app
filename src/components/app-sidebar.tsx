@@ -21,10 +21,10 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { WorkspaceSwitcher } from "../features/workspaces/ui/components/workspace-switcher";
-import { JiraSidebar } from "./jira-sidebar";
-import { useGetWorkspaces } from "../features/workspaces/api/use-get-workspaces";
-import { useWorkspaceId } from "../features/workspaces/hooks/use-workspace-id";
+import { WorkspaceSwitcher } from "../modules/jira/features/workspaces/ui/components/workspace-switcher";
+import { JiraSidebar } from "../modules/jira/components/jira-sidebar";
+import { useGetWorkspaces } from "../modules/jira/features/workspaces/api/use-get-workspaces";
+import { useWorkspaceId } from "../modules/jira/features/workspaces/hooks/use-workspace-id";
 
 // This is sample data
 const data = {
@@ -150,11 +150,6 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // Note: I'm using state to show active item.
-  // IRL you should use the url/router.
-  const [activeItem, setActiveItem] = React.useState(data.navMain[0]);
-  const [mails, setMails] = React.useState(data.mails);
-  const { setOpen } = useSidebar();
   const pathname = usePathname();
   const { data: workspaces } = useGetWorkspaces();
   const workspaceId = useWorkspaceId();
@@ -214,11 +209,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {/* This is the second sidebar */}
       {/* We disable collapsible and let it fill remaining space */}
-      <Sidebar collapsible="none" className="hidden flex-1 md:flex">
-        {pathname.startsWith("/jira") && activeWorkspace && workspaces && (
-          <JiraSidebar workspace={activeWorkspace} workspaces={workspaces} />
-        )}
-      </Sidebar>
+      {/* {props.children && (
+        <Sidebar collapsible="none" className="hidden flex-1 md:flex">
+          {props.children}
+        </Sidebar>
+      )} */}
+      {/* {pathname.startsWith("/jira") && activeWorkspace && workspaces && (
+<JiraSidebar workspace={activeWorkspace} workspaces={workspaces} />
+        )} */}
     </Sidebar>
   );
 }

@@ -20,7 +20,7 @@ export const SidebarImages = ({
   const { data } = useGetImages();
   if (!open) return null;
   return (
-    <div className={cn("w-[400px] relative flex flex-col h-full bg-red-3 ")}>
+    <div className={cn("w-[400px] relative flex flex-col h-full bg-red-3 z-50 bg-background")}>
       <div className="relative p-5 border-b shadow">
         <XIcon
           className="size-4 absolute top-4 right-2"

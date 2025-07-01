@@ -19,7 +19,7 @@ interface NavbarProps {
   editor?: Editor | null;
 }
 export const Navbar = ({ editor }: NavbarProps) => {
-  
+
   const { openFilePicker } = useFilePicker({
     accept: ".json",
     onFilesSuccessfullySelected: ({ plainFiles }: any) => {
@@ -34,7 +34,7 @@ export const Navbar = ({ editor }: NavbarProps) => {
     },
   });
   return (
-    <nav className="size-[68px] fixed left-5 flex z-50 items-center">
+    <nav className="absolute size-[68px] left-5 flex z-10 items-center">
       <Menubar className="border-none p-0 shadow-none bg-transparent hover:bg-black/20">
         <MenubarMenu>
           <MenubarTrigger>
