@@ -39,8 +39,8 @@ export const Editor = ({ initialValues }: Props) => {
 
   return (
     <div className="relative h-screen flex flex-col w-full">
-      <Navbar />
-      <div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
+      <Navbar editor={editor}/>
+      <div className="absolute h-[calc(100%-68px)] w-full top-[0px] flex">
         <SidebarImages
           editor={editor}
           open={openSidebarImage}

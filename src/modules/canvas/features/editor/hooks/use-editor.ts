@@ -12,9 +12,10 @@ import { useAutoResize } from "./use-auto-resize";
 import { useCanvasEvents } from "./use-canvas-events";
 import { useClipboard } from "./use-clipboard";
 import { HistoryType, useHistory } from "./use-history";
-import { createFilter } from "../utils";
+import { createFilter, downloadFile, transformText } from "../utils";
 import { nanoid } from "nanoid";
 import { useHotKeys } from "./use-hotkeys";
+import { JSON_KEYS } from "../types";
 
 interface Props {
   defaultHeight: number;
@@ -166,7 +167,6 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
           blur: 5,
         }),
       });
-      (canvas as any).xworkspace = initialWokspace;
       setContainer(container);
       setCanvas(canvas);
       canvas.add(initialWokspace);
@@ -250,8 +250,61 @@ function buildEditor({
   registerWatcher,
   unregisterWatcher,
 }: BuildEditorProps) {
+  const generateSaveOptions = () => {
+    const { width, height, left, top } = getWorkspace() as fabric.Rect;
+
+    return {
+      name: "Image",
+      format: "png",
+      quality: 1,
+      width,
+      height,
+      left,
+      top,
+    };
+  };
+
+  const savePng = () => {
+    const options = generateSaveOptions();
+
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    const dataUrl = canvas.toDataURL(options);
+
+    downloadFile(dataUrl, "png");
+    autoZoom();
+  };
+
+  const saveSvg = () => {
+    const options = generateSaveOptions();
+
+    canvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    const dataUrl = canvas.toDataURL(options);
+
+    downloadFile(dataUrl, "svg");
+    autoZoom();
+  };
+
+  const saveJson = () => {
+    const dataUrl = canvas.toJSON(JSON_KEYS);
+
+    transformText(dataUrl.objects);
+    const fileString = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(dataUrl, null, "\t")
+    )}`;
+    downloadFile(fileString, "json");
+  };
+
+   const loadJson = (json: string) => {
+    const data = JSON.parse(json);
+
+    canvas.loadFromJSON(data, () => {
+      autoZoom();
+    });
+  };
+
+
   const center = (object: fabric.Object) => {
-    const workpsace = (canvas as any).xworkspace as fabric.Object;
+    const workpsace = getWorkspace();
     const center = workpsace?.getCenterPoint();
     if (!center) return;
     // @ts-ignore
@@ -266,12 +319,16 @@ function buildEditor({
   };
 
   const getWorkspace = () => {
-    return (canvas as any).xworkspace as fabric.Object;
+    return canvas.getObjects().find(object => object.name === "workspace") as fabric.Rect;
   };
 
   return {
     canvas,
     getWorkspace,
+    savePng,
+    saveSvg,
+    saveJson,
+    loadJson,
     history,
     copy,
     paste,
