@@ -2,7 +2,6 @@ import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { auth } from "@/lib/auth";
 import { jiraDBPrismaClient } from "@/lib/jira-prisma-client";
-import { Role } from "@/generated/prisma-jira-database/jira-database-client-types";
 import { headers } from "next/headers";
 import { z } from "zod";
 
