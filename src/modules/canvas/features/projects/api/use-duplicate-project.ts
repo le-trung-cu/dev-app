@@ -26,8 +26,8 @@ export const useDuplicateProject = () => {
 
       return await response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
+    onSuccess: (_, {workspaceId}) => {
+      queryClient.invalidateQueries({ queryKey: ["projects", workspaceId] });
     },
     onError: () => {
       toast.error("Failed to duplicate project");

@@ -81,7 +81,7 @@ const app = new Hono()
     "/workspaces/:workspaceId/projects/:projectId/duplicate",
     zValidator(
       "param",
-      z.object({ workspaceId: z.number(), projectId: z.number() })
+      z.object({ workspaceId: z.coerce.number(), projectId: z.coerce.number() })
     ),
     async (c) => {
       const session = await auth.api.getSession({
@@ -115,7 +115,7 @@ const app = new Hono()
       const { id, createdAt, updatedAt, ...project } =
         workspace.canvasProjects[0];
       const newProject = await jiraDBPrismaClient.canvasProject.create({
-        data: project,
+        data: {...project, name: project.name + " Copy"},
       });
       return c.json({ isSuccess: true, project: newProject });
     }
@@ -168,6 +168,9 @@ const app = new Hono()
         },
         skip: (page - 1) * limit,
         take: limit,
+        orderBy: {
+          updatedAt: "desc"
+        }
       });
 
       return c.json({

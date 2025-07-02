@@ -151,7 +151,7 @@ export const ProjectsSection = () => {
                           }
                         >
                           <CopyIcon className="size-4 mr-2" />
-                          Make a copy
+                          Tạo bản copy
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="h-10 cursor-pointer"
@@ -164,7 +164,7 @@ export const ProjectsSection = () => {
                           }
                         >
                           <Trash className="size-4 mr-2" />
-                          Delete
+                          Xoá
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
