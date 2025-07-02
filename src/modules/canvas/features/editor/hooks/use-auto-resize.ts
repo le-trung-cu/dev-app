@@ -22,7 +22,7 @@ export const useAutoResize = ({ canvas, container }: UseAutoResizeProps) => {
 
     const center = canvas.getCenter();
 
-    const workspace = (canvas as any).xworkspace as fabric.Object;
+    const workspace = canvas.getObjects().find(object => object.name === "clip");
     if (!workspace) return;
 
     // @ts-ignore

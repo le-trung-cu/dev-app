@@ -159,6 +159,20 @@ exports.Prisma.MemberScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CanvasProjectScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  workspaceId: 'workspaceId',
+  userId: 'userId',
+  json: 'json',
+  height: 'height',
+  width: 'width',
+  thumbnailUrl: 'thumbnailUrl',
+  isTemplate: 'isTemplate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -191,7 +205,8 @@ exports.Prisma.ModelName = {
   Workspace: 'Workspace',
   Project: 'Project',
   Task: 'Task',
-  Member: 'Member'
+  Member: 'Member',
+  CanvasProject: 'CanvasProject'
 };
 
 /**

@@ -21,10 +21,11 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { WorkspaceSwitcher } from "../features/workspaces/ui/components/workspace-switcher";
-import { JiraSidebar } from "./jira-sidebar";
-import { useGetWorkspaces } from "../features/workspaces/api/use-get-workspaces";
-import { useWorkspaceId } from "../features/workspaces/hooks/use-workspace-id";
+import { WorkspaceSwitcher } from "../modules/jira/features/workspaces/ui/components/workspace-switcher";
+import { JiraSidebar } from "../modules/jira/components/jira-sidebar";
+import { useGetWorkspaces } from "../modules/jira/features/workspaces/api/use-get-workspaces";
+import { useWorkspaceId } from "../modules/jira/features/workspaces/hooks/use-workspace-id";
+import Image from "next/image";
 
 // This is sample data
 const data = {
@@ -150,15 +151,6 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // Note: I'm using state to show active item.
-  // IRL you should use the url/router.
-  const [activeItem, setActiveItem] = React.useState(data.navMain[0]);
-  const [mails, setMails] = React.useState(data.mails);
-  const { setOpen } = useSidebar();
-  const pathname = usePathname();
-  const { data: workspaces } = useGetWorkspaces();
-  const workspaceId = useWorkspaceId();
-  const activeWorkspace = workspaces?.find((x) => x.id == workspaceId);
   return (
     <Sidebar
       collapsible="icon"
@@ -182,15 +174,43 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     tooltip={{
-                      children: "jira",
+                      children: "Quản lý dự án với JIRA",
                       hidden: false,
                     }}
                     // isActive={activeItem?.title === item.title}
                     className="px-2.5 md:px-2"
                     asChild
                   >
-                    <Link href="/jira">jira</Link>
+                    <Link href="/jira">
+                      <Image
+                        src="/atlassian_jira_logo_icon_170511.svg"
+                        alt="logo"
+                        width={30}
+                        height={30}
+                      />
+                    </Link>
                   </SidebarMenuButton>
+
+                  <SidebarMenuButton
+                    tooltip={{
+                      children:
+                        "Với Canvas, bạn có thể thiết kế, tạo, in và làm việc trên mọi thứ.",
+                      hidden: false,
+                    }}
+                    isActive={false}
+                    className="px-2.5 md:px-2"
+                    asChild
+                  >
+                    <Link href="/canvas">
+                      <Image
+                        src="/figma-logo-22789.svg"
+                        alt="logo"
+                        width={30}
+                        height={30}
+                      />
+                    </Link>
+                  </SidebarMenuButton>
+
                   <SidebarMenuButton
                     tooltip={{
                       children: "chats",
@@ -214,11 +234,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {/* This is the second sidebar */}
       {/* We disable collapsible and let it fill remaining space */}
-      <Sidebar collapsible="none" className="hidden flex-1 md:flex">
-        {pathname.startsWith("/jira") && activeWorkspace && workspaces && (
-          <JiraSidebar workspace={activeWorkspace} workspaces={workspaces} />
-        )}
-      </Sidebar>
+      {props.children && (
+        <Sidebar collapsible="none" className="hidden flex-1 md:flex">
+          {props.children}
+        </Sidebar>
+      )}
     </Sidebar>
   );
 }

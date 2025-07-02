@@ -1,7 +1,16 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { JSON_KEYS } from "../type";
+import { JSON_KEYS } from "../types";
 
-export const useHistory = ({ canvas }: { canvas?: fabric.Canvas | null }) => {
+interface UseHistoryProps {
+  canvas: fabric.Canvas | null;
+  saveCallback?: (values: {
+    json: string;
+    height: number;
+    width: number;
+  }) => void;
+}
+
+export const useHistory = ({ canvas, saveCallback }: UseHistoryProps) => {
   const [historyIndex, setHistoryIndex] = useState(0);
   const historyStack = useRef<string[]>([]);
   const isOff = useRef(false);
@@ -12,12 +21,20 @@ export const useHistory = ({ canvas }: { canvas?: fabric.Canvas | null }) => {
       if (!canvas) return;
       const value = canvas.toJSON(JSON_KEYS);
       const json = JSON.stringify(value);
-      if (!isOff.current) {
+      if (!offHistory && !isOff.current) {
         historyStack.current.push(json);
         setHistoryIndex(historyStack.current.length - 1);
       }
+
+      const workspace = canvas
+        .getObjects()
+        .find((object) => object.name === "clip");
+      const height = workspace?.height || 0;
+      const width = workspace?.width || 0;
+
+      saveCallback?.({ json, height, width });
     },
-    [canvas]
+    [canvas, saveCallback]
   );
 
   const undo = useCallback(() => {
@@ -66,8 +83,6 @@ export const useHistory = ({ canvas }: { canvas?: fabric.Canvas | null }) => {
       canRedo,
     };
   }, [init, save, undo, redo, canUndo, canRedo]);
-
-  console.log({ history, historyIndex });
 
   return history;
 };

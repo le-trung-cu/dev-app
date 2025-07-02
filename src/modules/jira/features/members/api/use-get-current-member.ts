@@ -4,9 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 export const useGetCurrentMember = ({
   workspaceId,
 }: {
-  workspaceId: string | number;
+  workspaceId?: string | number;
 }) => {
   const query = useQuery({
+    enabled: !!workspaceId,
     queryKey: ["current-member", workspaceId],
     queryFn: async () => {
       const response = await client.api.jira.workspaces[

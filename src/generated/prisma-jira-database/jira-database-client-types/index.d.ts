@@ -33,6 +33,11 @@ export type Task = $Result.DefaultSelection<Prisma.$TaskPayload>
  * 
  */
 export type Member = $Result.DefaultSelection<Prisma.$MemberPayload>
+/**
+ * Model CanvasProject
+ * 
+ */
+export type CanvasProject = $Result.DefaultSelection<Prisma.$CanvasProjectPayload>
 
 /**
  * Enums
@@ -243,6 +248,16 @@ export class PrismaClient<
     * ```
     */
   get member(): Prisma.MemberDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.canvasProject`: Exposes CRUD operations for the **CanvasProject** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CanvasProjects
+    * const canvasProjects = await prisma.canvasProject.findMany()
+    * ```
+    */
+  get canvasProject(): Prisma.CanvasProjectDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -686,7 +701,8 @@ export namespace Prisma {
     Workspace: 'Workspace',
     Project: 'Project',
     Task: 'Task',
-    Member: 'Member'
+    Member: 'Member',
+    CanvasProject: 'CanvasProject'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -705,7 +721,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "workspace" | "project" | "task" | "member"
+      modelProps: "workspace" | "project" | "task" | "member" | "canvasProject"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1005,6 +1021,80 @@ export namespace Prisma {
           }
         }
       }
+      CanvasProject: {
+        payload: Prisma.$CanvasProjectPayload<ExtArgs>
+        fields: Prisma.CanvasProjectFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CanvasProjectFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CanvasProjectFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload>
+          }
+          findFirst: {
+            args: Prisma.CanvasProjectFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CanvasProjectFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload>
+          }
+          findMany: {
+            args: Prisma.CanvasProjectFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload>[]
+          }
+          create: {
+            args: Prisma.CanvasProjectCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload>
+          }
+          createMany: {
+            args: Prisma.CanvasProjectCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CanvasProjectCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload>[]
+          }
+          delete: {
+            args: Prisma.CanvasProjectDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload>
+          }
+          update: {
+            args: Prisma.CanvasProjectUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload>
+          }
+          deleteMany: {
+            args: Prisma.CanvasProjectDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CanvasProjectUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CanvasProjectUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload>[]
+          }
+          upsert: {
+            args: Prisma.CanvasProjectUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CanvasProjectPayload>
+          }
+          aggregate: {
+            args: Prisma.CanvasProjectAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCanvasProject>
+          }
+          groupBy: {
+            args: Prisma.CanvasProjectGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CanvasProjectGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CanvasProjectCountArgs<ExtArgs>
+            result: $Utils.Optional<CanvasProjectCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1093,6 +1183,7 @@ export namespace Prisma {
     project?: ProjectOmit
     task?: TaskOmit
     member?: MemberOmit
+    canvasProject?: CanvasProjectOmit
   }
 
   /* Types for Logging */
@@ -1190,12 +1281,14 @@ export namespace Prisma {
     members: number
     projects: number
     tasks: number
+    canvasProjects: number
   }
 
   export type WorkspaceCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | WorkspaceCountOutputTypeCountMembersArgs
     projects?: boolean | WorkspaceCountOutputTypeCountProjectsArgs
     tasks?: boolean | WorkspaceCountOutputTypeCountTasksArgs
+    canvasProjects?: boolean | WorkspaceCountOutputTypeCountCanvasProjectsArgs
   }
 
   // Custom InputTypes
@@ -1228,6 +1321,13 @@ export namespace Prisma {
    */
   export type WorkspaceCountOutputTypeCountTasksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TaskWhereInput
+  }
+
+  /**
+   * WorkspaceCountOutputType without action
+   */
+  export type WorkspaceCountOutputTypeCountCanvasProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CanvasProjectWhereInput
   }
 
 
@@ -1514,6 +1614,7 @@ export namespace Prisma {
     members?: boolean | Workspace$membersArgs<ExtArgs>
     projects?: boolean | Workspace$projectsArgs<ExtArgs>
     tasks?: boolean | Workspace$tasksArgs<ExtArgs>
+    canvasProjects?: boolean | Workspace$canvasProjectsArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workspace"]>
 
@@ -1552,6 +1653,7 @@ export namespace Prisma {
     members?: boolean | Workspace$membersArgs<ExtArgs>
     projects?: boolean | Workspace$projectsArgs<ExtArgs>
     tasks?: boolean | Workspace$tasksArgs<ExtArgs>
+    canvasProjects?: boolean | Workspace$canvasProjectsArgs<ExtArgs>
     _count?: boolean | WorkspaceCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type WorkspaceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1563,6 +1665,7 @@ export namespace Prisma {
       members: Prisma.$MemberPayload<ExtArgs>[]
       projects: Prisma.$ProjectPayload<ExtArgs>[]
       tasks: Prisma.$TaskPayload<ExtArgs>[]
+      canvasProjects: Prisma.$CanvasProjectPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -1969,6 +2072,7 @@ export namespace Prisma {
     members<T extends Workspace$membersArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     projects<T extends Workspace$projectsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$projectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tasks<T extends Workspace$tasksArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$tasksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    canvasProjects<T extends Workspace$canvasProjectsArgs<ExtArgs> = {}>(args?: Subset<T, Workspace$canvasProjectsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2460,6 +2564,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TaskScalarFieldEnum | TaskScalarFieldEnum[]
+  }
+
+  /**
+   * Workspace.canvasProjects
+   */
+  export type Workspace$canvasProjectsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    where?: CanvasProjectWhereInput
+    orderBy?: CanvasProjectOrderByWithRelationInput | CanvasProjectOrderByWithRelationInput[]
+    cursor?: CanvasProjectWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CanvasProjectScalarFieldEnum | CanvasProjectScalarFieldEnum[]
   }
 
   /**
@@ -5994,6 +6122,1186 @@ export namespace Prisma {
 
 
   /**
+   * Model CanvasProject
+   */
+
+  export type AggregateCanvasProject = {
+    _count: CanvasProjectCountAggregateOutputType | null
+    _avg: CanvasProjectAvgAggregateOutputType | null
+    _sum: CanvasProjectSumAggregateOutputType | null
+    _min: CanvasProjectMinAggregateOutputType | null
+    _max: CanvasProjectMaxAggregateOutputType | null
+  }
+
+  export type CanvasProjectAvgAggregateOutputType = {
+    id: number | null
+    workspaceId: number | null
+    height: number | null
+    width: number | null
+  }
+
+  export type CanvasProjectSumAggregateOutputType = {
+    id: number | null
+    workspaceId: number | null
+    height: number | null
+    width: number | null
+  }
+
+  export type CanvasProjectMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    workspaceId: number | null
+    userId: string | null
+    json: string | null
+    height: number | null
+    width: number | null
+    thumbnailUrl: string | null
+    isTemplate: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CanvasProjectMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    workspaceId: number | null
+    userId: string | null
+    json: string | null
+    height: number | null
+    width: number | null
+    thumbnailUrl: string | null
+    isTemplate: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CanvasProjectCountAggregateOutputType = {
+    id: number
+    name: number
+    workspaceId: number
+    userId: number
+    json: number
+    height: number
+    width: number
+    thumbnailUrl: number
+    isTemplate: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CanvasProjectAvgAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    height?: true
+    width?: true
+  }
+
+  export type CanvasProjectSumAggregateInputType = {
+    id?: true
+    workspaceId?: true
+    height?: true
+    width?: true
+  }
+
+  export type CanvasProjectMinAggregateInputType = {
+    id?: true
+    name?: true
+    workspaceId?: true
+    userId?: true
+    json?: true
+    height?: true
+    width?: true
+    thumbnailUrl?: true
+    isTemplate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CanvasProjectMaxAggregateInputType = {
+    id?: true
+    name?: true
+    workspaceId?: true
+    userId?: true
+    json?: true
+    height?: true
+    width?: true
+    thumbnailUrl?: true
+    isTemplate?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CanvasProjectCountAggregateInputType = {
+    id?: true
+    name?: true
+    workspaceId?: true
+    userId?: true
+    json?: true
+    height?: true
+    width?: true
+    thumbnailUrl?: true
+    isTemplate?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CanvasProjectAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CanvasProject to aggregate.
+     */
+    where?: CanvasProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CanvasProjects to fetch.
+     */
+    orderBy?: CanvasProjectOrderByWithRelationInput | CanvasProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CanvasProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CanvasProjects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CanvasProjects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CanvasProjects
+    **/
+    _count?: true | CanvasProjectCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CanvasProjectAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CanvasProjectSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CanvasProjectMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CanvasProjectMaxAggregateInputType
+  }
+
+  export type GetCanvasProjectAggregateType<T extends CanvasProjectAggregateArgs> = {
+        [P in keyof T & keyof AggregateCanvasProject]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCanvasProject[P]>
+      : GetScalarType<T[P], AggregateCanvasProject[P]>
+  }
+
+
+
+
+  export type CanvasProjectGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CanvasProjectWhereInput
+    orderBy?: CanvasProjectOrderByWithAggregationInput | CanvasProjectOrderByWithAggregationInput[]
+    by: CanvasProjectScalarFieldEnum[] | CanvasProjectScalarFieldEnum
+    having?: CanvasProjectScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CanvasProjectCountAggregateInputType | true
+    _avg?: CanvasProjectAvgAggregateInputType
+    _sum?: CanvasProjectSumAggregateInputType
+    _min?: CanvasProjectMinAggregateInputType
+    _max?: CanvasProjectMaxAggregateInputType
+  }
+
+  export type CanvasProjectGroupByOutputType = {
+    id: number
+    name: string
+    workspaceId: number
+    userId: string
+    json: string
+    height: number
+    width: number
+    thumbnailUrl: string | null
+    isTemplate: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: CanvasProjectCountAggregateOutputType | null
+    _avg: CanvasProjectAvgAggregateOutputType | null
+    _sum: CanvasProjectSumAggregateOutputType | null
+    _min: CanvasProjectMinAggregateOutputType | null
+    _max: CanvasProjectMaxAggregateOutputType | null
+  }
+
+  type GetCanvasProjectGroupByPayload<T extends CanvasProjectGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CanvasProjectGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CanvasProjectGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CanvasProjectGroupByOutputType[P]>
+            : GetScalarType<T[P], CanvasProjectGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CanvasProjectSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    workspaceId?: boolean
+    userId?: boolean
+    json?: boolean
+    height?: boolean
+    width?: boolean
+    thumbnailUrl?: boolean
+    isTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["canvasProject"]>
+
+  export type CanvasProjectSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    workspaceId?: boolean
+    userId?: boolean
+    json?: boolean
+    height?: boolean
+    width?: boolean
+    thumbnailUrl?: boolean
+    isTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["canvasProject"]>
+
+  export type CanvasProjectSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    workspaceId?: boolean
+    userId?: boolean
+    json?: boolean
+    height?: boolean
+    width?: boolean
+    thumbnailUrl?: boolean
+    isTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["canvasProject"]>
+
+  export type CanvasProjectSelectScalar = {
+    id?: boolean
+    name?: boolean
+    workspaceId?: boolean
+    userId?: boolean
+    json?: boolean
+    height?: boolean
+    width?: boolean
+    thumbnailUrl?: boolean
+    isTemplate?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CanvasProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "workspaceId" | "userId" | "json" | "height" | "width" | "thumbnailUrl" | "isTemplate" | "createdAt" | "updatedAt", ExtArgs["result"]["canvasProject"]>
+  export type CanvasProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type CanvasProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+  export type CanvasProjectIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
+  }
+
+  export type $CanvasProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CanvasProject"
+    objects: {
+      workspace: Prisma.$WorkspacePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      workspaceId: number
+      userId: string
+      json: string
+      height: number
+      width: number
+      thumbnailUrl: string | null
+      isTemplate: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["canvasProject"]>
+    composites: {}
+  }
+
+  type CanvasProjectGetPayload<S extends boolean | null | undefined | CanvasProjectDefaultArgs> = $Result.GetResult<Prisma.$CanvasProjectPayload, S>
+
+  type CanvasProjectCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CanvasProjectFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CanvasProjectCountAggregateInputType | true
+    }
+
+  export interface CanvasProjectDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CanvasProject'], meta: { name: 'CanvasProject' } }
+    /**
+     * Find zero or one CanvasProject that matches the filter.
+     * @param {CanvasProjectFindUniqueArgs} args - Arguments to find a CanvasProject
+     * @example
+     * // Get one CanvasProject
+     * const canvasProject = await prisma.canvasProject.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CanvasProjectFindUniqueArgs>(args: SelectSubset<T, CanvasProjectFindUniqueArgs<ExtArgs>>): Prisma__CanvasProjectClient<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CanvasProject that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CanvasProjectFindUniqueOrThrowArgs} args - Arguments to find a CanvasProject
+     * @example
+     * // Get one CanvasProject
+     * const canvasProject = await prisma.canvasProject.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CanvasProjectFindUniqueOrThrowArgs>(args: SelectSubset<T, CanvasProjectFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CanvasProjectClient<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CanvasProject that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CanvasProjectFindFirstArgs} args - Arguments to find a CanvasProject
+     * @example
+     * // Get one CanvasProject
+     * const canvasProject = await prisma.canvasProject.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CanvasProjectFindFirstArgs>(args?: SelectSubset<T, CanvasProjectFindFirstArgs<ExtArgs>>): Prisma__CanvasProjectClient<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CanvasProject that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CanvasProjectFindFirstOrThrowArgs} args - Arguments to find a CanvasProject
+     * @example
+     * // Get one CanvasProject
+     * const canvasProject = await prisma.canvasProject.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CanvasProjectFindFirstOrThrowArgs>(args?: SelectSubset<T, CanvasProjectFindFirstOrThrowArgs<ExtArgs>>): Prisma__CanvasProjectClient<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CanvasProjects that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CanvasProjectFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CanvasProjects
+     * const canvasProjects = await prisma.canvasProject.findMany()
+     * 
+     * // Get first 10 CanvasProjects
+     * const canvasProjects = await prisma.canvasProject.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const canvasProjectWithIdOnly = await prisma.canvasProject.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CanvasProjectFindManyArgs>(args?: SelectSubset<T, CanvasProjectFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CanvasProject.
+     * @param {CanvasProjectCreateArgs} args - Arguments to create a CanvasProject.
+     * @example
+     * // Create one CanvasProject
+     * const CanvasProject = await prisma.canvasProject.create({
+     *   data: {
+     *     // ... data to create a CanvasProject
+     *   }
+     * })
+     * 
+     */
+    create<T extends CanvasProjectCreateArgs>(args: SelectSubset<T, CanvasProjectCreateArgs<ExtArgs>>): Prisma__CanvasProjectClient<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CanvasProjects.
+     * @param {CanvasProjectCreateManyArgs} args - Arguments to create many CanvasProjects.
+     * @example
+     * // Create many CanvasProjects
+     * const canvasProject = await prisma.canvasProject.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CanvasProjectCreateManyArgs>(args?: SelectSubset<T, CanvasProjectCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CanvasProjects and returns the data saved in the database.
+     * @param {CanvasProjectCreateManyAndReturnArgs} args - Arguments to create many CanvasProjects.
+     * @example
+     * // Create many CanvasProjects
+     * const canvasProject = await prisma.canvasProject.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CanvasProjects and only return the `id`
+     * const canvasProjectWithIdOnly = await prisma.canvasProject.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CanvasProjectCreateManyAndReturnArgs>(args?: SelectSubset<T, CanvasProjectCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CanvasProject.
+     * @param {CanvasProjectDeleteArgs} args - Arguments to delete one CanvasProject.
+     * @example
+     * // Delete one CanvasProject
+     * const CanvasProject = await prisma.canvasProject.delete({
+     *   where: {
+     *     // ... filter to delete one CanvasProject
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CanvasProjectDeleteArgs>(args: SelectSubset<T, CanvasProjectDeleteArgs<ExtArgs>>): Prisma__CanvasProjectClient<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CanvasProject.
+     * @param {CanvasProjectUpdateArgs} args - Arguments to update one CanvasProject.
+     * @example
+     * // Update one CanvasProject
+     * const canvasProject = await prisma.canvasProject.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CanvasProjectUpdateArgs>(args: SelectSubset<T, CanvasProjectUpdateArgs<ExtArgs>>): Prisma__CanvasProjectClient<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CanvasProjects.
+     * @param {CanvasProjectDeleteManyArgs} args - Arguments to filter CanvasProjects to delete.
+     * @example
+     * // Delete a few CanvasProjects
+     * const { count } = await prisma.canvasProject.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CanvasProjectDeleteManyArgs>(args?: SelectSubset<T, CanvasProjectDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CanvasProjects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CanvasProjectUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CanvasProjects
+     * const canvasProject = await prisma.canvasProject.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CanvasProjectUpdateManyArgs>(args: SelectSubset<T, CanvasProjectUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CanvasProjects and returns the data updated in the database.
+     * @param {CanvasProjectUpdateManyAndReturnArgs} args - Arguments to update many CanvasProjects.
+     * @example
+     * // Update many CanvasProjects
+     * const canvasProject = await prisma.canvasProject.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CanvasProjects and only return the `id`
+     * const canvasProjectWithIdOnly = await prisma.canvasProject.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CanvasProjectUpdateManyAndReturnArgs>(args: SelectSubset<T, CanvasProjectUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CanvasProject.
+     * @param {CanvasProjectUpsertArgs} args - Arguments to update or create a CanvasProject.
+     * @example
+     * // Update or create a CanvasProject
+     * const canvasProject = await prisma.canvasProject.upsert({
+     *   create: {
+     *     // ... data to create a CanvasProject
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CanvasProject we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CanvasProjectUpsertArgs>(args: SelectSubset<T, CanvasProjectUpsertArgs<ExtArgs>>): Prisma__CanvasProjectClient<$Result.GetResult<Prisma.$CanvasProjectPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CanvasProjects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CanvasProjectCountArgs} args - Arguments to filter CanvasProjects to count.
+     * @example
+     * // Count the number of CanvasProjects
+     * const count = await prisma.canvasProject.count({
+     *   where: {
+     *     // ... the filter for the CanvasProjects we want to count
+     *   }
+     * })
+    **/
+    count<T extends CanvasProjectCountArgs>(
+      args?: Subset<T, CanvasProjectCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CanvasProjectCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CanvasProject.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CanvasProjectAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CanvasProjectAggregateArgs>(args: Subset<T, CanvasProjectAggregateArgs>): Prisma.PrismaPromise<GetCanvasProjectAggregateType<T>>
+
+    /**
+     * Group by CanvasProject.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CanvasProjectGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CanvasProjectGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CanvasProjectGroupByArgs['orderBy'] }
+        : { orderBy?: CanvasProjectGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CanvasProjectGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCanvasProjectGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CanvasProject model
+   */
+  readonly fields: CanvasProjectFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CanvasProject.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CanvasProjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workspace<T extends WorkspaceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkspaceDefaultArgs<ExtArgs>>): Prisma__WorkspaceClient<$Result.GetResult<Prisma.$WorkspacePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CanvasProject model
+   */
+  interface CanvasProjectFieldRefs {
+    readonly id: FieldRef<"CanvasProject", 'Int'>
+    readonly name: FieldRef<"CanvasProject", 'String'>
+    readonly workspaceId: FieldRef<"CanvasProject", 'Int'>
+    readonly userId: FieldRef<"CanvasProject", 'String'>
+    readonly json: FieldRef<"CanvasProject", 'String'>
+    readonly height: FieldRef<"CanvasProject", 'Int'>
+    readonly width: FieldRef<"CanvasProject", 'Int'>
+    readonly thumbnailUrl: FieldRef<"CanvasProject", 'String'>
+    readonly isTemplate: FieldRef<"CanvasProject", 'Boolean'>
+    readonly createdAt: FieldRef<"CanvasProject", 'DateTime'>
+    readonly updatedAt: FieldRef<"CanvasProject", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CanvasProject findUnique
+   */
+  export type CanvasProjectFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which CanvasProject to fetch.
+     */
+    where: CanvasProjectWhereUniqueInput
+  }
+
+  /**
+   * CanvasProject findUniqueOrThrow
+   */
+  export type CanvasProjectFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which CanvasProject to fetch.
+     */
+    where: CanvasProjectWhereUniqueInput
+  }
+
+  /**
+   * CanvasProject findFirst
+   */
+  export type CanvasProjectFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which CanvasProject to fetch.
+     */
+    where?: CanvasProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CanvasProjects to fetch.
+     */
+    orderBy?: CanvasProjectOrderByWithRelationInput | CanvasProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CanvasProjects.
+     */
+    cursor?: CanvasProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CanvasProjects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CanvasProjects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CanvasProjects.
+     */
+    distinct?: CanvasProjectScalarFieldEnum | CanvasProjectScalarFieldEnum[]
+  }
+
+  /**
+   * CanvasProject findFirstOrThrow
+   */
+  export type CanvasProjectFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which CanvasProject to fetch.
+     */
+    where?: CanvasProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CanvasProjects to fetch.
+     */
+    orderBy?: CanvasProjectOrderByWithRelationInput | CanvasProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CanvasProjects.
+     */
+    cursor?: CanvasProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CanvasProjects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CanvasProjects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CanvasProjects.
+     */
+    distinct?: CanvasProjectScalarFieldEnum | CanvasProjectScalarFieldEnum[]
+  }
+
+  /**
+   * CanvasProject findMany
+   */
+  export type CanvasProjectFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which CanvasProjects to fetch.
+     */
+    where?: CanvasProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CanvasProjects to fetch.
+     */
+    orderBy?: CanvasProjectOrderByWithRelationInput | CanvasProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CanvasProjects.
+     */
+    cursor?: CanvasProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CanvasProjects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CanvasProjects.
+     */
+    skip?: number
+    distinct?: CanvasProjectScalarFieldEnum | CanvasProjectScalarFieldEnum[]
+  }
+
+  /**
+   * CanvasProject create
+   */
+  export type CanvasProjectCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CanvasProject.
+     */
+    data: XOR<CanvasProjectCreateInput, CanvasProjectUncheckedCreateInput>
+  }
+
+  /**
+   * CanvasProject createMany
+   */
+  export type CanvasProjectCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CanvasProjects.
+     */
+    data: CanvasProjectCreateManyInput | CanvasProjectCreateManyInput[]
+  }
+
+  /**
+   * CanvasProject createManyAndReturn
+   */
+  export type CanvasProjectCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * The data used to create many CanvasProjects.
+     */
+    data: CanvasProjectCreateManyInput | CanvasProjectCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CanvasProject update
+   */
+  export type CanvasProjectUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CanvasProject.
+     */
+    data: XOR<CanvasProjectUpdateInput, CanvasProjectUncheckedUpdateInput>
+    /**
+     * Choose, which CanvasProject to update.
+     */
+    where: CanvasProjectWhereUniqueInput
+  }
+
+  /**
+   * CanvasProject updateMany
+   */
+  export type CanvasProjectUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CanvasProjects.
+     */
+    data: XOR<CanvasProjectUpdateManyMutationInput, CanvasProjectUncheckedUpdateManyInput>
+    /**
+     * Filter which CanvasProjects to update
+     */
+    where?: CanvasProjectWhereInput
+    /**
+     * Limit how many CanvasProjects to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CanvasProject updateManyAndReturn
+   */
+  export type CanvasProjectUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * The data used to update CanvasProjects.
+     */
+    data: XOR<CanvasProjectUpdateManyMutationInput, CanvasProjectUncheckedUpdateManyInput>
+    /**
+     * Filter which CanvasProjects to update
+     */
+    where?: CanvasProjectWhereInput
+    /**
+     * Limit how many CanvasProjects to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CanvasProject upsert
+   */
+  export type CanvasProjectUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CanvasProject to update in case it exists.
+     */
+    where: CanvasProjectWhereUniqueInput
+    /**
+     * In case the CanvasProject found by the `where` argument doesn't exist, create a new CanvasProject with this data.
+     */
+    create: XOR<CanvasProjectCreateInput, CanvasProjectUncheckedCreateInput>
+    /**
+     * In case the CanvasProject was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CanvasProjectUpdateInput, CanvasProjectUncheckedUpdateInput>
+  }
+
+  /**
+   * CanvasProject delete
+   */
+  export type CanvasProjectDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+    /**
+     * Filter which CanvasProject to delete.
+     */
+    where: CanvasProjectWhereUniqueInput
+  }
+
+  /**
+   * CanvasProject deleteMany
+   */
+  export type CanvasProjectDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CanvasProjects to delete
+     */
+    where?: CanvasProjectWhereInput
+    /**
+     * Limit how many CanvasProjects to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CanvasProject without action
+   */
+  export type CanvasProjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CanvasProject
+     */
+    select?: CanvasProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CanvasProject
+     */
+    omit?: CanvasProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CanvasProjectInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -6056,6 +7364,23 @@ export namespace Prisma {
   };
 
   export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
+
+
+  export const CanvasProjectScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    workspaceId: 'workspaceId',
+    userId: 'userId',
+    json: 'json',
+    height: 'height',
+    width: 'width',
+    thumbnailUrl: 'thumbnailUrl',
+    isTemplate: 'isTemplate',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CanvasProjectScalarFieldEnum = (typeof CanvasProjectScalarFieldEnum)[keyof typeof CanvasProjectScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -6152,6 +7477,7 @@ export namespace Prisma {
     members?: MemberListRelationFilter
     projects?: ProjectListRelationFilter
     tasks?: TaskListRelationFilter
+    canvasProjects?: CanvasProjectListRelationFilter
   }
 
   export type WorkspaceOrderByWithRelationInput = {
@@ -6165,6 +7491,7 @@ export namespace Prisma {
     members?: MemberOrderByRelationAggregateInput
     projects?: ProjectOrderByRelationAggregateInput
     tasks?: TaskOrderByRelationAggregateInput
+    canvasProjects?: CanvasProjectOrderByRelationAggregateInput
   }
 
   export type WorkspaceWhereUniqueInput = Prisma.AtLeast<{
@@ -6181,6 +7508,7 @@ export namespace Prisma {
     members?: MemberListRelationFilter
     projects?: ProjectListRelationFilter
     tasks?: TaskListRelationFilter
+    canvasProjects?: CanvasProjectListRelationFilter
   }, "id">
 
   export type WorkspaceOrderByWithAggregationInput = {
@@ -6434,6 +7762,93 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Member"> | Date | string
   }
 
+  export type CanvasProjectWhereInput = {
+    AND?: CanvasProjectWhereInput | CanvasProjectWhereInput[]
+    OR?: CanvasProjectWhereInput[]
+    NOT?: CanvasProjectWhereInput | CanvasProjectWhereInput[]
+    id?: IntFilter<"CanvasProject"> | number
+    name?: StringFilter<"CanvasProject"> | string
+    workspaceId?: IntFilter<"CanvasProject"> | number
+    userId?: StringFilter<"CanvasProject"> | string
+    json?: StringFilter<"CanvasProject"> | string
+    height?: IntFilter<"CanvasProject"> | number
+    width?: IntFilter<"CanvasProject"> | number
+    thumbnailUrl?: StringNullableFilter<"CanvasProject"> | string | null
+    isTemplate?: BoolFilter<"CanvasProject"> | boolean
+    createdAt?: DateTimeFilter<"CanvasProject"> | Date | string
+    updatedAt?: DateTimeFilter<"CanvasProject"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }
+
+  export type CanvasProjectOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    json?: SortOrder
+    height?: SortOrder
+    width?: SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
+    isTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    workspace?: WorkspaceOrderByWithRelationInput
+  }
+
+  export type CanvasProjectWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: CanvasProjectWhereInput | CanvasProjectWhereInput[]
+    OR?: CanvasProjectWhereInput[]
+    NOT?: CanvasProjectWhereInput | CanvasProjectWhereInput[]
+    name?: StringFilter<"CanvasProject"> | string
+    workspaceId?: IntFilter<"CanvasProject"> | number
+    userId?: StringFilter<"CanvasProject"> | string
+    json?: StringFilter<"CanvasProject"> | string
+    height?: IntFilter<"CanvasProject"> | number
+    width?: IntFilter<"CanvasProject"> | number
+    thumbnailUrl?: StringNullableFilter<"CanvasProject"> | string | null
+    isTemplate?: BoolFilter<"CanvasProject"> | boolean
+    createdAt?: DateTimeFilter<"CanvasProject"> | Date | string
+    updatedAt?: DateTimeFilter<"CanvasProject"> | Date | string
+    workspace?: XOR<WorkspaceScalarRelationFilter, WorkspaceWhereInput>
+  }, "id">
+
+  export type CanvasProjectOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    json?: SortOrder
+    height?: SortOrder
+    width?: SortOrder
+    thumbnailUrl?: SortOrderInput | SortOrder
+    isTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CanvasProjectCountOrderByAggregateInput
+    _avg?: CanvasProjectAvgOrderByAggregateInput
+    _max?: CanvasProjectMaxOrderByAggregateInput
+    _min?: CanvasProjectMinOrderByAggregateInput
+    _sum?: CanvasProjectSumOrderByAggregateInput
+  }
+
+  export type CanvasProjectScalarWhereWithAggregatesInput = {
+    AND?: CanvasProjectScalarWhereWithAggregatesInput | CanvasProjectScalarWhereWithAggregatesInput[]
+    OR?: CanvasProjectScalarWhereWithAggregatesInput[]
+    NOT?: CanvasProjectScalarWhereWithAggregatesInput | CanvasProjectScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"CanvasProject"> | number
+    name?: StringWithAggregatesFilter<"CanvasProject"> | string
+    workspaceId?: IntWithAggregatesFilter<"CanvasProject"> | number
+    userId?: StringWithAggregatesFilter<"CanvasProject"> | string
+    json?: StringWithAggregatesFilter<"CanvasProject"> | string
+    height?: IntWithAggregatesFilter<"CanvasProject"> | number
+    width?: IntWithAggregatesFilter<"CanvasProject"> | number
+    thumbnailUrl?: StringNullableWithAggregatesFilter<"CanvasProject"> | string | null
+    isTemplate?: BoolWithAggregatesFilter<"CanvasProject"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"CanvasProject"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CanvasProject"> | Date | string
+  }
+
   export type WorkspaceCreateInput = {
     name: string
     userId: string
@@ -6444,6 +7859,7 @@ export namespace Prisma {
     members?: MemberCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskCreateNestedManyWithoutWorkspaceInput
+    canvasProjects?: CanvasProjectCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateInput = {
@@ -6457,6 +7873,7 @@ export namespace Prisma {
     members?: MemberUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskUncheckedCreateNestedManyWithoutWorkspaceInput
+    canvasProjects?: CanvasProjectUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUpdateInput = {
@@ -6469,6 +7886,7 @@ export namespace Prisma {
     members?: MemberUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUpdateManyWithoutWorkspaceNestedInput
+    canvasProjects?: CanvasProjectUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateInput = {
@@ -6482,6 +7900,7 @@ export namespace Prisma {
     members?: MemberUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutWorkspaceNestedInput
+    canvasProjects?: CanvasProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceCreateManyInput = {
@@ -6731,6 +8150,100 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CanvasProjectCreateInput = {
+    name: string
+    userId: string
+    json: string
+    height: number
+    width: number
+    thumbnailUrl?: string | null
+    isTemplate?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workspace: WorkspaceCreateNestedOneWithoutCanvasProjectsInput
+  }
+
+  export type CanvasProjectUncheckedCreateInput = {
+    id?: number
+    name: string
+    workspaceId: number
+    userId: string
+    json: string
+    height: number
+    width: number
+    thumbnailUrl?: string | null
+    isTemplate?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CanvasProjectUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    json?: StringFieldUpdateOperationsInput | string
+    height?: IntFieldUpdateOperationsInput | number
+    width?: IntFieldUpdateOperationsInput | number
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isTemplate?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workspace?: WorkspaceUpdateOneRequiredWithoutCanvasProjectsNestedInput
+  }
+
+  export type CanvasProjectUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    workspaceId?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    json?: StringFieldUpdateOperationsInput | string
+    height?: IntFieldUpdateOperationsInput | number
+    width?: IntFieldUpdateOperationsInput | number
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isTemplate?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CanvasProjectCreateManyInput = {
+    id?: number
+    name: string
+    workspaceId: number
+    userId: string
+    json: string
+    height: number
+    width: number
+    thumbnailUrl?: string | null
+    isTemplate?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CanvasProjectUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    json?: StringFieldUpdateOperationsInput | string
+    height?: IntFieldUpdateOperationsInput | number
+    width?: IntFieldUpdateOperationsInput | number
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isTemplate?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CanvasProjectUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    workspaceId?: IntFieldUpdateOperationsInput | number
+    userId?: StringFieldUpdateOperationsInput | string
+    json?: StringFieldUpdateOperationsInput | string
+    height?: IntFieldUpdateOperationsInput | number
+    width?: IntFieldUpdateOperationsInput | number
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isTemplate?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -6785,6 +8298,12 @@ export namespace Prisma {
     none?: TaskWhereInput
   }
 
+  export type CanvasProjectListRelationFilter = {
+    every?: CanvasProjectWhereInput
+    some?: CanvasProjectWhereInput
+    none?: CanvasProjectWhereInput
+  }
+
   export type MemberOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -6794,6 +8313,10 @@ export namespace Prisma {
   }
 
   export type TaskOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CanvasProjectOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -7150,6 +8673,93 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type CanvasProjectCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    json?: SortOrder
+    height?: SortOrder
+    width?: SortOrder
+    thumbnailUrl?: SortOrder
+    isTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CanvasProjectAvgOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    height?: SortOrder
+    width?: SortOrder
+  }
+
+  export type CanvasProjectMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    json?: SortOrder
+    height?: SortOrder
+    width?: SortOrder
+    thumbnailUrl?: SortOrder
+    isTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CanvasProjectMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    workspaceId?: SortOrder
+    userId?: SortOrder
+    json?: SortOrder
+    height?: SortOrder
+    width?: SortOrder
+    thumbnailUrl?: SortOrder
+    isTemplate?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CanvasProjectSumOrderByAggregateInput = {
+    id?: SortOrder
+    workspaceId?: SortOrder
+    height?: SortOrder
+    width?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type MemberCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<MemberCreateWithoutWorkspaceInput, MemberUncheckedCreateWithoutWorkspaceInput> | MemberCreateWithoutWorkspaceInput[] | MemberUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutWorkspaceInput | MemberCreateOrConnectWithoutWorkspaceInput[]
@@ -7171,6 +8781,13 @@ export namespace Prisma {
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
   }
 
+  export type CanvasProjectCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<CanvasProjectCreateWithoutWorkspaceInput, CanvasProjectUncheckedCreateWithoutWorkspaceInput> | CanvasProjectCreateWithoutWorkspaceInput[] | CanvasProjectUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CanvasProjectCreateOrConnectWithoutWorkspaceInput | CanvasProjectCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: CanvasProjectCreateManyWorkspaceInputEnvelope
+    connect?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
+  }
+
   export type MemberUncheckedCreateNestedManyWithoutWorkspaceInput = {
     create?: XOR<MemberCreateWithoutWorkspaceInput, MemberUncheckedCreateWithoutWorkspaceInput> | MemberCreateWithoutWorkspaceInput[] | MemberUncheckedCreateWithoutWorkspaceInput[]
     connectOrCreate?: MemberCreateOrConnectWithoutWorkspaceInput | MemberCreateOrConnectWithoutWorkspaceInput[]
@@ -7190,6 +8807,13 @@ export namespace Prisma {
     connectOrCreate?: TaskCreateOrConnectWithoutWorkspaceInput | TaskCreateOrConnectWithoutWorkspaceInput[]
     createMany?: TaskCreateManyWorkspaceInputEnvelope
     connect?: TaskWhereUniqueInput | TaskWhereUniqueInput[]
+  }
+
+  export type CanvasProjectUncheckedCreateNestedManyWithoutWorkspaceInput = {
+    create?: XOR<CanvasProjectCreateWithoutWorkspaceInput, CanvasProjectUncheckedCreateWithoutWorkspaceInput> | CanvasProjectCreateWithoutWorkspaceInput[] | CanvasProjectUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CanvasProjectCreateOrConnectWithoutWorkspaceInput | CanvasProjectCreateOrConnectWithoutWorkspaceInput[]
+    createMany?: CanvasProjectCreateManyWorkspaceInputEnvelope
+    connect?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -7242,6 +8866,20 @@ export namespace Prisma {
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
   }
 
+  export type CanvasProjectUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<CanvasProjectCreateWithoutWorkspaceInput, CanvasProjectUncheckedCreateWithoutWorkspaceInput> | CanvasProjectCreateWithoutWorkspaceInput[] | CanvasProjectUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CanvasProjectCreateOrConnectWithoutWorkspaceInput | CanvasProjectCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: CanvasProjectUpsertWithWhereUniqueWithoutWorkspaceInput | CanvasProjectUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: CanvasProjectCreateManyWorkspaceInputEnvelope
+    set?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
+    disconnect?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
+    delete?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
+    connect?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
+    update?: CanvasProjectUpdateWithWhereUniqueWithoutWorkspaceInput | CanvasProjectUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: CanvasProjectUpdateManyWithWhereWithoutWorkspaceInput | CanvasProjectUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: CanvasProjectScalarWhereInput | CanvasProjectScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -7290,6 +8928,20 @@ export namespace Prisma {
     update?: TaskUpdateWithWhereUniqueWithoutWorkspaceInput | TaskUpdateWithWhereUniqueWithoutWorkspaceInput[]
     updateMany?: TaskUpdateManyWithWhereWithoutWorkspaceInput | TaskUpdateManyWithWhereWithoutWorkspaceInput[]
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type CanvasProjectUncheckedUpdateManyWithoutWorkspaceNestedInput = {
+    create?: XOR<CanvasProjectCreateWithoutWorkspaceInput, CanvasProjectUncheckedCreateWithoutWorkspaceInput> | CanvasProjectCreateWithoutWorkspaceInput[] | CanvasProjectUncheckedCreateWithoutWorkspaceInput[]
+    connectOrCreate?: CanvasProjectCreateOrConnectWithoutWorkspaceInput | CanvasProjectCreateOrConnectWithoutWorkspaceInput[]
+    upsert?: CanvasProjectUpsertWithWhereUniqueWithoutWorkspaceInput | CanvasProjectUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    createMany?: CanvasProjectCreateManyWorkspaceInputEnvelope
+    set?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
+    disconnect?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
+    delete?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
+    connect?: CanvasProjectWhereUniqueInput | CanvasProjectWhereUniqueInput[]
+    update?: CanvasProjectUpdateWithWhereUniqueWithoutWorkspaceInput | CanvasProjectUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    updateMany?: CanvasProjectUpdateManyWithWhereWithoutWorkspaceInput | CanvasProjectUpdateManyWithWhereWithoutWorkspaceInput[]
+    deleteMany?: CanvasProjectScalarWhereInput | CanvasProjectScalarWhereInput[]
   }
 
   export type WorkspaceCreateNestedOneWithoutProjectsInput = {
@@ -7476,6 +9128,24 @@ export namespace Prisma {
     update?: TaskUpdateWithWhereUniqueWithoutAssigneeInput | TaskUpdateWithWhereUniqueWithoutAssigneeInput[]
     updateMany?: TaskUpdateManyWithWhereWithoutAssigneeInput | TaskUpdateManyWithWhereWithoutAssigneeInput[]
     deleteMany?: TaskScalarWhereInput | TaskScalarWhereInput[]
+  }
+
+  export type WorkspaceCreateNestedOneWithoutCanvasProjectsInput = {
+    create?: XOR<WorkspaceCreateWithoutCanvasProjectsInput, WorkspaceUncheckedCreateWithoutCanvasProjectsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutCanvasProjectsInput
+    connect?: WorkspaceWhereUniqueInput
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type WorkspaceUpdateOneRequiredWithoutCanvasProjectsNestedInput = {
+    create?: XOR<WorkspaceCreateWithoutCanvasProjectsInput, WorkspaceUncheckedCreateWithoutCanvasProjectsInput>
+    connectOrCreate?: WorkspaceCreateOrConnectWithoutCanvasProjectsInput
+    upsert?: WorkspaceUpsertWithoutCanvasProjectsInput
+    connect?: WorkspaceWhereUniqueInput
+    update?: XOR<XOR<WorkspaceUpdateToOneWithWhereWithoutCanvasProjectsInput, WorkspaceUpdateWithoutCanvasProjectsInput>, WorkspaceUncheckedUpdateWithoutCanvasProjectsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -7699,6 +9369,37 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
   export type MemberCreateWithoutWorkspaceInput = {
     userId: string
     role: $Enums.Role
@@ -7783,6 +9484,40 @@ export namespace Prisma {
 
   export type TaskCreateManyWorkspaceInputEnvelope = {
     data: TaskCreateManyWorkspaceInput | TaskCreateManyWorkspaceInput[]
+  }
+
+  export type CanvasProjectCreateWithoutWorkspaceInput = {
+    name: string
+    userId: string
+    json: string
+    height: number
+    width: number
+    thumbnailUrl?: string | null
+    isTemplate?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CanvasProjectUncheckedCreateWithoutWorkspaceInput = {
+    id?: number
+    name: string
+    userId: string
+    json: string
+    height: number
+    width: number
+    thumbnailUrl?: string | null
+    isTemplate?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CanvasProjectCreateOrConnectWithoutWorkspaceInput = {
+    where: CanvasProjectWhereUniqueInput
+    create: XOR<CanvasProjectCreateWithoutWorkspaceInput, CanvasProjectUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type CanvasProjectCreateManyWorkspaceInputEnvelope = {
+    data: CanvasProjectCreateManyWorkspaceInput | CanvasProjectCreateManyWorkspaceInput[]
   }
 
   export type MemberUpsertWithWhereUniqueWithoutWorkspaceInput = {
@@ -7874,6 +9609,39 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Task"> | Date | string
   }
 
+  export type CanvasProjectUpsertWithWhereUniqueWithoutWorkspaceInput = {
+    where: CanvasProjectWhereUniqueInput
+    update: XOR<CanvasProjectUpdateWithoutWorkspaceInput, CanvasProjectUncheckedUpdateWithoutWorkspaceInput>
+    create: XOR<CanvasProjectCreateWithoutWorkspaceInput, CanvasProjectUncheckedCreateWithoutWorkspaceInput>
+  }
+
+  export type CanvasProjectUpdateWithWhereUniqueWithoutWorkspaceInput = {
+    where: CanvasProjectWhereUniqueInput
+    data: XOR<CanvasProjectUpdateWithoutWorkspaceInput, CanvasProjectUncheckedUpdateWithoutWorkspaceInput>
+  }
+
+  export type CanvasProjectUpdateManyWithWhereWithoutWorkspaceInput = {
+    where: CanvasProjectScalarWhereInput
+    data: XOR<CanvasProjectUpdateManyMutationInput, CanvasProjectUncheckedUpdateManyWithoutWorkspaceInput>
+  }
+
+  export type CanvasProjectScalarWhereInput = {
+    AND?: CanvasProjectScalarWhereInput | CanvasProjectScalarWhereInput[]
+    OR?: CanvasProjectScalarWhereInput[]
+    NOT?: CanvasProjectScalarWhereInput | CanvasProjectScalarWhereInput[]
+    id?: IntFilter<"CanvasProject"> | number
+    name?: StringFilter<"CanvasProject"> | string
+    workspaceId?: IntFilter<"CanvasProject"> | number
+    userId?: StringFilter<"CanvasProject"> | string
+    json?: StringFilter<"CanvasProject"> | string
+    height?: IntFilter<"CanvasProject"> | number
+    width?: IntFilter<"CanvasProject"> | number
+    thumbnailUrl?: StringNullableFilter<"CanvasProject"> | string | null
+    isTemplate?: BoolFilter<"CanvasProject"> | boolean
+    createdAt?: DateTimeFilter<"CanvasProject"> | Date | string
+    updatedAt?: DateTimeFilter<"CanvasProject"> | Date | string
+  }
+
   export type WorkspaceCreateWithoutProjectsInput = {
     name: string
     userId: string
@@ -7883,6 +9651,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: MemberCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskCreateNestedManyWithoutWorkspaceInput
+    canvasProjects?: CanvasProjectCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutProjectsInput = {
@@ -7895,6 +9664,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: MemberUncheckedCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskUncheckedCreateNestedManyWithoutWorkspaceInput
+    canvasProjects?: CanvasProjectUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutProjectsInput = {
@@ -7956,6 +9726,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUpdateManyWithoutWorkspaceNestedInput
+    canvasProjects?: CanvasProjectUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutProjectsInput = {
@@ -7968,6 +9739,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUncheckedUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutWorkspaceNestedInput
+    canvasProjects?: CanvasProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type TaskUpsertWithWhereUniqueWithoutProjectInput = {
@@ -7995,6 +9767,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: MemberCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    canvasProjects?: CanvasProjectCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutTasksInput = {
@@ -8007,6 +9780,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     members?: MemberUncheckedCreateNestedManyWithoutWorkspaceInput
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    canvasProjects?: CanvasProjectUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutTasksInput = {
@@ -8078,6 +9852,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    canvasProjects?: CanvasProjectUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutTasksInput = {
@@ -8090,6 +9865,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: MemberUncheckedUpdateManyWithoutWorkspaceNestedInput
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    canvasProjects?: CanvasProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type ProjectUpsertWithoutTaskInput = {
@@ -8157,6 +9933,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     projects?: ProjectCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskCreateNestedManyWithoutWorkspaceInput
+    canvasProjects?: CanvasProjectCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceUncheckedCreateWithoutMembersInput = {
@@ -8169,6 +9946,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
     tasks?: TaskUncheckedCreateNestedManyWithoutWorkspaceInput
+    canvasProjects?: CanvasProjectUncheckedCreateNestedManyWithoutWorkspaceInput
   }
 
   export type WorkspaceCreateOrConnectWithoutMembersInput = {
@@ -8230,6 +10008,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUpdateManyWithoutWorkspaceNestedInput
+    canvasProjects?: CanvasProjectUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type WorkspaceUncheckedUpdateWithoutMembersInput = {
@@ -8242,6 +10021,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
     tasks?: TaskUncheckedUpdateManyWithoutWorkspaceNestedInput
+    canvasProjects?: CanvasProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type TaskUpsertWithWhereUniqueWithoutAssigneeInput = {
@@ -8258,6 +10038,72 @@ export namespace Prisma {
   export type TaskUpdateManyWithWhereWithoutAssigneeInput = {
     where: TaskScalarWhereInput
     data: XOR<TaskUpdateManyMutationInput, TaskUncheckedUpdateManyWithoutAssigneeInput>
+  }
+
+  export type WorkspaceCreateWithoutCanvasProjectsInput = {
+    name: string
+    userId: string
+    imageUrl: string
+    inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: MemberCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectCreateNestedManyWithoutWorkspaceInput
+    tasks?: TaskCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceUncheckedCreateWithoutCanvasProjectsInput = {
+    id?: number
+    name: string
+    userId: string
+    imageUrl: string
+    inviteCode: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: MemberUncheckedCreateNestedManyWithoutWorkspaceInput
+    projects?: ProjectUncheckedCreateNestedManyWithoutWorkspaceInput
+    tasks?: TaskUncheckedCreateNestedManyWithoutWorkspaceInput
+  }
+
+  export type WorkspaceCreateOrConnectWithoutCanvasProjectsInput = {
+    where: WorkspaceWhereUniqueInput
+    create: XOR<WorkspaceCreateWithoutCanvasProjectsInput, WorkspaceUncheckedCreateWithoutCanvasProjectsInput>
+  }
+
+  export type WorkspaceUpsertWithoutCanvasProjectsInput = {
+    update: XOR<WorkspaceUpdateWithoutCanvasProjectsInput, WorkspaceUncheckedUpdateWithoutCanvasProjectsInput>
+    create: XOR<WorkspaceCreateWithoutCanvasProjectsInput, WorkspaceUncheckedCreateWithoutCanvasProjectsInput>
+    where?: WorkspaceWhereInput
+  }
+
+  export type WorkspaceUpdateToOneWithWhereWithoutCanvasProjectsInput = {
+    where?: WorkspaceWhereInput
+    data: XOR<WorkspaceUpdateWithoutCanvasProjectsInput, WorkspaceUncheckedUpdateWithoutCanvasProjectsInput>
+  }
+
+  export type WorkspaceUpdateWithoutCanvasProjectsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: MemberUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUpdateManyWithoutWorkspaceNestedInput
+    tasks?: TaskUpdateManyWithoutWorkspaceNestedInput
+  }
+
+  export type WorkspaceUncheckedUpdateWithoutCanvasProjectsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    inviteCode?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: MemberUncheckedUpdateManyWithoutWorkspaceNestedInput
+    projects?: ProjectUncheckedUpdateManyWithoutWorkspaceNestedInput
+    tasks?: TaskUncheckedUpdateManyWithoutWorkspaceNestedInput
   }
 
   export type MemberCreateManyWorkspaceInput = {
@@ -8285,6 +10131,19 @@ export namespace Prisma {
     status?: $Enums.TaskStatus | null
     priority?: $Enums.Priority | null
     position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CanvasProjectCreateManyWorkspaceInput = {
+    id?: number
+    name: string
+    userId: string
+    json: string
+    height: number
+    width: number
+    thumbnailUrl?: string | null
+    isTemplate?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8373,6 +10232,44 @@ export namespace Prisma {
     status?: NullableEnumTaskStatusFieldUpdateOperationsInput | $Enums.TaskStatus | null
     priority?: NullableEnumPriorityFieldUpdateOperationsInput | $Enums.Priority | null
     position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CanvasProjectUpdateWithoutWorkspaceInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    json?: StringFieldUpdateOperationsInput | string
+    height?: IntFieldUpdateOperationsInput | number
+    width?: IntFieldUpdateOperationsInput | number
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isTemplate?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CanvasProjectUncheckedUpdateWithoutWorkspaceInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    json?: StringFieldUpdateOperationsInput | string
+    height?: IntFieldUpdateOperationsInput | number
+    width?: IntFieldUpdateOperationsInput | number
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isTemplate?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CanvasProjectUncheckedUpdateManyWithoutWorkspaceInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    json?: StringFieldUpdateOperationsInput | string
+    height?: IntFieldUpdateOperationsInput | number
+    width?: IntFieldUpdateOperationsInput | number
+    thumbnailUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isTemplate?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

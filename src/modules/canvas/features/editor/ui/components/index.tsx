@@ -10,23 +10,41 @@ import { useEditor } from "../../hooks/use-editor";
 import { SidebarProperties } from "./sidebar-properties";
 import { SidebarImages } from "./sidebar-images";
 import { SidebarSettings } from "./sidebar-settings";
+import { useUpdateProject } from "../../../projects/api/use-update-project";
+import debounce from "lodash.debounce";
+import { useWorkspaceId } from "@/modules/jira/features/workspaces/hooks/use-workspace-id";
+import { useProjectId } from "@/modules/jira/features/tasks/hooks/use-project-id";
 
 // Layout editort, resize canvas
 interface Props {
   initialValues: {
     width: number;
     height: number;
+    json: string;
   };
 }
 export const Editor = ({ initialValues }: Props) => {
   const [openProperties, setOpenProperties] = useState(true);
   const [openSidebarImage, setOpenSidebarImage] = useState(false);
   const [openSidebarSettings, setOpenSidebarSettings] = useState(false);
+  const workspaceId = useWorkspaceId();
+  const projectId = useProjectId();
   const ref = useRef<fabric.Canvas>(null);
+  const { mutate } = useUpdateProject({ workspaceId, projectId });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedSave = useCallback(
+    debounce((values: { json: string; height: number; width: number }) => {
+      mutate(values);
+    }, 500),
+    [mutate]
+  );
 
   const { editor, init } = useEditor({
     defaultHeight: initialValues.height,
     defaultWidth: initialValues.width,
+    defaultState: initialValues.json,
+    saveCallback: debouncedSave,
   });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -39,8 +57,8 @@ export const Editor = ({ initialValues }: Props) => {
 
   return (
     <div className="relative h-screen flex flex-col w-full">
-      <Navbar />
-      <div className="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
+      <div className="absolute h-full w-full top-[0px] flex">
+        <Navbar editor={editor} />
         <SidebarImages
           editor={editor}
           open={openSidebarImage}

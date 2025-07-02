@@ -2,10 +2,47 @@ import { fabric } from "fabric";
 import React, { useEffect, useRef } from "react";
 
 const DEV_MODE = process.env.NODE_ENV === "development";
-
 declare global {
   var canvas: fabric.Canvas | undefined;
 }
+
+
+function patchFilterSerialization() {
+  const filterTypes = fabric.Image.filters;
+
+  Object.keys(filterTypes).forEach((key) => {
+    // @ts-ignore
+    const FilterClass = filterTypes[key];
+    if (typeof FilterClass !== "function") return;
+
+    const proto = FilterClass.prototype;
+
+    // Tránh patch nhiều lần
+    if (proto.__toObjectOverridden) return;
+
+    const originalToObject = proto.toObject;
+
+    proto.toObject = function () {
+      return fabric.util.object.extend(originalToObject.call(this), {
+        id: this.id,
+        name: this.name,
+      });
+    };
+
+    proto.__toObjectOverridden = true;
+
+    // Patch fromObject (nếu bạn deserialize JSON)
+    // @ts-ignore
+    FilterClass.fromObject = function (object, callback) {
+      const filter = new FilterClass(object);
+      filter.id = object.id;
+      filter.name = object.name;
+      callback?.(filter);
+      return filter;
+    };
+  });
+}
+patchFilterSerialization();
 
 // Initial canvas
 export const Canvas = React.forwardRef<

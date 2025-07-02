@@ -52,6 +52,8 @@ import { useCreateProjectModal } from "../features/projects/hooks/use-create-pro
 import { useGetProjects } from "../features/projects/api/use-get-projects";
 import { ProjectAvatar } from "../features/projects/ui/components/project-avatar";
 import { useGetCurrentMember } from "../features/members/api/use-get-current-member";
+import { useGetWorkspaces } from "../features/workspaces/api/use-get-workspaces";
+import { useWorkspaceId } from "../features/workspaces/hooks/use-workspace-id";
 
 const menus = [
   {
@@ -71,15 +73,16 @@ const menus = [
     href: "members",
   },
 ] as const;
-export const JiraSidebar = ({
-  workspace,
-}: {
-  workspace: Omit<Workspace, "createdAt" | "updatedAt">;
-  workspaces: Omit<Workspace, "createdAt" | "updatedAt">[];
-}) => {
+export const JiraSidebar = () => {
   const { setOpen } = useCreateProjectModal();
-  const { data: projects } = useGetProjects({ workspaceId: workspace.id });
-  const { data: member } = useGetCurrentMember({ workspaceId: workspace.id });
+  const { data: workspaces } = useGetWorkspaces();
+  const workspaceId = useWorkspaceId();
+  const workspace = workspaces?.find((x) => x.id == workspaceId);
+  const { data: projects } = useGetProjects({ workspaceId: workspace?.id });
+  const { data: member } = useGetCurrentMember({ workspaceId: workspace?.id });
+
+  if(!workspace) return null;
+  
   return (
     <div>
       <SidebarHeader className="gap-3.5 border-b p-4">
