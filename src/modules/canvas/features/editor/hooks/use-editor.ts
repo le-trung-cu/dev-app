@@ -782,6 +782,7 @@ function buildEditor({
         object.applyFilters();
         setEditorProperty("filters", filters);
         canvas.renderAll();
+        history.save();
       }
     },
     changeFilter: (id: string, value: string) => {
@@ -803,6 +804,7 @@ function buildEditor({
         object.applyFilters();
         setEditorProperty("filters", filters);
         canvas.renderAll();
+        history.save();
       }
     },
     deleteFilter: (id: string) => {
@@ -819,6 +821,7 @@ function buildEditor({
         object.applyFilters();
         setEditorProperty("filters", filters);
         canvas.renderAll();
+        history.save();
       }
     },
     addText: (value: string = "Text") => {

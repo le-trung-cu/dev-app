@@ -1,4 +1,5 @@
 export const JSON_KEYS = [
+  "id",
   "name",
   "gradientAngle",
   "selectable",
