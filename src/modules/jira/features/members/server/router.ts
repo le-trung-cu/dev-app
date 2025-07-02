@@ -6,6 +6,7 @@ import { Role } from "@/generated/prisma-jira-database/jira-database-client-type
 import { headers } from "next/headers";
 import { inviteMembersSchema, updateMemberSchema } from "../schema";
 import { userDBPrismaClient } from "@/lib/user-prisma-client";
+import { z } from "zod";
 
 const app = new Hono()
   // get members
@@ -14,7 +15,7 @@ const app = new Hono()
       headers: await headers(),
     });
     if (!session) return c.json({ error: "Unauthorized" }, 401);
-    const workspaceId = parseInt(c.req.param("workspaceId"));
+    const workspaceId = c.req.param("workspaceId");
     const workspace = await jiraDBPrismaClient.workspace.findFirst({
       where: {
         id: workspaceId,
@@ -62,7 +63,7 @@ const app = new Hono()
       headers: await headers(),
     });
     if (!session) return c.json({ error: "Unauthorized" }, 401);
-    const workspaceId = parseInt(c.req.param("workspaceId"));
+    const workspaceId = c.req.param("workspaceId");
     const workspace = await jiraDBPrismaClient.workspace.findFirst({
       where: {
         id: workspaceId,
@@ -97,7 +98,7 @@ const app = new Hono()
       });
       if (!session) return c.json({ error: "Unauthorized" }, 401);
       const { userIds, role } = c.req.valid("json");
-      const workspaceId = parseInt(c.req.param("workspaceId"));
+      const workspaceId = c.req.param("workspaceId");
       const workspace = await jiraDBPrismaClient.workspace.findFirst({
         where: {
           id: workspaceId,
@@ -134,7 +135,7 @@ const app = new Hono()
       headers: await headers(),
     });
     if (!session) return c.json({ error: "Unauthorized" }, 401);
-    const workspaceId = parseInt(c.req.param("workspaceId"));
+    const workspaceId = c.req.param("workspaceId");
     const workspace = await jiraDBPrismaClient.workspace.findFirst({
       where: {
         id: workspaceId,
@@ -150,26 +151,32 @@ const app = new Hono()
       return c.json({ error: "Unauthorized" }, 401);
     await jiraDBPrismaClient.member.update({
       where: {
-        id: workspace.members[0].id
+        id: workspace.members[0].id,
       },
       data: {
-        joined: true
-      }
-    })
+        joined: true,
+      },
+    });
 
-    return c.json({isSuccess: true});
+    return c.json({ isSuccess: true });
   })
   // update role
   .put(
     "/workspaces/:workspaceId/members/:memberId",
+    zValidator(
+      "param",
+      z.object({
+        workspaceId: z.string(),
+        memberId: z.string(),
+      })
+    ),
     zValidator("json", updateMemberSchema),
     async (c) => {
       const session = await auth.api.getSession({
         headers: await headers(),
       });
       if (!session) return c.json({ error: "Unauthorized" }, 401);
-      const workspaceId = parseInt(c.req.param("workspaceId"));
-      const memberId = parseInt(c.req.param("memberId"));
+      const { workspaceId, memberId } = c.req.valid("param");
       const role = c.req.valid("json").role;
       const workspace = await jiraDBPrismaClient.workspace.findFirst({
         where: {
@@ -202,37 +209,47 @@ const app = new Hono()
     }
   )
   // kick out member
-  .delete("/workspaces/:workspaceId/members/:memberId", async (c) => {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session) return c.json({ error: "Unauthorized" }, 401);
-    const workspaceId = parseInt(c.req.param("workspaceId"));
-    const memberId = parseInt(c.req.param("memberId"));
-    const workspace = await jiraDBPrismaClient.workspace.findFirst({
-      where: {
-        id: workspaceId,
-      },
-      include: {
-        members: {
-          where: { OR: [{ userId: session.user.id }, { id: memberId }] },
+  .delete(
+    "/workspaces/:workspaceId/members/:memberId",
+    zValidator(
+      "param",
+      z.object({
+        workspaceId: z.string(),
+        memberId: z.string(),
+      })
+    ),
+    async (c) => {
+      const session = await auth.api.getSession({
+        headers: await headers(),
+      });
+      if (!session) return c.json({ error: "Unauthorized" }, 401);
+      const { workspaceId, memberId } = c.req.valid("param");
+
+      const workspace = await jiraDBPrismaClient.workspace.findFirst({
+        where: {
+          id: workspaceId,
         },
-      },
-    });
-    if (!workspace) return c.json({ error: "NotFound" }, 404);
-    const currentMember = workspace.members.find(
-      (c) => c.userId === session.user.id
-    );
-    if (!currentMember || currentMember.role !== Role.Admin) {
-      return c.json({ error: "Unauthorized" }, 401);
+        include: {
+          members: {
+            where: { OR: [{ userId: session.user.id }, { id: memberId }] },
+          },
+        },
+      });
+      if (!workspace) return c.json({ error: "NotFound" }, 404);
+      const currentMember = workspace.members.find(
+        (c) => c.userId === session.user.id
+      );
+      if (!currentMember || currentMember.role !== Role.Admin) {
+        return c.json({ error: "Unauthorized" }, 401);
+      }
+
+      await jiraDBPrismaClient.member.delete({
+        where: {
+          id: memberId,
+        },
+      });
+
+      return c.json({ isSuccess: true });
     }
-
-    await jiraDBPrismaClient.member.delete({
-      where: {
-        id: memberId,
-      },
-    });
-
-    return c.json({ isSuccess: true });
-  });
+  );
 export default app;

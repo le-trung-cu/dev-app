@@ -28,7 +28,8 @@ enum TaskStatus {
 }
 
 model Workspace {
-  id             Int             @id @default(autoincrement())
+  id String @id @default(uuid())
+
   name           String
   userId         String
   imageUrl       String
@@ -37,14 +38,16 @@ model Workspace {
   projects       Project[]
   tasks          Task[]
   canvasProjects CanvasProject[]
+  channels       Channel[]
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 }
 
 model Project {
-  id          Int       @id @default(autoincrement())
+  id String @id @default(uuid())
+
   name        String
-  workspaceId Int
+  workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   task        Task[]
   createdAt   DateTime  @default(now())
@@ -52,14 +55,14 @@ model Project {
 }
 
 model Task {
-  id          Int         @id @default(autoincrement())
+  id          String      @id @default(uuid())
   name        String
   endDate     DateTime?
-  workspaceId Int
+  workspaceId String
   workspace   Workspace   @relation(fields: [workspaceId], references: [id])
-  projectId   Int?
+  projectId   String?
   project     Project?    @relation(fields: [projectId], references: [id])
-  assigneeId  Int?
+  assigneeId  String?
   assignee    Member?     @relation(fields: [assigneeId], references: [id])
   status      TaskStatus?
   priority    Priority?
@@ -69,21 +72,29 @@ model Task {
 }
 
 model Member {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   userId      String
-  workspaceId Int
+  workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id])
   role        Role
   tasks       Task[]
   joined      Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+
+  message                Message[]
+  conversationsInitiated Conversation[] @relation("MemberOne")
+  conversationsReceived  Conversation[] @relation("MemberTwo")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([workspaceId])
 }
 
 model CanvasProject {
-  id           Int       @id @default(autoincrement())
+  id           String    @id @default(uuid())
   name         String
-  workspaceId  Int
+  workspaceId  String
   workspace    Workspace @relation(fields: [workspaceId], references: [id])
   userId       String
   json         String
@@ -93,4 +104,52 @@ model CanvasProject {
   isTemplate   Boolean   @default(false)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+}
+
+enum ChannelType {
+  TEXT
+  AUDIO
+  VIDEO
+}
+
+model Channel {
+  id          String    @id @default(uuid())
+  name        String
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  messages    Message[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Message {
+  id              String    @id @default(uuid())
+  workspaceId     String
+  content         String
+  fileUrl         String?
+  memberId        String
+  member          Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  channelId       String
+  channel         Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  parentMessageId String?
+  parentMessage   Message?  @relation("MessageToReplies", fields: [parentMessageId], references: [id], onDelete: Cascade)
+  replies         Message[] @relation("MessageToReplies")
+  deleted         Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([channelId])
+  @@index([memberId])
+}
+
+model Conversation {
+  workspaceId String
+  memberOneId String
+  memberOne   Member @relation("MemberOne", fields: [memberOneId], references: [id], onDelete: Cascade)
+  memberTwoId String
+  memberTwo   Member @relation("MemberTwo", fields: [memberTwoId], references: [id], onDelete: Cascade)
+
+  @@id([workspaceId, memberOneId, memberTwoId])
+  @@unique([memberOneId, memberTwoId])
+  @@index([memberTwoId])
 }

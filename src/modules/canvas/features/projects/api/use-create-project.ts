@@ -15,13 +15,13 @@ export const useCreateProject = () => {
       workspaceId,
       json,
     }: {
-      workspaceId: string | number;
+      workspaceId: string;
       json: RequestType;
     }) => {
       const response = await client.api.canvas.workspaces[
         ":workspaceId"
       ].projects.$post({
-        param: { workspaceId: workspaceId as string },
+        param: { workspaceId },
         json,
       });
 

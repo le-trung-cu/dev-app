@@ -12,7 +12,7 @@ const app = new Hono()
       headers: await headers(),
     });
     if (!session) return c.json({ error: "Unauthorized" }, 401);
-    const workspaceId = parseInt(c.req.param("workspaceId"));
+    const workspaceId = c.req.param("workspaceId");
     const userId = session.user.id;
     const workspace = await jiraDBPrismaClient.workspace.findFirst({
       where: {
@@ -45,7 +45,7 @@ const app = new Hono()
 
       const data = c.req.valid("form");
 
-      const workspaceId = parseInt(c.req.param("workspaceId"));
+      const workspaceId = c.req.param("workspaceId");
       const userId = session.user.id;
 
       const workspace = await jiraDBPrismaClient.workspace.findFirst({

@@ -11,14 +11,14 @@ export const useInviteMembers = () => {
       userIds,
       role,
     }: {
-      workspaceId: string | number;
+      workspaceId: string;
       userIds: string[];
       role: Role;
     }) => {
       const response = await client.api.jira.workspaces[
         ":workspaceId"
       ].members.$put({
-        param: { workspaceId: workspaceId as string },
+        param: { workspaceId },
         json: { userIds, role },
       });
       if (!response.ok) {

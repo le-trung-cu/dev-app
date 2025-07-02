@@ -24,9 +24,9 @@ const app = new Hono()
         },
         skip: (page - 1) * limit,
         take: limit,
-        // orderBy: {
-        //   updatedAt: "desc",
-        // },
+        orderBy: {
+          updatedAt: "desc",
+        },
       });
 
       return c.json({ isSuccess: true, projects });
@@ -36,7 +36,7 @@ const app = new Hono()
     "/workspaces/:workspaceId/projects/:projectId",
     zValidator(
       "param",
-      z.object({ workspaceId: z.coerce.number(), projectId: z.coerce.number() })
+      z.object({ workspaceId: z.string(), projectId: z.string() })
     ),
     async (c) => {
       const session = await auth.api.getSession({
@@ -80,7 +80,7 @@ const app = new Hono()
     "/workspaces/:workspaceId/projects/:projectId/duplicate",
     zValidator(
       "param",
-      z.object({ workspaceId: z.coerce.number(), projectId: z.coerce.number() })
+      z.object({ workspaceId: z.string(), projectId: z.string() })
     ),
     async (c) => {
       const session = await auth.api.getSession({
@@ -114,7 +114,7 @@ const app = new Hono()
       const { id, createdAt, updatedAt, ...project } =
         workspace.canvasProjects[0];
       const newProject = await jiraDBPrismaClient.canvasProject.create({
-        data: {...project, name: project.name + " Copy"},
+        data: { ...project, name: project.name + " Copy" },
       });
       return c.json({ isSuccess: true, project: newProject });
     }
@@ -124,7 +124,7 @@ const app = new Hono()
     zValidator(
       "param",
       z.object({
-        workspaceId: z.coerce.number(),
+        workspaceId: z.string(),
       })
     ),
     zValidator(
@@ -168,8 +168,8 @@ const app = new Hono()
         skip: (page - 1) * limit,
         take: limit,
         orderBy: {
-          updatedAt: "desc"
-        }
+          updatedAt: "desc",
+        },
       });
 
       return c.json({
@@ -184,8 +184,8 @@ const app = new Hono()
     zValidator(
       "param",
       z.object({
-        workspaceId: z.coerce.number(),
-        projectId: z.coerce.number(),
+        workspaceId: z.string(),
+        projectId: z.string(),
       })
     ),
     zValidator(
@@ -247,7 +247,7 @@ const app = new Hono()
     "/workspaces/:workspaceId/projects/:projectId",
     zValidator(
       "param",
-      z.object({ workspaceId: z.coerce.number(), projectId: z.coerce.number() })
+      z.object({ workspaceId: z.string(), projectId: z.string() })
     ),
     async (c) => {
       const session = await auth.api.getSession({
@@ -298,7 +298,7 @@ const app = new Hono()
         headers: await headers(),
       });
       if (!session) return c.json({ error: "Unauthorized" }, 401);
-      const workspaceId = parseInt(c.req.param("workspaceId"));
+      const workspaceId = c.req.param("workspaceId");
       const { name, json, height, width } = c.req.valid("json");
       const userId = session.user.id;
       const workspace = await jiraDBPrismaClient.workspace.findFirst({

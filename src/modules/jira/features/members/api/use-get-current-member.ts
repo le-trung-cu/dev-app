@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export const useGetCurrentMember = ({
   workspaceId,
 }: {
-  workspaceId?: string | number;
+  workspaceId: string;
 }) => {
   const query = useQuery({
     enabled: !!workspaceId,
@@ -12,7 +12,7 @@ export const useGetCurrentMember = ({
     queryFn: async () => {
       const response = await client.api.jira.workspaces[
         ":workspaceId"
-      ].members.current.$get({ param: { workspaceId: workspaceId as string } });
+      ].members.current.$get({ param: { workspaceId } });
       if (!response.ok) {
         throw new Error("Failed to update workspace");
       }

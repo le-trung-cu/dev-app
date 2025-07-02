@@ -11,8 +11,8 @@ export const useGetProject = ({
   workspaceId,
   projectId,
 }: {
-  workspaceId: string | number;
-  projectId: string | number;
+  workspaceId: string;
+  projectId: string;
 }) => {
   const query = useQuery({
     enabled: !!workspaceId && !!projectId,
@@ -22,8 +22,8 @@ export const useGetProject = ({
         ":workspaceId"
       ].projects[":projectId"].$get({
         param: {
-          workspaceId: workspaceId as string,
-          projectId: projectId as string,
+          workspaceId,
+          projectId,
         },
       });
 

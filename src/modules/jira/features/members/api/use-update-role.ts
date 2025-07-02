@@ -11,16 +11,16 @@ export const useUpdateRole = () => {
       memberId,
       role,
     }: {
-      workspaceId: string | number;
-      memberId: string | number;
+      workspaceId: string;
+      memberId: string;
       role: Role;
     }) => {
       const response = await client.api.jira.workspaces[":workspaceId"].members[
         ":memberId"
       ].$put({
         param: {
-          workspaceId: workspaceId as string,
-          memberId: memberId as string,
+          workspaceId,
+          memberId,
         },
         json: {
           role,

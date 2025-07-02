@@ -9,15 +9,15 @@ export const useDeleteMember = () => {
       workspaceId,
       memberId,
     }: {
-      workspaceId: string | number;
-      memberId: string | number;
+      workspaceId: string;
+      memberId: string;
     }) => {
       const response = await client.api.jira.workspaces[":workspaceId"].members[
         ":memberId"
       ].$delete({
         param: {
-          workspaceId: workspaceId as string,
-          memberId: memberId as string,
+          workspaceId,
+          memberId,
         },
       });
       if (!response.ok) {

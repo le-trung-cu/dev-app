@@ -46,7 +46,7 @@ const app = new Hono()
     });
     if (!session) return c.json({ error: "Unauthorized" }, 401);
     const userId = session?.user.id;
-    const workspaceId = parseInt(c.req.param("workspaceId"));
+    const workspaceId = c.req.param("workspaceId");
     const member = jiraDBPrismaClient.member.findFirst({
       where: {
         userId,
@@ -96,7 +96,7 @@ const app = new Hono()
     });
     if (!session) return c.json({ error: "Unauthorized" }, 401);
 
-    const workspaceId = parseInt(c.req.param("workspaceId"));
+    const workspaceId =c.req.param("workspaceId");
     const userId = session.user.id;
 
     const workspace = await jiraDBPrismaClient.workspace.findFirst({
@@ -134,7 +134,7 @@ const app = new Hono()
       });
       if (!session) return c.json({ error: "Unauthorized" }, 401);
       const data = c.req.valid("form");
-      const workspaceId = parseInt(c.req.param("workspaceId"));
+      const workspaceId = c.req.param("workspaceId");
       const userId = session.user.id;
 
       const workspace = await jiraDBPrismaClient.workspace.findFirst({
@@ -173,7 +173,7 @@ const app = new Hono()
     });
     if (!session) return c.json({ error: "Unauthorized" }, 401);
 
-    const workspaceId = parseInt(c.req.param("workspaceId"));
+    const workspaceId = c.req.param("workspaceId");
     const userId = session.user.id;
 
     const workspace = await jiraDBPrismaClient.workspace.findFirst({

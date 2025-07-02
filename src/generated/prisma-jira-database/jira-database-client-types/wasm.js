@@ -173,6 +173,33 @@ exports.Prisma.CanvasProjectScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ChannelScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  content: 'content',
+  fileUrl: 'fileUrl',
+  memberId: 'memberId',
+  channelId: 'channelId',
+  parentMessageId: 'parentMessageId',
+  deleted: 'deleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConversationScalarFieldEnum = {
+  workspaceId: 'workspaceId',
+  memberOneId: 'memberOneId',
+  memberTwoId: 'memberTwoId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -206,7 +233,10 @@ exports.Prisma.ModelName = {
   Project: 'Project',
   Task: 'Task',
   Member: 'Member',
-  CanvasProject: 'CanvasProject'
+  CanvasProject: 'CanvasProject',
+  Channel: 'Channel',
+  Message: 'Message',
+  Conversation: 'Conversation'
 };
 
 /**

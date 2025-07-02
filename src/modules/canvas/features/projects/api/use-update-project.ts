@@ -15,8 +15,8 @@ export const useUpdateProject = ({
   workspaceId,
   projectId,
 }: {
-  workspaceId: string | number;
-  projectId: string | number;
+  workspaceId: string;
+  projectId: string;
 }) => {
   const queryClient = useQueryClient();
 
@@ -28,8 +28,8 @@ export const useUpdateProject = ({
       ].projects[":projectId"].$patch({
         json,
         param: {
-          workspaceId: workspaceId as string,
-          projectId: projectId as string,
+          workspaceId,
+          projectId,
         },
       });
 
