@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export const useGetProjects = ({
   workspaceId,
 }: {
-  workspaceId: string | number;
+  workspaceId?: string | number;
 }) => {
   const query = useQuery({
     enabled: !!workspaceId,

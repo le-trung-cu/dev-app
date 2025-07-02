@@ -1,14 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
@@ -20,6 +11,7 @@ import { CreateProjectModal } from "@/modules/jira/features/projects/ui/componen
 import { CreateTaskModal } from "@/modules/jira/features/tasks/ui/components/create-task-modal";
 import { EditTaskModal } from "@/modules/jira/features/tasks/ui/components/edit-task-modal";
 import { MenuApps } from "@/components/menu-apps";
+import { JiraSidebar } from "@/modules/jira/components/jira-sidebar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,6 +23,7 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <>
       <SidebarProvider
@@ -40,7 +33,9 @@ export default function Layout({
           } as React.CSSProperties
         }
       >
-        <AppSidebar />
+        <AppSidebar>
+            <JiraSidebar />
+        </AppSidebar>
         <SidebarInset>
           <header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 border-b p-4">
             <SidebarTrigger className="-ml-1" />
