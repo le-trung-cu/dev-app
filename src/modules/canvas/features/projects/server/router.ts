@@ -37,7 +37,7 @@ const app = new Hono()
     "/workspaces/:workspaceId/projects/:projectId",
     zValidator(
       "param",
-      z.object({ workspaceId: z.number(), projectId: z.number() })
+      z.object({ workspaceId: z.coerce.number(), projectId: z.coerce.number() })
     ),
     async (c) => {
       const session = await auth.api.getSession({
@@ -69,7 +69,7 @@ const app = new Hono()
       if (workspace.members.length === 0)
         return c.json({ error: "Unauthorized" }, 401);
 
-      await jiraDBPrismaClient.project.delete({
+      await jiraDBPrismaClient.canvasProject.delete({
         where: {
           id: projectId,
         },
@@ -120,33 +120,63 @@ const app = new Hono()
       return c.json({ isSuccess: true, project: newProject });
     }
   )
-  .get("/workspaces/:workspaceId/projects", async (c) => {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    if (!session) return c.json({ error: "Unauthorized" }, 401);
-    const workspaceId = parseInt(c.req.param("workspaceId"));
-    const userId = session.user.id;
-    const workspace = await jiraDBPrismaClient.workspace.findFirst({
-      where: {
-        id: workspaceId,
-      },
-      include: {
-        members: {
-          where: {
-            userId,
+  .get(
+    "/workspaces/:workspaceId/projects",
+    zValidator(
+      "param",
+      z.object({
+        workspaceId: z.coerce.number(),
+      })
+    ),
+    zValidator(
+      "query",
+      z.object({
+        page: z.coerce.number(),
+        limit: z.coerce.number(),
+      })
+    ),
+    async (c) => {
+      const { page, limit } = c.req.valid("query");
+      const { workspaceId } = c.req.valid("param");
+
+      const session = await auth.api.getSession({
+        headers: await headers(),
+      });
+      if (!session) return c.json({ error: "Unauthorized" }, 401);
+      const userId = session.user.id;
+      const workspace = await jiraDBPrismaClient.workspace.findFirst({
+        where: {
+          id: workspaceId,
+        },
+        include: {
+          members: {
+            where: {
+              userId,
+            },
           },
         },
-        canvasProjects: true,
-      },
-    });
+      });
 
-    if (!workspace) return c.json({ error: "NotFound" }, 404);
-    if (workspace.members.length === 0)
-      return c.json({ error: "Unauthorized" }, 401);
+      if (!workspace) return c.json({ error: "NotFound" }, 404);
+      if (workspace.members.length === 0)
+        return c.json({ error: "Unauthorized" }, 401);
 
-    return c.json({ isSuccess: true, projects: workspace.canvasProjects });
-  })
+      const projects = await jiraDBPrismaClient.canvasProject.findMany({
+        where: {
+          workspaceId,
+          isTemplate: false,
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+
+      return c.json({
+        isSuccess: true,
+        data: projects,
+        nextPage: projects.length === limit ? page + 1 : null,
+      });
+    }
+  )
   .patch(
     "/workspaces/:workspaceId/projects/:projectId",
     zValidator(
@@ -208,7 +238,7 @@ const app = new Hono()
         },
       });
 
-      return c.json({project: data})
+      return c.json({ project: data });
     }
   )
   .get(

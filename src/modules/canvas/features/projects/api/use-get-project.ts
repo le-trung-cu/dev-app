@@ -16,7 +16,7 @@ export const useGetProject = ({
 }) => {
   const query = useQuery({
     enabled: !!workspaceId && !!projectId,
-    queryKey: ["project", workspaceId, projectId],
+    queryKey: ["project", workspaceId?.toString(), projectId?.toString()],
     queryFn: async () => {
       const response = await client.api.canvas.workspaces[
         ":workspaceId"
