@@ -4,6 +4,7 @@ import jiraWorkspaces from "@/modules/jira/features/workspaces/server/router";
 import jiraMembers from "@/modules/jira/features/members/server/router";
 import jiraProjects from "@/modules/jira/features/projects/server/router";
 import jiraTasks from "@/modules/jira/features/tasks/server/router";
+import canvasProjects from "@/modules/canvas/features/projects/server/router";
 import auth from "@/modules/auth/server/router";
 import images from "@/modules/images/server/route";
 
@@ -15,6 +16,7 @@ const jira = app.basePath("/api")
   .route("/jira", jiraProjects)
   .route("/jira", jiraTasks)
   .route("/jira", auth)
+  .route("/canvas", canvasProjects)
   .route("/images", images);
 
 const routes = jira;

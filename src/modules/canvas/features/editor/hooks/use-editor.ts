@@ -15,12 +15,8 @@ import { HistoryType, useHistory } from "./use-history";
 import { createFilter, downloadFile, transformText } from "../utils";
 import { nanoid } from "nanoid";
 import { useHotKeys } from "./use-hotkeys";
-import { JSON_KEYS } from "../types";
-
-interface Props {
-  defaultHeight: number;
-  defaultWidth: number;
-}
+import { EditorHookProps, JSON_KEYS } from "../types";
+import { useLoadState } from "./use-load-state";
 
 export interface EditorProperties {
   fill?: string;
@@ -44,7 +40,14 @@ export interface EditorProperties {
   scaleY?: number;
   filters?: fabric.IBaseFilter[];
 }
-export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
+export const useEditor = ({
+  defaultHeight,
+  defaultWidth,
+  defaultState,
+  saveCallback,
+}: EditorHookProps) => {
+  const initialState = useRef(defaultState);
+
   const [canvas, setCanvas] = useState<fabric.Canvas | null>(null);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
   // const [selectedObjects, setSelectedObjects] = useState<fabric.Object[]>([]);
@@ -155,10 +158,11 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
         width: container.offsetWidth,
         height: container.offsetHeight,
       });
+
       const initialWokspace = new fabric.Rect({
         width: defaultHeight,
         height: defaultWidth,
-        name: "workspace",
+        name: "clip",
         fill: "white",
         selectable: false,
         hasControls: false,
@@ -172,13 +176,12 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
       canvas.add(initialWokspace);
       canvas.centerObject(initialWokspace);
       canvas.clipPath = initialWokspace;
-
       history.init(canvas);
     },
     []
   );
 
-  const history = useHistory({ canvas });
+  const history = useHistory({ canvas, saveCallback });
 
   const { copy, paste } = useClipboard({ canvas });
 
@@ -192,6 +195,8 @@ export const useEditor = ({ defaultHeight, defaultWidth }: Props) => {
   });
 
   const { autoZoom } = useAutoResize({ canvas, container });
+
+  useLoadState({ canvas, autoZoom, initialState, history });
 
   useCanvasEvents({
     canvas,
@@ -294,14 +299,13 @@ function buildEditor({
     downloadFile(fileString, "json");
   };
 
-   const loadJson = (json: string) => {
+  const loadJson = (json: string) => {
     const data = JSON.parse(json);
 
     canvas.loadFromJSON(data, () => {
       autoZoom();
     });
   };
-
 
   const center = (object: fabric.Object) => {
     const workpsace = getWorkspace();
@@ -319,7 +323,9 @@ function buildEditor({
   };
 
   const getWorkspace = () => {
-    return canvas.getObjects().find(object => object.name === "workspace") as fabric.Rect;
+    return canvas
+      .getObjects()
+      .find((object) => object.name === "clip") as fabric.Rect;
   };
 
   return {
@@ -358,14 +364,14 @@ function buildEditor({
 
       workspace?.set(value);
       autoZoom();
-      // save();
+      history.save();
     },
     changeBackground: (value: string) => {
       const workspace = getWorkspace();
       workspace?.set({ fill: value });
       setEditorProperty("background", value);
       canvas.renderAll();
-      // save();
+      history.save();
     },
     changeFillColor: (value: string) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -373,6 +379,7 @@ function buildEditor({
       });
       setEditorProperty("fill", value);
       canvas.renderAll();
+      history.save();
     },
     changeStrokeColor: (value: string) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -380,6 +387,7 @@ function buildEditor({
       });
       setEditorProperty("stroke", value);
       canvas.renderAll();
+      history.save();
     },
     changeStrokeWidth: (value: number) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -387,6 +395,7 @@ function buildEditor({
       });
       setEditorProperty("strokeWidth", value);
       canvas.renderAll();
+      history.save();
     },
     changeText: (value: string) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -397,6 +406,7 @@ function buildEditor({
       });
       setEditorProperty("text", value);
       canvas.renderAll();
+      history.save();
     },
     changeFontWeight: (value: string) => {
       let fontWeight = 400;
@@ -409,6 +419,7 @@ function buildEditor({
       });
       setEditorProperty("fontWeight", fontWeight);
       canvas.renderAll();
+      history.save();
     },
     changeFontFamily: (value: string) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -419,6 +430,7 @@ function buildEditor({
       });
       setEditorProperty("fontFamily", value);
       canvas.renderAll();
+      history.save();
     },
     changeFontStyle: (value: EditorProperties["fontStyle"]) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -429,6 +441,7 @@ function buildEditor({
       });
       setEditorProperty("fontStyle", value);
       canvas.renderAll();
+      history.save();
     },
     changeFontSize: (value: EditorProperties["fontSize"]) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -439,6 +452,7 @@ function buildEditor({
       });
       setEditorProperty("fontSize", value);
       canvas.renderAll();
+      history.save();
     },
     changeUnderline: (value: EditorProperties["underline"]) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -449,6 +463,7 @@ function buildEditor({
       });
       setEditorProperty("underline", value);
       canvas.renderAll();
+      history.save();
     },
     changeLinethrough: (value: EditorProperties["linethrough"]) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -459,6 +474,7 @@ function buildEditor({
       });
       setEditorProperty("linethrough", value);
       canvas.renderAll();
+      history.save();
     },
     changeTextAlign: (value: EditorProperties["textAlign"]) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -469,6 +485,7 @@ function buildEditor({
       });
       setEditorProperty("textAlign", value);
       canvas.renderAll();
+      history.save();
     },
     changeWidth: (value: number) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -476,6 +493,7 @@ function buildEditor({
       });
       setEditorProperty("width", value);
       canvas.renderAll();
+      history.save();
     },
     changeHeight: (value: number) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -483,6 +501,7 @@ function buildEditor({
       });
       setEditorProperty("height", value);
       canvas.renderAll();
+      history.save();
     },
     changeScaleX: (value: number) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -490,6 +509,7 @@ function buildEditor({
       });
       setEditorProperty("scaleX", value);
       canvas.renderAll();
+      history.save();
     },
     changeScaleY: (value: number) => {
       canvas.getActiveObjects().forEach((object) => {
@@ -497,6 +517,7 @@ function buildEditor({
       });
       setEditorProperty("scaleY", value);
       canvas.renderAll();
+      history.save();
     },
     addRectangle: () => {
       const color = "rgba(0, 0, 0, 1)";

@@ -56,3 +56,14 @@ export const fonts = [
   "Geneva",
   "Lucida Console",
 ];
+
+export interface EditorHookProps {
+  defaultHeight: number;
+  defaultWidth: number;
+  defaultState: string;
+  saveCallback?: (values: {
+    json: string;
+    height: number;
+    width: number;
+  }) => void;
+}

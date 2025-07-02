@@ -13,6 +13,7 @@ import {
   CopyIcon,
   HandIcon,
   ImageIcon,
+  Loader,
   MousePointer2,
   MoveUpRight,
   Redo2,
@@ -26,9 +27,12 @@ import {
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
-import { BsCloudCheck, BsTriangle } from "react-icons/bs";
+import { BsCloudCheck, BsCloudSlash, BsTriangle } from "react-icons/bs";
 import { Editor } from "../../hooks/use-editor";
 import { Separator } from "@/components/ui/separator";
+import { useMutationState } from "@tanstack/react-query";
+import { useWorkspaceId } from "@/modules/jira/features/workspaces/hooks/use-workspace-id";
+import { useProjectId } from "@/modules/jira/features/tasks/hooks/use-project-id";
 
 interface Props {
   editor?: Editor | null;
@@ -40,6 +44,21 @@ export const Toolbar = ({
   onOpenSidebarImages,
   setOpenSidebarSettings,
 }: Props) => {
+  const workspaceId = useWorkspaceId();
+  const projectId = useProjectId();
+  const data = useMutationState({
+    filters: {
+      mutationKey: ["project", workspaceId, projectId],
+      exact: true,
+    },
+    select: (mutation) => mutation.state.status,
+  });
+
+  const currentStatus = data[data.length - 1];
+
+  const isError = currentStatus === "error";
+  const isPending = currentStatus === "pending";
+
   return (
     <aside className="fixed bottom-10 left-1/2 -translate-x-1/2 z-30 flex items-center">
       <div className="flex items-center bg-gray-800 text-white rounded-md p-1">
@@ -173,10 +192,28 @@ export const Toolbar = ({
         >
           <Settings className="size-4" />
         </Button>
-        <Separator orientation="vertical" className="h-[20px] mx-2"/>
+        <Separator orientation="vertical" className="h-[20px] mx-2" />
         <div className="flex items-center gap-2 px-3">
-          <BsCloudCheck className="size-6" />
-          <span className="text-muted-foreground text-xs">Saved</span>
+          {isPending && (
+            <div className="flex items-center gap-x-2">
+              <Loader className="size-4 animate-spin text-muted-foreground" />
+              <div className="text-xs text-muted-foreground">Saving...</div>
+            </div>
+          )}
+          {!isPending && isError && (
+            <div className="flex items-center gap-x-2">
+              <BsCloudSlash className="size-[20px] text-muted-foreground" />
+              <div className="text-xs text-muted-foreground">
+                Failed to save
+              </div>
+            </div>
+          )}
+          {!isPending && !isError && (
+            <div className="flex items-center gap-x-2">
+              <BsCloudCheck className="size-[20px] text-muted-foreground" />
+              <div className="text-xs text-muted-foreground">Saved</div>
+            </div>
+          )}
         </div>
       </div>
     </aside>
