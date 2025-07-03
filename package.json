@@ -51,6 +51,7 @@
     "color-rgba": "^3.0.0",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "emoji-picker-react": "^4.12.3",
     "fabric": "5.5.2",
     "hono": "^4.7.11",
     "input-otp": "^1.4.2",
