@@ -176,6 +176,7 @@ exports.Prisma.CanvasProjectScalarFieldEnum = {
 exports.Prisma.ChannelScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  type: 'type',
   workspaceId: 'workspaceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -226,6 +227,12 @@ exports.Priority = exports.$Enums.Priority = {
 exports.Role = exports.$Enums.Role = {
   Admin: 'Admin',
   Member: 'Member'
+};
+
+exports.ChannelType = exports.$Enums.ChannelType = {
+  TEXT: 'TEXT',
+  AUDIO: 'AUDIO',
+  VIDEO: 'VIDEO'
 };
 
 exports.Prisma.ModelName = {

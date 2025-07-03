@@ -18,7 +18,7 @@ const jira = app.basePath("/api")
   .route("/jira", jiraTasks)
   .route("/jira", auth)
   .route("/canvas", canvasProjects)
-  .route("/slack", slackChannels)
+  .route("/chats", slackChannels)
   .route("/images", images);
 
 const routes = jira;

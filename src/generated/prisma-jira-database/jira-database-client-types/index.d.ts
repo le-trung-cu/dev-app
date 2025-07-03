@@ -7676,6 +7676,7 @@ export namespace Prisma {
   export type ChannelMinAggregateOutputType = {
     id: string | null
     name: string | null
+    type: $Enums.ChannelType | null
     workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7684,6 +7685,7 @@ export namespace Prisma {
   export type ChannelMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    type: $Enums.ChannelType | null
     workspaceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -7692,6 +7694,7 @@ export namespace Prisma {
   export type ChannelCountAggregateOutputType = {
     id: number
     name: number
+    type: number
     workspaceId: number
     createdAt: number
     updatedAt: number
@@ -7702,6 +7705,7 @@ export namespace Prisma {
   export type ChannelMinAggregateInputType = {
     id?: true
     name?: true
+    type?: true
     workspaceId?: true
     createdAt?: true
     updatedAt?: true
@@ -7710,6 +7714,7 @@ export namespace Prisma {
   export type ChannelMaxAggregateInputType = {
     id?: true
     name?: true
+    type?: true
     workspaceId?: true
     createdAt?: true
     updatedAt?: true
@@ -7718,6 +7723,7 @@ export namespace Prisma {
   export type ChannelCountAggregateInputType = {
     id?: true
     name?: true
+    type?: true
     workspaceId?: true
     createdAt?: true
     updatedAt?: true
@@ -7799,6 +7805,7 @@ export namespace Prisma {
   export type ChannelGroupByOutputType = {
     id: string
     name: string
+    type: $Enums.ChannelType
     workspaceId: string
     createdAt: Date
     updatedAt: Date
@@ -7824,6 +7831,7 @@ export namespace Prisma {
   export type ChannelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    type?: boolean
     workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7835,6 +7843,7 @@ export namespace Prisma {
   export type ChannelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    type?: boolean
     workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7844,6 +7853,7 @@ export namespace Prisma {
   export type ChannelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    type?: boolean
     workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -7853,12 +7863,13 @@ export namespace Prisma {
   export type ChannelSelectScalar = {
     id?: boolean
     name?: boolean
+    type?: boolean
     workspaceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["channel"]>
+  export type ChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "type" | "workspaceId" | "createdAt" | "updatedAt", ExtArgs["result"]["channel"]>
   export type ChannelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     workspace?: boolean | WorkspaceDefaultArgs<ExtArgs>
     messages?: boolean | Channel$messagesArgs<ExtArgs>
@@ -7880,6 +7891,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      type: $Enums.ChannelType
       workspaceId: string
       createdAt: Date
       updatedAt: Date
@@ -8310,6 +8322,7 @@ export namespace Prisma {
   interface ChannelFieldRefs {
     readonly id: FieldRef<"Channel", 'String'>
     readonly name: FieldRef<"Channel", 'String'>
+    readonly type: FieldRef<"Channel", 'ChannelType'>
     readonly workspaceId: FieldRef<"Channel", 'String'>
     readonly createdAt: FieldRef<"Channel", 'DateTime'>
     readonly updatedAt: FieldRef<"Channel", 'DateTime'>
@@ -11058,6 +11071,7 @@ export namespace Prisma {
   export const ChannelScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    type: 'type',
     workspaceId: 'workspaceId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -11158,6 +11172,13 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'ChannelType'
+   */
+  export type EnumChannelTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ChannelType'>
     
 
 
@@ -11569,6 +11590,7 @@ export namespace Prisma {
     NOT?: ChannelWhereInput | ChannelWhereInput[]
     id?: StringFilter<"Channel"> | string
     name?: StringFilter<"Channel"> | string
+    type?: EnumChannelTypeFilter<"Channel"> | $Enums.ChannelType
     workspaceId?: StringFilter<"Channel"> | string
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
@@ -11579,6 +11601,7 @@ export namespace Prisma {
   export type ChannelOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    type?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11592,6 +11615,7 @@ export namespace Prisma {
     OR?: ChannelWhereInput[]
     NOT?: ChannelWhereInput | ChannelWhereInput[]
     name?: StringFilter<"Channel"> | string
+    type?: EnumChannelTypeFilter<"Channel"> | $Enums.ChannelType
     workspaceId?: StringFilter<"Channel"> | string
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
@@ -11602,6 +11626,7 @@ export namespace Prisma {
   export type ChannelOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    type?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -11616,6 +11641,7 @@ export namespace Prisma {
     NOT?: ChannelScalarWhereWithAggregatesInput | ChannelScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Channel"> | string
     name?: StringWithAggregatesFilter<"Channel"> | string
+    type?: EnumChannelTypeWithAggregatesFilter<"Channel"> | $Enums.ChannelType
     workspaceId?: StringWithAggregatesFilter<"Channel"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Channel"> | Date | string
@@ -12189,6 +12215,7 @@ export namespace Prisma {
   export type ChannelCreateInput = {
     id?: string
     name: string
+    type?: $Enums.ChannelType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChannelsInput
@@ -12198,6 +12225,7 @@ export namespace Prisma {
   export type ChannelUncheckedCreateInput = {
     id?: string
     name: string
+    type?: $Enums.ChannelType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12207,6 +12235,7 @@ export namespace Prisma {
   export type ChannelUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    type?: EnumChannelTypeFieldUpdateOperationsInput | $Enums.ChannelType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChannelsNestedInput
@@ -12216,6 +12245,7 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    type?: EnumChannelTypeFieldUpdateOperationsInput | $Enums.ChannelType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12225,6 +12255,7 @@ export namespace Prisma {
   export type ChannelCreateManyInput = {
     id?: string
     name: string
+    type?: $Enums.ChannelType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -12233,6 +12264,7 @@ export namespace Prisma {
   export type ChannelUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    type?: EnumChannelTypeFieldUpdateOperationsInput | $Enums.ChannelType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12240,6 +12272,7 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    type?: EnumChannelTypeFieldUpdateOperationsInput | $Enums.ChannelType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12856,9 +12889,17 @@ export namespace Prisma {
     width?: SortOrder
   }
 
+  export type EnumChannelTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChannelType | EnumChannelTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ChannelType[]
+    notIn?: $Enums.ChannelType[]
+    not?: NestedEnumChannelTypeFilter<$PrismaModel> | $Enums.ChannelType
+  }
+
   export type ChannelCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    type?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12867,6 +12908,7 @@ export namespace Prisma {
   export type ChannelMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    type?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -12875,9 +12917,20 @@ export namespace Prisma {
   export type ChannelMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    type?: SortOrder
     workspaceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type EnumChannelTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChannelType | EnumChannelTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ChannelType[]
+    notIn?: $Enums.ChannelType[]
+    not?: NestedEnumChannelTypeWithAggregatesFilter<$PrismaModel> | $Enums.ChannelType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumChannelTypeFilter<$PrismaModel>
+    _max?: NestedEnumChannelTypeFilter<$PrismaModel>
   }
 
   export type MemberScalarRelationFilter = {
@@ -13531,6 +13584,10 @@ export namespace Prisma {
     connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
+  export type EnumChannelTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ChannelType
+  }
+
   export type WorkspaceUpdateOneRequiredWithoutChannelsNestedInput = {
     create?: XOR<WorkspaceCreateWithoutChannelsInput, WorkspaceUncheckedCreateWithoutChannelsInput>
     connectOrCreate?: WorkspaceCreateOrConnectWithoutChannelsInput
@@ -13906,6 +13963,23 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedEnumChannelTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChannelType | EnumChannelTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ChannelType[]
+    notIn?: $Enums.ChannelType[]
+    not?: NestedEnumChannelTypeFilter<$PrismaModel> | $Enums.ChannelType
+  }
+
+  export type NestedEnumChannelTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ChannelType | EnumChannelTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ChannelType[]
+    notIn?: $Enums.ChannelType[]
+    not?: NestedEnumChannelTypeWithAggregatesFilter<$PrismaModel> | $Enums.ChannelType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumChannelTypeFilter<$PrismaModel>
+    _max?: NestedEnumChannelTypeFilter<$PrismaModel>
+  }
+
   export type MemberCreateWithoutWorkspaceInput = {
     id?: string
     userId: string
@@ -14039,6 +14113,7 @@ export namespace Prisma {
   export type ChannelCreateWithoutWorkspaceInput = {
     id?: string
     name: string
+    type?: $Enums.ChannelType
     createdAt?: Date | string
     updatedAt?: Date | string
     messages?: MessageCreateNestedManyWithoutChannelInput
@@ -14047,6 +14122,7 @@ export namespace Prisma {
   export type ChannelUncheckedCreateWithoutWorkspaceInput = {
     id?: string
     name: string
+    type?: $Enums.ChannelType
     createdAt?: Date | string
     updatedAt?: Date | string
     messages?: MessageUncheckedCreateNestedManyWithoutChannelInput
@@ -14205,6 +14281,7 @@ export namespace Prisma {
     NOT?: ChannelScalarWhereInput | ChannelScalarWhereInput[]
     id?: StringFilter<"Channel"> | string
     name?: StringFilter<"Channel"> | string
+    type?: EnumChannelTypeFilter<"Channel"> | $Enums.ChannelType
     workspaceId?: StringFilter<"Channel"> | string
     createdAt?: DateTimeFilter<"Channel"> | Date | string
     updatedAt?: DateTimeFilter<"Channel"> | Date | string
@@ -15019,6 +15096,7 @@ export namespace Prisma {
   export type ChannelCreateWithoutMessagesInput = {
     id?: string
     name: string
+    type?: $Enums.ChannelType
     createdAt?: Date | string
     updatedAt?: Date | string
     workspace: WorkspaceCreateNestedOneWithoutChannelsInput
@@ -15027,6 +15105,7 @@ export namespace Prisma {
   export type ChannelUncheckedCreateWithoutMessagesInput = {
     id?: string
     name: string
+    type?: $Enums.ChannelType
     workspaceId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15154,6 +15233,7 @@ export namespace Prisma {
   export type ChannelUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    type?: EnumChannelTypeFieldUpdateOperationsInput | $Enums.ChannelType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     workspace?: WorkspaceUpdateOneRequiredWithoutChannelsNestedInput
@@ -15162,6 +15242,7 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    type?: EnumChannelTypeFieldUpdateOperationsInput | $Enums.ChannelType
     workspaceId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15401,6 +15482,7 @@ export namespace Prisma {
   export type ChannelCreateManyWorkspaceInput = {
     id?: string
     name: string
+    type?: $Enums.ChannelType
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15544,6 +15626,7 @@ export namespace Prisma {
   export type ChannelUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    type?: EnumChannelTypeFieldUpdateOperationsInput | $Enums.ChannelType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUpdateManyWithoutChannelNestedInput
@@ -15552,6 +15635,7 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    type?: EnumChannelTypeFieldUpdateOperationsInput | $Enums.ChannelType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: MessageUncheckedUpdateManyWithoutChannelNestedInput
@@ -15560,6 +15644,7 @@ export namespace Prisma {
   export type ChannelUncheckedUpdateManyWithoutWorkspaceInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    type?: EnumChannelTypeFieldUpdateOperationsInput | $Enums.ChannelType
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

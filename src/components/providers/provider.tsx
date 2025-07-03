@@ -8,6 +8,7 @@ import {
   isServer,
 } from "@tanstack/react-query";
 import * as React from "react";
+import { Toaster } from "../ui/sonner";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -55,6 +56,7 @@ export function Providers({ children }: ProvidersProps) {
     <NuqsAdapter>
       <QueryClientProvider client={queryClient}>
           {children}
+          <Toaster />
       </QueryClientProvider>
     </NuqsAdapter>
   );

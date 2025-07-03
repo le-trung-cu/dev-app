@@ -12,13 +12,13 @@ export const useUpdateTask = () => {
       taskId,
       ...data
     }: z.infer<typeof updateTaskSchema> & {
-      workspaceId: string | number;
-      taskId: string | number;
+      workspaceId: string;
+      taskId: string;
     }) => {
       const response = await client.api.jira.workspaces[":workspaceId"].tasks[
         ":taskId"
       ].$put({
-        param: { workspaceId: workspaceId as string, taskId: taskId as string },
+        param: { workspaceId, taskId },
         json: {
           ...data,
         },
