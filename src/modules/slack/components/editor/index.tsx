@@ -4,7 +4,11 @@ import React, { RefObject, useEffect, useRef } from "react";
 import "quill/dist/quill.snow.css";
 import { PiArrowElbowDownLeftThin } from "react-icons/pi";
 import { BsArrowReturnLeft, BsShift } from "react-icons/bs";
-import { Plus } from "lucide-react";
+import { ImageIcon, Plus, SendIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { EmojiPopover } from "@/components/emoji-popover";
+import { MdOutlineAddReaction } from "react-icons/md";
+import { Hint } from "@/components/hint";
 
 interface EditorProps {
   innerRef?: RefObject<Quill | null>;
@@ -71,18 +75,43 @@ const Editor = ({ innerRef, defaultValue = [] }: EditorProps) => {
 
   return (
     <div>
-      <div ref={containerRef}></div>
-      <div className="text-muted-foreground text-sm text-right select-none pt-2 ">
-        Nhấn{" "}
-        <span className="inline-flex items-baseline gap-1">
-          <BsShift /> Shift
-        </span>
-        <Plus className="inline-block size-4 mx-2" />
-        <span className="inline-flex items-baseline gap-1">
-          <BsArrowReturnLeft />
-          Enter
-        </span>{" "}
-        để xuống dòng
+      <div className="relative">
+        <div ref={containerRef}></div>
+        <Hint label="Gửi tin nhắn">
+          <Button
+            variant="outline"
+            size="icon"
+            className="absolute right-1 bottom-1 rounded-xs"
+          >
+            <SendIcon />
+          </Button>
+        </Hint>
+      </div>
+      <div className="flex justify-between items-center pt-2">
+        <div className="flex gap-2">
+          <EmojiPopover hint="Thêm trạng thái">
+            <Button variant="outline" size="icon" className="rounded-full">
+              <MdOutlineAddReaction className="size-5" />
+            </Button>
+          </EmojiPopover>
+          <Hint label="Thêm hình ảnh">
+            <Button variant="outline" size="icon" className="rounded-full">
+              <ImageIcon />
+            </Button>
+          </Hint>
+        </div>
+        <div className="text-muted-foreground text-sm text-right select-none">
+          Nhấn{" "}
+          <span className="inline-flex items-baseline gap-1">
+            <BsShift /> Shift
+          </span>
+          <Plus className="inline-block size-4 mx-2" />
+          <span className="inline-flex items-baseline gap-1">
+            <BsArrowReturnLeft />
+            Enter
+          </span>{" "}
+          để xuống dòng
+        </div>
       </div>
     </div>
   );

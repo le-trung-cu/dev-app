@@ -7,31 +7,25 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-interface ActionTooltipProps {
+interface HintProps {
   label: string;
   children: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left";
   align?: "start" | "center" | "end";
 }
 
-export const ActionTooltip = ({
-  label,
-  children,
-  side,
-  align
-}: ActionTooltipProps) => {
+export const Hint = ({ label, children, side, align }: HintProps) => {
   return (
     <TooltipProvider>
       <Tooltip delayDuration={50}>
-        <TooltipTrigger asChild>
-          {children}
-        </TooltipTrigger>
-        <TooltipContent side={side} align={align}>
-          <p className="font-semibold text-sm capitalize">
-            {label.toLowerCase()}
-          </p>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
+        <TooltipContent
+          side={side}
+          align={align}
+        >
+          <p className="font-medium text-xs capitalize">{label.toLowerCase()}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
-  )
-}
+  );
+};

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { GetChannelsResponType } from "../../api/use-get-channels";
 import { Edit, Trash2 } from "lucide-react";
-import { ActionTooltip } from "@/components/action-tooltip";
+import { Hint } from "@/components/hint";
 import { cn } from "@/lib/utils";
 import { useEditChannelModal } from "../../hooks/use-edit-channel-modal";
 import { useConfirm } from "@/hooks/use-confirm";
@@ -62,18 +62,18 @@ export const WorkspaceChannel = ({ channel, isAdmin, className }: Props) => {
         <span>{channel.name}</span>
         {channel.name !== "genneral" && isAdmin && (
           <div className="ml-auto flex items-center gap-x-2">
-            <ActionTooltip label="Chỉnh sửa">
+            <Hint label="Chỉnh sửa">
               <Edit
                 onClick={(e) => onEdit(e)}
                 className="invisible group-hover/channel:visible w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
               />
-            </ActionTooltip>
-            <ActionTooltip label="Xoá">
+            </Hint>
+            <Hint label="Xoá">
               <Trash2
                 onClick={(e) => onDelete(e)}
                 className="invisible group-hover/channel:visible w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition"
               />
-            </ActionTooltip>
+            </Hint>
           </div>
         )}
       </Link>
