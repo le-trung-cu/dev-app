@@ -1778,6 +1778,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type ConversationCountOutputType
+   */
+
+  export type ConversationCountOutputType = {
+    messages: number
+  }
+
+  export type ConversationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    messages?: boolean | ConversationCountOutputTypeCountMessagesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ConversationCountOutputType without action
+   */
+  export type ConversationCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationCountOutputType
+     */
+    select?: ConversationCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ConversationCountOutputType without action
+   */
+  export type ConversationCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageWhereInput
+  }
+
+
+  /**
    * Models
    */
 
@@ -8779,6 +8810,7 @@ export namespace Prisma {
     fileUrl: string | null
     memberId: string | null
     channelId: string | null
+    conversationId: string | null
     parentMessageId: string | null
     deleted: boolean | null
     createdAt: Date | null
@@ -8792,6 +8824,7 @@ export namespace Prisma {
     fileUrl: string | null
     memberId: string | null
     channelId: string | null
+    conversationId: string | null
     parentMessageId: string | null
     deleted: boolean | null
     createdAt: Date | null
@@ -8805,6 +8838,7 @@ export namespace Prisma {
     fileUrl: number
     memberId: number
     channelId: number
+    conversationId: number
     parentMessageId: number
     deleted: number
     createdAt: number
@@ -8820,6 +8854,7 @@ export namespace Prisma {
     fileUrl?: true
     memberId?: true
     channelId?: true
+    conversationId?: true
     parentMessageId?: true
     deleted?: true
     createdAt?: true
@@ -8833,6 +8868,7 @@ export namespace Prisma {
     fileUrl?: true
     memberId?: true
     channelId?: true
+    conversationId?: true
     parentMessageId?: true
     deleted?: true
     createdAt?: true
@@ -8846,6 +8882,7 @@ export namespace Prisma {
     fileUrl?: true
     memberId?: true
     channelId?: true
+    conversationId?: true
     parentMessageId?: true
     deleted?: true
     createdAt?: true
@@ -8931,7 +8968,8 @@ export namespace Prisma {
     content: string
     fileUrl: string | null
     memberId: string
-    channelId: string
+    channelId: string | null
+    conversationId: string | null
     parentMessageId: string | null
     deleted: boolean
     createdAt: Date
@@ -8962,12 +9000,14 @@ export namespace Prisma {
     fileUrl?: boolean
     memberId?: boolean
     channelId?: boolean
+    conversationId?: boolean
     parentMessageId?: boolean
     deleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     member?: boolean | MemberDefaultArgs<ExtArgs>
-    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    channel?: boolean | Message$channelArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
     replies?: boolean | Message$repliesArgs<ExtArgs>
     _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
@@ -8980,12 +9020,14 @@ export namespace Prisma {
     fileUrl?: boolean
     memberId?: boolean
     channelId?: boolean
+    conversationId?: boolean
     parentMessageId?: boolean
     deleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     member?: boolean | MemberDefaultArgs<ExtArgs>
-    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    channel?: boolean | Message$channelArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
@@ -8996,12 +9038,14 @@ export namespace Prisma {
     fileUrl?: boolean
     memberId?: boolean
     channelId?: boolean
+    conversationId?: boolean
     parentMessageId?: boolean
     deleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     member?: boolean | MemberDefaultArgs<ExtArgs>
-    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    channel?: boolean | Message$channelArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
 
@@ -9012,28 +9056,32 @@ export namespace Prisma {
     fileUrl?: boolean
     memberId?: boolean
     channelId?: boolean
+    conversationId?: boolean
     parentMessageId?: boolean
     deleted?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "content" | "fileUrl" | "memberId" | "channelId" | "parentMessageId" | "deleted" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "content" | "fileUrl" | "memberId" | "channelId" | "conversationId" | "parentMessageId" | "deleted" | "createdAt" | "updatedAt", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     member?: boolean | MemberDefaultArgs<ExtArgs>
-    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    channel?: boolean | Message$channelArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
     replies?: boolean | Message$repliesArgs<ExtArgs>
     _count?: boolean | MessageCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     member?: boolean | MemberDefaultArgs<ExtArgs>
-    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    channel?: boolean | Message$channelArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
   }
   export type MessageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     member?: boolean | MemberDefaultArgs<ExtArgs>
-    channel?: boolean | ChannelDefaultArgs<ExtArgs>
+    channel?: boolean | Message$channelArgs<ExtArgs>
+    conversation?: boolean | Message$conversationArgs<ExtArgs>
     parentMessage?: boolean | Message$parentMessageArgs<ExtArgs>
   }
 
@@ -9041,7 +9089,8 @@ export namespace Prisma {
     name: "Message"
     objects: {
       member: Prisma.$MemberPayload<ExtArgs>
-      channel: Prisma.$ChannelPayload<ExtArgs>
+      channel: Prisma.$ChannelPayload<ExtArgs> | null
+      conversation: Prisma.$ConversationPayload<ExtArgs> | null
       parentMessage: Prisma.$MessagePayload<ExtArgs> | null
       replies: Prisma.$MessagePayload<ExtArgs>[]
     }
@@ -9051,7 +9100,8 @@ export namespace Prisma {
       content: string
       fileUrl: string | null
       memberId: string
-      channelId: string
+      channelId: string | null
+      conversationId: string | null
       parentMessageId: string | null
       deleted: boolean
       createdAt: Date
@@ -9451,7 +9501,8 @@ export namespace Prisma {
   export interface Prisma__MessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     member<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    channel<T extends ChannelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ChannelDefaultArgs<ExtArgs>>): Prisma__ChannelClient<$Result.GetResult<Prisma.$ChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    channel<T extends Message$channelArgs<ExtArgs> = {}>(args?: Subset<T, Message$channelArgs<ExtArgs>>): Prisma__ChannelClient<$Result.GetResult<Prisma.$ChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    conversation<T extends Message$conversationArgs<ExtArgs> = {}>(args?: Subset<T, Message$conversationArgs<ExtArgs>>): Prisma__ConversationClient<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     parentMessage<T extends Message$parentMessageArgs<ExtArgs> = {}>(args?: Subset<T, Message$parentMessageArgs<ExtArgs>>): Prisma__MessageClient<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     replies<T extends Message$repliesArgs<ExtArgs> = {}>(args?: Subset<T, Message$repliesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -9489,6 +9540,7 @@ export namespace Prisma {
     readonly fileUrl: FieldRef<"Message", 'String'>
     readonly memberId: FieldRef<"Message", 'String'>
     readonly channelId: FieldRef<"Message", 'String'>
+    readonly conversationId: FieldRef<"Message", 'String'>
     readonly parentMessageId: FieldRef<"Message", 'String'>
     readonly deleted: FieldRef<"Message", 'Boolean'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
@@ -9887,6 +9939,44 @@ export namespace Prisma {
   }
 
   /**
+   * Message.channel
+   */
+  export type Message$channelArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Channel
+     */
+    select?: ChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Channel
+     */
+    omit?: ChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ChannelInclude<ExtArgs> | null
+    where?: ChannelWhereInput
+  }
+
+  /**
+   * Message.conversation
+   */
+  export type Message$conversationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conversation
+     */
+    select?: ConversationSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conversation
+     */
+    omit?: ConversationOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConversationInclude<ExtArgs> | null
+    where?: ConversationWhereInput
+  }
+
+  /**
    * Message.parentMessage
    */
   export type Message$parentMessageArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -9959,18 +10049,21 @@ export namespace Prisma {
   }
 
   export type ConversationMinAggregateOutputType = {
+    id: string | null
     workspaceId: string | null
     memberOneId: string | null
     memberTwoId: string | null
   }
 
   export type ConversationMaxAggregateOutputType = {
+    id: string | null
     workspaceId: string | null
     memberOneId: string | null
     memberTwoId: string | null
   }
 
   export type ConversationCountAggregateOutputType = {
+    id: number
     workspaceId: number
     memberOneId: number
     memberTwoId: number
@@ -9979,18 +10072,21 @@ export namespace Prisma {
 
 
   export type ConversationMinAggregateInputType = {
+    id?: true
     workspaceId?: true
     memberOneId?: true
     memberTwoId?: true
   }
 
   export type ConversationMaxAggregateInputType = {
+    id?: true
     workspaceId?: true
     memberOneId?: true
     memberTwoId?: true
   }
 
   export type ConversationCountAggregateInputType = {
+    id?: true
     workspaceId?: true
     memberOneId?: true
     memberTwoId?: true
@@ -10070,6 +10166,7 @@ export namespace Prisma {
   }
 
   export type ConversationGroupByOutputType = {
+    id: string
     workspaceId: string
     memberOneId: string
     memberTwoId: string
@@ -10093,14 +10190,18 @@ export namespace Prisma {
 
 
   export type ConversationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     workspaceId?: boolean
     memberOneId?: boolean
     memberTwoId?: boolean
     memberOne?: boolean | MemberDefaultArgs<ExtArgs>
     memberTwo?: boolean | MemberDefaultArgs<ExtArgs>
+    messages?: boolean | Conversation$messagesArgs<ExtArgs>
+    _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["conversation"]>
 
   export type ConversationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     workspaceId?: boolean
     memberOneId?: boolean
     memberTwoId?: boolean
@@ -10109,6 +10210,7 @@ export namespace Prisma {
   }, ExtArgs["result"]["conversation"]>
 
   export type ConversationSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     workspaceId?: boolean
     memberOneId?: boolean
     memberTwoId?: boolean
@@ -10117,15 +10219,18 @@ export namespace Prisma {
   }, ExtArgs["result"]["conversation"]>
 
   export type ConversationSelectScalar = {
+    id?: boolean
     workspaceId?: boolean
     memberOneId?: boolean
     memberTwoId?: boolean
   }
 
-  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"workspaceId" | "memberOneId" | "memberTwoId", ExtArgs["result"]["conversation"]>
+  export type ConversationOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "workspaceId" | "memberOneId" | "memberTwoId", ExtArgs["result"]["conversation"]>
   export type ConversationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     memberOne?: boolean | MemberDefaultArgs<ExtArgs>
     memberTwo?: boolean | MemberDefaultArgs<ExtArgs>
+    messages?: boolean | Conversation$messagesArgs<ExtArgs>
+    _count?: boolean | ConversationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ConversationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     memberOne?: boolean | MemberDefaultArgs<ExtArgs>
@@ -10141,8 +10246,10 @@ export namespace Prisma {
     objects: {
       memberOne: Prisma.$MemberPayload<ExtArgs>
       memberTwo: Prisma.$MemberPayload<ExtArgs>
+      messages: Prisma.$MessagePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
+      id: string
       workspaceId: string
       memberOneId: string
       memberTwoId: string
@@ -10229,8 +10336,8 @@ export namespace Prisma {
      * // Get first 10 Conversations
      * const conversations = await prisma.conversation.findMany({ take: 10 })
      * 
-     * // Only select the `workspaceId`
-     * const conversationWithWorkspaceIdOnly = await prisma.conversation.findMany({ select: { workspaceId: true } })
+     * // Only select the `id`
+     * const conversationWithIdOnly = await prisma.conversation.findMany({ select: { id: true } })
      * 
      */
     findMany<T extends ConversationFindManyArgs>(args?: SelectSubset<T, ConversationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -10274,9 +10381,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Create many Conversations and only return the `workspaceId`
-     * const conversationWithWorkspaceIdOnly = await prisma.conversation.createManyAndReturn({
-     *   select: { workspaceId: true },
+     * // Create many Conversations and only return the `id`
+     * const conversationWithIdOnly = await prisma.conversation.createManyAndReturn({
+     *   select: { id: true },
      *   data: [
      *     // ... provide data here
      *   ]
@@ -10365,9 +10472,9 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Conversations and only return the `workspaceId`
-     * const conversationWithWorkspaceIdOnly = await prisma.conversation.updateManyAndReturn({
-     *   select: { workspaceId: true },
+     * // Update zero or more Conversations and only return the `id`
+     * const conversationWithIdOnly = await prisma.conversation.updateManyAndReturn({
+     *   select: { id: true },
      *   where: {
      *     // ... provide filter here
      *   },
@@ -10542,6 +10649,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     memberOne<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     memberTwo<T extends MemberDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MemberDefaultArgs<ExtArgs>>): Prisma__MemberClient<$Result.GetResult<Prisma.$MemberPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    messages<T extends Conversation$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Conversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10571,6 +10679,7 @@ export namespace Prisma {
    * Fields of the Conversation model
    */
   interface ConversationFieldRefs {
+    readonly id: FieldRef<"Conversation", 'String'>
     readonly workspaceId: FieldRef<"Conversation", 'String'>
     readonly memberOneId: FieldRef<"Conversation", 'String'>
     readonly memberTwoId: FieldRef<"Conversation", 'String'>
@@ -10968,6 +11077,30 @@ export namespace Prisma {
   }
 
   /**
+   * Conversation.messages
+   */
+  export type Conversation$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    cursor?: MessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
+  }
+
+  /**
    * Conversation without action
    */
   export type ConversationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11087,6 +11220,7 @@ export namespace Prisma {
     fileUrl: 'fileUrl',
     memberId: 'memberId',
     channelId: 'channelId',
+    conversationId: 'conversationId',
     parentMessageId: 'parentMessageId',
     deleted: 'deleted',
     createdAt: 'createdAt',
@@ -11097,6 +11231,7 @@ export namespace Prisma {
 
 
   export const ConversationScalarFieldEnum: {
+    id: 'id',
     workspaceId: 'workspaceId',
     memberOneId: 'memberOneId',
     memberTwoId: 'memberTwoId'
@@ -11656,13 +11791,15 @@ export namespace Prisma {
     content?: StringFilter<"Message"> | string
     fileUrl?: StringNullableFilter<"Message"> | string | null
     memberId?: StringFilter<"Message"> | string
-    channelId?: StringFilter<"Message"> | string
+    channelId?: StringNullableFilter<"Message"> | string | null
+    conversationId?: StringNullableFilter<"Message"> | string | null
     parentMessageId?: StringNullableFilter<"Message"> | string | null
     deleted?: BoolFilter<"Message"> | boolean
     createdAt?: DateTimeFilter<"Message"> | Date | string
     updatedAt?: DateTimeFilter<"Message"> | Date | string
     member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
-    channel?: XOR<ChannelScalarRelationFilter, ChannelWhereInput>
+    channel?: XOR<ChannelNullableScalarRelationFilter, ChannelWhereInput> | null
+    conversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
     parentMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
     replies?: MessageListRelationFilter
   }
@@ -11673,13 +11810,15 @@ export namespace Prisma {
     content?: SortOrder
     fileUrl?: SortOrderInput | SortOrder
     memberId?: SortOrder
-    channelId?: SortOrder
+    channelId?: SortOrderInput | SortOrder
+    conversationId?: SortOrderInput | SortOrder
     parentMessageId?: SortOrderInput | SortOrder
     deleted?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     member?: MemberOrderByWithRelationInput
     channel?: ChannelOrderByWithRelationInput
+    conversation?: ConversationOrderByWithRelationInput
     parentMessage?: MessageOrderByWithRelationInput
     replies?: MessageOrderByRelationAggregateInput
   }
@@ -11693,13 +11832,15 @@ export namespace Prisma {
     content?: StringFilter<"Message"> | string
     fileUrl?: StringNullableFilter<"Message"> | string | null
     memberId?: StringFilter<"Message"> | string
-    channelId?: StringFilter<"Message"> | string
+    channelId?: StringNullableFilter<"Message"> | string | null
+    conversationId?: StringNullableFilter<"Message"> | string | null
     parentMessageId?: StringNullableFilter<"Message"> | string | null
     deleted?: BoolFilter<"Message"> | boolean
     createdAt?: DateTimeFilter<"Message"> | Date | string
     updatedAt?: DateTimeFilter<"Message"> | Date | string
     member?: XOR<MemberScalarRelationFilter, MemberWhereInput>
-    channel?: XOR<ChannelScalarRelationFilter, ChannelWhereInput>
+    channel?: XOR<ChannelNullableScalarRelationFilter, ChannelWhereInput> | null
+    conversation?: XOR<ConversationNullableScalarRelationFilter, ConversationWhereInput> | null
     parentMessage?: XOR<MessageNullableScalarRelationFilter, MessageWhereInput> | null
     replies?: MessageListRelationFilter
   }, "id">
@@ -11710,7 +11851,8 @@ export namespace Prisma {
     content?: SortOrder
     fileUrl?: SortOrderInput | SortOrder
     memberId?: SortOrder
-    channelId?: SortOrder
+    channelId?: SortOrderInput | SortOrder
+    conversationId?: SortOrderInput | SortOrder
     parentMessageId?: SortOrderInput | SortOrder
     deleted?: SortOrder
     createdAt?: SortOrder
@@ -11729,7 +11871,8 @@ export namespace Prisma {
     content?: StringWithAggregatesFilter<"Message"> | string
     fileUrl?: StringNullableWithAggregatesFilter<"Message"> | string | null
     memberId?: StringWithAggregatesFilter<"Message"> | string
-    channelId?: StringWithAggregatesFilter<"Message"> | string
+    channelId?: StringNullableWithAggregatesFilter<"Message"> | string | null
+    conversationId?: StringNullableWithAggregatesFilter<"Message"> | string | null
     parentMessageId?: StringNullableWithAggregatesFilter<"Message"> | string | null
     deleted?: BoolWithAggregatesFilter<"Message"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
@@ -11740,22 +11883,27 @@ export namespace Prisma {
     AND?: ConversationWhereInput | ConversationWhereInput[]
     OR?: ConversationWhereInput[]
     NOT?: ConversationWhereInput | ConversationWhereInput[]
+    id?: StringFilter<"Conversation"> | string
     workspaceId?: StringFilter<"Conversation"> | string
     memberOneId?: StringFilter<"Conversation"> | string
     memberTwoId?: StringFilter<"Conversation"> | string
     memberOne?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     memberTwo?: XOR<MemberScalarRelationFilter, MemberWhereInput>
+    messages?: MessageListRelationFilter
   }
 
   export type ConversationOrderByWithRelationInput = {
+    id?: SortOrder
     workspaceId?: SortOrder
     memberOneId?: SortOrder
     memberTwoId?: SortOrder
     memberOne?: MemberOrderByWithRelationInput
     memberTwo?: MemberOrderByWithRelationInput
+    messages?: MessageOrderByRelationAggregateInput
   }
 
   export type ConversationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
     memberOneId_memberTwoId?: ConversationMemberOneIdMemberTwoIdCompoundUniqueInput
     workspaceId_memberOneId_memberTwoId?: ConversationWorkspaceIdMemberOneIdMemberTwoIdCompoundUniqueInput
     AND?: ConversationWhereInput | ConversationWhereInput[]
@@ -11766,9 +11914,11 @@ export namespace Prisma {
     memberTwoId?: StringFilter<"Conversation"> | string
     memberOne?: XOR<MemberScalarRelationFilter, MemberWhereInput>
     memberTwo?: XOR<MemberScalarRelationFilter, MemberWhereInput>
-  }, "workspaceId_memberOneId_memberTwoId" | "memberOneId_memberTwoId">
+    messages?: MessageListRelationFilter
+  }, "id" | "memberOneId_memberTwoId" | "workspaceId_memberOneId_memberTwoId">
 
   export type ConversationOrderByWithAggregationInput = {
+    id?: SortOrder
     workspaceId?: SortOrder
     memberOneId?: SortOrder
     memberTwoId?: SortOrder
@@ -11781,6 +11931,7 @@ export namespace Prisma {
     AND?: ConversationScalarWhereWithAggregatesInput | ConversationScalarWhereWithAggregatesInput[]
     OR?: ConversationScalarWhereWithAggregatesInput[]
     NOT?: ConversationScalarWhereWithAggregatesInput | ConversationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Conversation"> | string
     workspaceId?: StringWithAggregatesFilter<"Conversation"> | string
     memberOneId?: StringWithAggregatesFilter<"Conversation"> | string
     memberTwoId?: StringWithAggregatesFilter<"Conversation"> | string
@@ -12287,7 +12438,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     member: MemberCreateNestedOneWithoutMessageInput
-    channel: ChannelCreateNestedOneWithoutMessagesInput
+    channel?: ChannelCreateNestedOneWithoutMessagesInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
   }
@@ -12298,7 +12450,8 @@ export namespace Prisma {
     content: string
     fileUrl?: string | null
     memberId: string
-    channelId: string
+    channelId?: string | null
+    conversationId?: string | null
     parentMessageId?: string | null
     deleted?: boolean
     createdAt?: Date | string
@@ -12315,7 +12468,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     member?: MemberUpdateOneRequiredWithoutMessageNestedInput
-    channel?: ChannelUpdateOneRequiredWithoutMessagesNestedInput
+    channel?: ChannelUpdateOneWithoutMessagesNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
   }
@@ -12326,7 +12480,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     memberId?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
+    channelId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     parentMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12340,7 +12495,8 @@ export namespace Prisma {
     content: string
     fileUrl?: string | null
     memberId: string
-    channelId: string
+    channelId?: string | null
+    conversationId?: string | null
     parentMessageId?: string | null
     deleted?: boolean
     createdAt?: Date | string
@@ -12363,7 +12519,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     memberId?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
+    channelId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     parentMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12371,40 +12528,51 @@ export namespace Prisma {
   }
 
   export type ConversationCreateInput = {
+    id?: string
     workspaceId: string
     memberOne: MemberCreateNestedOneWithoutConversationsInitiatedInput
     memberTwo: MemberCreateNestedOneWithoutConversationsReceivedInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateInput = {
+    id?: string
     workspaceId: string
     memberOneId: string
     memberTwoId: string
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     memberOne?: MemberUpdateOneRequiredWithoutConversationsInitiatedNestedInput
     memberTwo?: MemberUpdateOneRequiredWithoutConversationsReceivedNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     memberOneId?: StringFieldUpdateOperationsInput | string
     memberTwoId?: StringFieldUpdateOperationsInput | string
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationCreateManyInput = {
+    id?: string
     workspaceId: string
     memberOneId: string
     memberTwoId: string
   }
 
   export type ConversationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ConversationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     memberOneId?: StringFieldUpdateOperationsInput | string
     memberTwoId?: StringFieldUpdateOperationsInput | string
@@ -12938,9 +13106,14 @@ export namespace Prisma {
     isNot?: MemberWhereInput
   }
 
-  export type ChannelScalarRelationFilter = {
-    is?: ChannelWhereInput
-    isNot?: ChannelWhereInput
+  export type ChannelNullableScalarRelationFilter = {
+    is?: ChannelWhereInput | null
+    isNot?: ChannelWhereInput | null
+  }
+
+  export type ConversationNullableScalarRelationFilter = {
+    is?: ConversationWhereInput | null
+    isNot?: ConversationWhereInput | null
   }
 
   export type MessageNullableScalarRelationFilter = {
@@ -12955,6 +13128,7 @@ export namespace Prisma {
     fileUrl?: SortOrder
     memberId?: SortOrder
     channelId?: SortOrder
+    conversationId?: SortOrder
     parentMessageId?: SortOrder
     deleted?: SortOrder
     createdAt?: SortOrder
@@ -12968,6 +13142,7 @@ export namespace Prisma {
     fileUrl?: SortOrder
     memberId?: SortOrder
     channelId?: SortOrder
+    conversationId?: SortOrder
     parentMessageId?: SortOrder
     deleted?: SortOrder
     createdAt?: SortOrder
@@ -12981,6 +13156,7 @@ export namespace Prisma {
     fileUrl?: SortOrder
     memberId?: SortOrder
     channelId?: SortOrder
+    conversationId?: SortOrder
     parentMessageId?: SortOrder
     deleted?: SortOrder
     createdAt?: SortOrder
@@ -12999,18 +13175,21 @@ export namespace Prisma {
   }
 
   export type ConversationCountOrderByAggregateInput = {
+    id?: SortOrder
     workspaceId?: SortOrder
     memberOneId?: SortOrder
     memberTwoId?: SortOrder
   }
 
   export type ConversationMaxOrderByAggregateInput = {
+    id?: SortOrder
     workspaceId?: SortOrder
     memberOneId?: SortOrder
     memberTwoId?: SortOrder
   }
 
   export type ConversationMinOrderByAggregateInput = {
+    id?: SortOrder
     workspaceId?: SortOrder
     memberOneId?: SortOrder
     memberTwoId?: SortOrder
@@ -13636,6 +13815,12 @@ export namespace Prisma {
     connect?: ChannelWhereUniqueInput
   }
 
+  export type ConversationCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutMessagesInput
+    connect?: ConversationWhereUniqueInput
+  }
+
   export type MessageCreateNestedOneWithoutRepliesInput = {
     create?: XOR<MessageCreateWithoutRepliesInput, MessageUncheckedCreateWithoutRepliesInput>
     connectOrCreate?: MessageCreateOrConnectWithoutRepliesInput
@@ -13664,12 +13849,24 @@ export namespace Prisma {
     update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutMessageInput, MemberUpdateWithoutMessageInput>, MemberUncheckedUpdateWithoutMessageInput>
   }
 
-  export type ChannelUpdateOneRequiredWithoutMessagesNestedInput = {
+  export type ChannelUpdateOneWithoutMessagesNestedInput = {
     create?: XOR<ChannelCreateWithoutMessagesInput, ChannelUncheckedCreateWithoutMessagesInput>
     connectOrCreate?: ChannelCreateOrConnectWithoutMessagesInput
     upsert?: ChannelUpsertWithoutMessagesInput
+    disconnect?: ChannelWhereInput | boolean
+    delete?: ChannelWhereInput | boolean
     connect?: ChannelWhereUniqueInput
     update?: XOR<XOR<ChannelUpdateToOneWithWhereWithoutMessagesInput, ChannelUpdateWithoutMessagesInput>, ChannelUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type ConversationUpdateOneWithoutMessagesNestedInput = {
+    create?: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: ConversationCreateOrConnectWithoutMessagesInput
+    upsert?: ConversationUpsertWithoutMessagesInput
+    disconnect?: ConversationWhereInput | boolean
+    delete?: ConversationWhereInput | boolean
+    connect?: ConversationWhereUniqueInput
+    update?: XOR<XOR<ConversationUpdateToOneWithWhereWithoutMessagesInput, ConversationUpdateWithoutMessagesInput>, ConversationUncheckedUpdateWithoutMessagesInput>
   }
 
   export type MessageUpdateOneWithoutRepliesNestedInput = {
@@ -13722,6 +13919,20 @@ export namespace Prisma {
     connect?: MemberWhereUniqueInput
   }
 
+  export type MessageCreateNestedManyWithoutConversationInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
+  export type MessageUncheckedCreateNestedManyWithoutConversationInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
   export type MemberUpdateOneRequiredWithoutConversationsInitiatedNestedInput = {
     create?: XOR<MemberCreateWithoutConversationsInitiatedInput, MemberUncheckedCreateWithoutConversationsInitiatedInput>
     connectOrCreate?: MemberCreateOrConnectWithoutConversationsInitiatedInput
@@ -13736,6 +13947,34 @@ export namespace Prisma {
     upsert?: MemberUpsertWithoutConversationsReceivedInput
     connect?: MemberWhereUniqueInput
     update?: XOR<XOR<MemberUpdateToOneWithWhereWithoutConversationsReceivedInput, MemberUpdateWithoutConversationsReceivedInput>, MemberUncheckedUpdateWithoutConversationsReceivedInput>
+  }
+
+  export type MessageUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutConversationInput | MessageUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutConversationInput | MessageUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutConversationInput | MessageUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
+  export type MessageUncheckedUpdateManyWithoutConversationNestedInput = {
+    create?: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput> | MessageCreateWithoutConversationInput[] | MessageUncheckedCreateWithoutConversationInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutConversationInput | MessageCreateOrConnectWithoutConversationInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutConversationInput | MessageUpsertWithWhereUniqueWithoutConversationInput[]
+    createMany?: MessageCreateManyConversationInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutConversationInput | MessageUpdateWithWhereUniqueWithoutConversationInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutConversationInput | MessageUpdateManyWithWhereWithoutConversationInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -14674,7 +14913,8 @@ export namespace Prisma {
     deleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    channel: ChannelCreateNestedOneWithoutMessagesInput
+    channel?: ChannelCreateNestedOneWithoutMessagesInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
   }
@@ -14684,7 +14924,8 @@ export namespace Prisma {
     workspaceId: string
     content: string
     fileUrl?: string | null
-    channelId: string
+    channelId?: string | null
+    conversationId?: string | null
     parentMessageId?: string | null
     deleted?: boolean
     createdAt?: Date | string
@@ -14702,13 +14943,17 @@ export namespace Prisma {
   }
 
   export type ConversationCreateWithoutMemberOneInput = {
+    id?: string
     workspaceId: string
     memberTwo: MemberCreateNestedOneWithoutConversationsReceivedInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateWithoutMemberOneInput = {
+    id?: string
     workspaceId: string
     memberTwoId: string
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationCreateOrConnectWithoutMemberOneInput = {
@@ -14721,13 +14966,17 @@ export namespace Prisma {
   }
 
   export type ConversationCreateWithoutMemberTwoInput = {
+    id?: string
     workspaceId: string
     memberOne: MemberCreateNestedOneWithoutConversationsInitiatedInput
+    messages?: MessageCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationUncheckedCreateWithoutMemberTwoInput = {
+    id?: string
     workspaceId: string
     memberOneId: string
+    messages?: MessageUncheckedCreateNestedManyWithoutConversationInput
   }
 
   export type ConversationCreateOrConnectWithoutMemberTwoInput = {
@@ -14819,7 +15068,8 @@ export namespace Prisma {
     content?: StringFilter<"Message"> | string
     fileUrl?: StringNullableFilter<"Message"> | string | null
     memberId?: StringFilter<"Message"> | string
-    channelId?: StringFilter<"Message"> | string
+    channelId?: StringNullableFilter<"Message"> | string | null
+    conversationId?: StringNullableFilter<"Message"> | string | null
     parentMessageId?: StringNullableFilter<"Message"> | string | null
     deleted?: BoolFilter<"Message"> | boolean
     createdAt?: DateTimeFilter<"Message"> | Date | string
@@ -14846,6 +15096,7 @@ export namespace Prisma {
     AND?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
     OR?: ConversationScalarWhereInput[]
     NOT?: ConversationScalarWhereInput | ConversationScalarWhereInput[]
+    id?: StringFilter<"Conversation"> | string
     workspaceId?: StringFilter<"Conversation"> | string
     memberOneId?: StringFilter<"Conversation"> | string
     memberTwoId?: StringFilter<"Conversation"> | string
@@ -14981,6 +15232,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     member: MemberCreateNestedOneWithoutMessageInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
   }
@@ -14991,6 +15243,7 @@ export namespace Prisma {
     content: string
     fileUrl?: string | null
     memberId: string
+    conversationId?: string | null
     parentMessageId?: string | null
     deleted?: boolean
     createdAt?: Date | string
@@ -15116,6 +15369,25 @@ export namespace Prisma {
     create: XOR<ChannelCreateWithoutMessagesInput, ChannelUncheckedCreateWithoutMessagesInput>
   }
 
+  export type ConversationCreateWithoutMessagesInput = {
+    id?: string
+    workspaceId: string
+    memberOne: MemberCreateNestedOneWithoutConversationsInitiatedInput
+    memberTwo: MemberCreateNestedOneWithoutConversationsReceivedInput
+  }
+
+  export type ConversationUncheckedCreateWithoutMessagesInput = {
+    id?: string
+    workspaceId: string
+    memberOneId: string
+    memberTwoId: string
+  }
+
+  export type ConversationCreateOrConnectWithoutMessagesInput = {
+    where: ConversationWhereUniqueInput
+    create: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+  }
+
   export type MessageCreateWithoutRepliesInput = {
     id?: string
     workspaceId: string
@@ -15125,7 +15397,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     member: MemberCreateNestedOneWithoutMessageInput
-    channel: ChannelCreateNestedOneWithoutMessagesInput
+    channel?: ChannelCreateNestedOneWithoutMessagesInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
     parentMessage?: MessageCreateNestedOneWithoutRepliesInput
   }
 
@@ -15135,7 +15408,8 @@ export namespace Prisma {
     content: string
     fileUrl?: string | null
     memberId: string
-    channelId: string
+    channelId?: string | null
+    conversationId?: string | null
     parentMessageId?: string | null
     deleted?: boolean
     createdAt?: Date | string
@@ -15156,7 +15430,8 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     member: MemberCreateNestedOneWithoutMessageInput
-    channel: ChannelCreateNestedOneWithoutMessagesInput
+    channel?: ChannelCreateNestedOneWithoutMessagesInput
+    conversation?: ConversationCreateNestedOneWithoutMessagesInput
     replies?: MessageCreateNestedManyWithoutParentMessageInput
   }
 
@@ -15166,7 +15441,8 @@ export namespace Prisma {
     content: string
     fileUrl?: string | null
     memberId: string
-    channelId: string
+    channelId?: string | null
+    conversationId?: string | null
     deleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15248,6 +15524,31 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ConversationUpsertWithoutMessagesInput = {
+    update: XOR<ConversationUpdateWithoutMessagesInput, ConversationUncheckedUpdateWithoutMessagesInput>
+    create: XOR<ConversationCreateWithoutMessagesInput, ConversationUncheckedCreateWithoutMessagesInput>
+    where?: ConversationWhereInput
+  }
+
+  export type ConversationUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: ConversationWhereInput
+    data: XOR<ConversationUpdateWithoutMessagesInput, ConversationUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type ConversationUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    memberOne?: MemberUpdateOneRequiredWithoutConversationsInitiatedNestedInput
+    memberTwo?: MemberUpdateOneRequiredWithoutConversationsReceivedNestedInput
+  }
+
+  export type ConversationUncheckedUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    memberOneId?: StringFieldUpdateOperationsInput | string
+    memberTwoId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type MessageUpsertWithoutRepliesInput = {
     update: XOR<MessageUpdateWithoutRepliesInput, MessageUncheckedUpdateWithoutRepliesInput>
     create: XOR<MessageCreateWithoutRepliesInput, MessageUncheckedCreateWithoutRepliesInput>
@@ -15268,7 +15569,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     member?: MemberUpdateOneRequiredWithoutMessageNestedInput
-    channel?: ChannelUpdateOneRequiredWithoutMessagesNestedInput
+    channel?: ChannelUpdateOneWithoutMessagesNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
   }
 
@@ -15278,7 +15580,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     memberId?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
+    channelId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     parentMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15363,6 +15666,43 @@ export namespace Prisma {
     create: XOR<MemberCreateWithoutConversationsReceivedInput, MemberUncheckedCreateWithoutConversationsReceivedInput>
   }
 
+  export type MessageCreateWithoutConversationInput = {
+    id?: string
+    workspaceId: string
+    content: string
+    fileUrl?: string | null
+    deleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    member: MemberCreateNestedOneWithoutMessageInput
+    channel?: ChannelCreateNestedOneWithoutMessagesInput
+    parentMessage?: MessageCreateNestedOneWithoutRepliesInput
+    replies?: MessageCreateNestedManyWithoutParentMessageInput
+  }
+
+  export type MessageUncheckedCreateWithoutConversationInput = {
+    id?: string
+    workspaceId: string
+    content: string
+    fileUrl?: string | null
+    memberId: string
+    channelId?: string | null
+    parentMessageId?: string | null
+    deleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    replies?: MessageUncheckedCreateNestedManyWithoutParentMessageInput
+  }
+
+  export type MessageCreateOrConnectWithoutConversationInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput>
+  }
+
+  export type MessageCreateManyConversationInputEnvelope = {
+    data: MessageCreateManyConversationInput | MessageCreateManyConversationInput[]
+  }
+
   export type MemberUpsertWithoutConversationsInitiatedInput = {
     update: XOR<MemberUpdateWithoutConversationsInitiatedInput, MemberUncheckedUpdateWithoutConversationsInitiatedInput>
     create: XOR<MemberCreateWithoutConversationsInitiatedInput, MemberUncheckedCreateWithoutConversationsInitiatedInput>
@@ -15435,6 +15775,22 @@ export namespace Prisma {
     tasks?: TaskUncheckedUpdateManyWithoutAssigneeNestedInput
     message?: MessageUncheckedUpdateManyWithoutMemberNestedInput
     conversationsInitiated?: ConversationUncheckedUpdateManyWithoutMemberOneNestedInput
+  }
+
+  export type MessageUpsertWithWhereUniqueWithoutConversationInput = {
+    where: MessageWhereUniqueInput
+    update: XOR<MessageUpdateWithoutConversationInput, MessageUncheckedUpdateWithoutConversationInput>
+    create: XOR<MessageCreateWithoutConversationInput, MessageUncheckedCreateWithoutConversationInput>
+  }
+
+  export type MessageUpdateWithWhereUniqueWithoutConversationInput = {
+    where: MessageWhereUniqueInput
+    data: XOR<MessageUpdateWithoutConversationInput, MessageUncheckedUpdateWithoutConversationInput>
+  }
+
+  export type MessageUpdateManyWithWhereWithoutConversationInput = {
+    where: MessageScalarWhereInput
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutConversationInput>
   }
 
   export type MemberCreateManyWorkspaceInput = {
@@ -15719,7 +16075,8 @@ export namespace Prisma {
     workspaceId: string
     content: string
     fileUrl?: string | null
-    channelId: string
+    channelId?: string | null
+    conversationId?: string | null
     parentMessageId?: string | null
     deleted?: boolean
     createdAt?: Date | string
@@ -15727,11 +16084,13 @@ export namespace Prisma {
   }
 
   export type ConversationCreateManyMemberOneInput = {
+    id?: string
     workspaceId: string
     memberTwoId: string
   }
 
   export type ConversationCreateManyMemberTwoInput = {
+    id?: string
     workspaceId: string
     memberOneId: string
   }
@@ -15783,7 +16142,8 @@ export namespace Prisma {
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    channel?: ChannelUpdateOneRequiredWithoutMessagesNestedInput
+    channel?: ChannelUpdateOneWithoutMessagesNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
   }
@@ -15793,7 +16153,8 @@ export namespace Prisma {
     workspaceId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    channelId?: StringFieldUpdateOperationsInput | string
+    channelId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     parentMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15806,7 +16167,8 @@ export namespace Prisma {
     workspaceId?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    channelId?: StringFieldUpdateOperationsInput | string
+    channelId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     parentMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15814,31 +16176,41 @@ export namespace Prisma {
   }
 
   export type ConversationUpdateWithoutMemberOneInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     memberTwo?: MemberUpdateOneRequiredWithoutConversationsReceivedNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutMemberOneInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     memberTwoId?: StringFieldUpdateOperationsInput | string
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateManyWithoutMemberOneInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     memberTwoId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ConversationUpdateWithoutMemberTwoInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     memberOne?: MemberUpdateOneRequiredWithoutConversationsInitiatedNestedInput
+    messages?: MessageUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateWithoutMemberTwoInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     memberOneId?: StringFieldUpdateOperationsInput | string
+    messages?: MessageUncheckedUpdateManyWithoutConversationNestedInput
   }
 
   export type ConversationUncheckedUpdateManyWithoutMemberTwoInput = {
+    id?: StringFieldUpdateOperationsInput | string
     workspaceId?: StringFieldUpdateOperationsInput | string
     memberOneId?: StringFieldUpdateOperationsInput | string
   }
@@ -15849,6 +16221,7 @@ export namespace Prisma {
     content: string
     fileUrl?: string | null
     memberId: string
+    conversationId?: string | null
     parentMessageId?: string | null
     deleted?: boolean
     createdAt?: Date | string
@@ -15864,6 +16237,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     member?: MemberUpdateOneRequiredWithoutMessageNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
     parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
   }
@@ -15874,6 +16248,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     memberId?: StringFieldUpdateOperationsInput | string
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     parentMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15887,6 +16262,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     memberId?: StringFieldUpdateOperationsInput | string
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     parentMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15899,7 +16275,8 @@ export namespace Prisma {
     content: string
     fileUrl?: string | null
     memberId: string
-    channelId: string
+    channelId?: string | null
+    conversationId?: string | null
     deleted?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15914,7 +16291,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     member?: MemberUpdateOneRequiredWithoutMessageNestedInput
-    channel?: ChannelUpdateOneRequiredWithoutMessagesNestedInput
+    channel?: ChannelUpdateOneWithoutMessagesNestedInput
+    conversation?: ConversationUpdateOneWithoutMessagesNestedInput
     replies?: MessageUpdateManyWithoutParentMessageNestedInput
   }
 
@@ -15924,7 +16302,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     memberId?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
+    channelId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15937,7 +16316,62 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
     memberId?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
+    channelId?: NullableStringFieldUpdateOperationsInput | string | null
+    conversationId?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MessageCreateManyConversationInput = {
+    id?: string
+    workspaceId: string
+    content: string
+    fileUrl?: string | null
+    memberId: string
+    channelId?: string | null
+    parentMessageId?: string | null
+    deleted?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MessageUpdateWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    member?: MemberUpdateOneRequiredWithoutMessageNestedInput
+    channel?: ChannelUpdateOneWithoutMessagesNestedInput
+    parentMessage?: MessageUpdateOneWithoutRepliesNestedInput
+    replies?: MessageUpdateManyWithoutParentMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    memberId?: StringFieldUpdateOperationsInput | string
+    channelId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentMessageId?: NullableStringFieldUpdateOperationsInput | string | null
+    deleted?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    replies?: MessageUncheckedUpdateManyWithoutParentMessageNestedInput
+  }
+
+  export type MessageUncheckedUpdateManyWithoutConversationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    workspaceId?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    fileUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    memberId?: StringFieldUpdateOperationsInput | string
+    channelId?: NullableStringFieldUpdateOperationsInput | string | null
+    parentMessageId?: NullableStringFieldUpdateOperationsInput | string | null
     deleted?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

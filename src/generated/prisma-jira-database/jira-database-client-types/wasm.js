@@ -189,6 +189,7 @@ exports.Prisma.MessageScalarFieldEnum = {
   fileUrl: 'fileUrl',
   memberId: 'memberId',
   channelId: 'channelId',
+  conversationId: 'conversationId',
   parentMessageId: 'parentMessageId',
   deleted: 'deleted',
   createdAt: 'createdAt',
@@ -196,6 +197,7 @@ exports.Prisma.MessageScalarFieldEnum = {
 };
 
 exports.Prisma.ConversationScalarFieldEnum = {
+  id: 'id',
   workspaceId: 'workspaceId',
   memberOneId: 'memberOneId',
   memberTwoId: 'memberTwoId'

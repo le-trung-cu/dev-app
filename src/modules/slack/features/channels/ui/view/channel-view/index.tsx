@@ -5,6 +5,8 @@ import { useGetChannel } from "../../../api/use-get-channel";
 import { Loader, TriangleAlert } from "lucide-react";
 import { Header } from "./header";
 import { ChatInput } from "./chat-input";
+import { useGetMessages } from "@/modules/slack/features/messages/api/use-get-messages";
+import { Button } from "@/components/ui/button";
 
 export const ChannelView = () => {
   const workspaceId = useWorkspaceId();
@@ -12,6 +14,15 @@ export const ChannelView = () => {
   const { data: channel, isLoading } = useGetChannel({
     workspaceId,
     channelId,
+  });
+
+  const {
+    data: messages,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetMessages({
+    param: { workspaceId },
+    query: { channelId },
   });
 
   if (isLoading) {
@@ -34,7 +45,16 @@ export const ChannelView = () => {
   return (
     <div className="flex flex-col h-full">
       <Header channel={channel} />
-      <div className="flex-1"></div>
+      <div className="flex justify-center">
+        {hasNextPage && (
+          <Button onClick={() => fetchNextPage()}>load more</Button>
+        )}
+      </div>
+      <div className="flex-1">
+        {messages?.pages
+          ?.flatMap((page) => page.messages)
+          .map((item) => <div key={item.id}>{item.content}</div>)}
+      </div>
       <ChatInput />
     </div>
   );

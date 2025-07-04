@@ -1,6 +1,6 @@
 import { Hint } from "@/components/hint";
 import { useUploadThing } from "@/lib/uploadthing";
-import { Loader2, XIcon } from "lucide-react";
+import { Loader2, TriangleAlert, XIcon } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -29,13 +29,14 @@ export const FileUpload = ({
       onClientUploadComplete: (result) => {
         // alert("uploaded successfully!");
         onClientUploadComplete?.(result[0].ufsUrl);
+        setUploadStatus("isSuccess");
       },
       onUploadError: () => {
-        alert("error occurred while uploading");
+        setUploadStatus("isError");
       },
-      // onUploadBegin: ({ file }) => {
-      //   console.log("upload has begun for", file);
-      // },
+      onUploadBegin: () => {
+        setUploadStatus("isPending");
+      },
     }
   );
 
@@ -65,7 +66,30 @@ export const FileUpload = ({
       </div>
     );
   }
-  console.log({ url });
+
+  if (uploadStatus === "isError") {
+    return (
+      <div
+        key={fileName}
+        className="h-[100px] w-[80px] relative group overflow-clip"
+      >
+        <Image fill alt={fileName} src={fileContent} className="object-cover" />
+        <Hint label="Xoá">
+          <XIcon
+            className="absolute top-0 right-0  rounded-full border border-gray-700 bg-background hidden group-hover:inline-flex cursor-pointer z-10"
+            onClick={() => onRemove?.()}
+          />
+        </Hint>
+        <div className="absolute inset-0 bg-white/80 flex justify-center items-center">
+          <div className="flex items-center gap-2">
+            <TriangleAlert className="text-red-500" />
+            <span className="text-red-500 text-xs">Error</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!!url) {
     return (
       <div

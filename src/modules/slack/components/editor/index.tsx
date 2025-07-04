@@ -1,5 +1,11 @@
 import Quill, { Delta, Op, QuillOptions } from "quill";
-import React, { RefObject, useEffect, useRef, useState } from "react";
+import React, {
+  RefObject,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 
 import "quill/dist/quill.snow.css";
 import { PiArrowElbowDownLeftThin } from "react-icons/pi";
@@ -12,14 +18,28 @@ import { Hint } from "@/components/hint";
 import { useImperativeFilePicker } from "use-file-picker";
 import Image from "next/image";
 import { FileUpload } from "./file-upload";
+import { useCreateMessage } from "../../features/messages/api/use-create-message";
+
+interface EditorValue {
+  content: string;
+  fileUrl: string | undefined;
+}
 
 interface EditorProps {
   innerRef?: RefObject<Quill | null>;
   defaultValue?: Delta | Op[];
-  onSubmit?: () => void;
+  disabled?: boolean;
+  onSubmit?: (value: EditorValue) => void;
 }
 // Editor is an uncontrolled React component
-const Editor = ({ innerRef, defaultValue = [], onSubmit }: EditorProps) => {
+const Editor = ({
+  innerRef,
+  defaultValue = [],
+  disabled = false,
+  onSubmit,
+}: EditorProps) => {
+  const submitRef = useRef(onSubmit);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const defaultValueRef = useRef(defaultValue);
   const quillRef = useRef<Quill | null>(null);
@@ -43,6 +63,20 @@ const Editor = ({ innerRef, defaultValue = [], onSubmit }: EditorProps) => {
     },
   });
 
+  const imagesRef = useRef<string[]>([]);
+
+  imagesRef.current = filesContent?.map((item, index) => uploadedImages[index]);
+
+  useLayoutEffect(() => {
+    submitRef.current = onSubmit;
+    defaultValueRef.current = defaultValue;
+    if (disabled && quillRef.current?.isEnabled()) {
+      quillRef.current.disable();
+    } else if (!disabled && !quillRef.current?.isEnabled) {
+      quillRef.current?.enable();
+    }
+  });
+
   useEffect(() => {
     if (!containerRef.current) {
       return;
@@ -52,6 +86,7 @@ const Editor = ({ innerRef, defaultValue = [], onSubmit }: EditorProps) => {
     const editorContainer = container.appendChild(
       container.ownerDocument.createElement("div")
     );
+
     const options: QuillOptions = {
       theme: "snow",
       placeholder: "nhập nội dung...",
@@ -64,7 +99,11 @@ const Editor = ({ innerRef, defaultValue = [], onSubmit }: EditorProps) => {
                 //TODO send message
                 console.log("send message");
                 const text = quill.getText();
-                // const addedImage = image;
+                const fileUrl =
+                  imagesRef.current.length > 0
+                    ? imagesRef.current.join("\n")
+                    : undefined;
+                submitRef.current?.({ content: text, fileUrl });
               },
             },
             shift_enter: {
@@ -98,6 +137,14 @@ const Editor = ({ innerRef, defaultValue = [], onSubmit }: EditorProps) => {
     };
   }, [innerRef]);
 
+  useEffect(() => {
+    if (disabled) {
+      quillRef.current?.disable();
+    } else {
+      quillRef.current?.enable();
+    }
+  }, [disabled]);
+
   return (
     <div>
       <div className="flex flex-wrap gap-2 py-2">
@@ -122,6 +169,7 @@ const Editor = ({ innerRef, defaultValue = [], onSubmit }: EditorProps) => {
         <div ref={containerRef}></div>
         <Hint label="Gửi tin nhắn">
           <Button
+            disabled={disabled}
             variant="outline"
             size="icon"
             className="absolute right-1 bottom-1 rounded-xs"
@@ -133,12 +181,18 @@ const Editor = ({ innerRef, defaultValue = [], onSubmit }: EditorProps) => {
       <div className="flex justify-between items-center pt-2">
         <div className="flex gap-2">
           <EmojiPopover hint="Thêm trạng thái">
-            <Button variant="outline" size="icon" className="rounded-full">
+            <Button
+              disabled={disabled}
+              variant="outline"
+              size="icon"
+              className="rounded-full"
+            >
               <MdOutlineAddReaction className="size-5" />
             </Button>
           </EmojiPopover>
           <Hint label="Thêm hình ảnh">
             <Button
+              disabled={disabled}
               variant="outline"
               size="icon"
               className="rounded-full"

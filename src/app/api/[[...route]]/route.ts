@@ -6,6 +6,7 @@ import jiraProjects from "@/modules/jira/features/projects/server/router";
 import jiraTasks from "@/modules/jira/features/tasks/server/router";
 import canvasProjects from "@/modules/canvas/features/projects/server/router";
 import slackChannels from "@/modules/slack/features/channels/server/route";
+import slackMessages from "@/modules/slack/features/messages/sever/route";
 import auth from "@/modules/auth/server/router";
 import images from "@/modules/images/server/route";
 
@@ -19,6 +20,7 @@ const jira = app.basePath("/api")
   .route("/jira", auth)
   .route("/canvas", canvasProjects)
   .route("/chats", slackChannels)
+  .route("/chats", slackMessages)
   .route("/images", images);
 
 const routes = jira;
