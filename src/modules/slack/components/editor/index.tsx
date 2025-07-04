@@ -1,24 +1,47 @@
 import Quill, { Delta, Op, QuillOptions } from "quill";
-import React, { RefObject, useEffect, useRef } from "react";
+import React, { RefObject, useEffect, useRef, useState } from "react";
 
 import "quill/dist/quill.snow.css";
 import { PiArrowElbowDownLeftThin } from "react-icons/pi";
 import { BsArrowReturnLeft, BsShift } from "react-icons/bs";
-import { ImageIcon, Plus, SendIcon } from "lucide-react";
+import { ImageIcon, Plus, SendIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmojiPopover } from "@/components/emoji-popover";
 import { MdOutlineAddReaction } from "react-icons/md";
 import { Hint } from "@/components/hint";
+import { useImperativeFilePicker } from "use-file-picker";
+import Image from "next/image";
+import { FileUpload } from "./file-upload";
 
 interface EditorProps {
   innerRef?: RefObject<Quill | null>;
   defaultValue?: Delta | Op[];
+  onSubmit?: () => void;
 }
 // Editor is an uncontrolled React component
-const Editor = ({ innerRef, defaultValue = [] }: EditorProps) => {
+const Editor = ({ innerRef, defaultValue = [], onSubmit }: EditorProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const defaultValueRef = useRef(defaultValue);
   const quillRef = useRef<Quill | null>(null);
+  const [uploadedImages, setUploadedImage] = useState<Record<number, string>>(
+    {}
+  );
+  const {
+    openFilePicker,
+    filesContent,
+    loading,
+    errors,
+    plainFiles,
+    clear,
+    removeFileByIndex,
+  } = useImperativeFilePicker({
+    readAs: "DataURL",
+    multiple: true,
+    onFileRemoved: (removedFile, removedIndex) => {
+      // this callback is called when a file is removed from the list of selected files
+      console.log("onFileRemoved", removedFile, removedIndex);
+    },
+  });
 
   useEffect(() => {
     if (!containerRef.current) {
@@ -40,6 +63,8 @@ const Editor = ({ innerRef, defaultValue = [] }: EditorProps) => {
               handler: () => {
                 //TODO send message
                 console.log("send message");
+                const text = quill.getText();
+                // const addedImage = image;
               },
             },
             shift_enter: {
@@ -75,6 +100,24 @@ const Editor = ({ innerRef, defaultValue = [] }: EditorProps) => {
 
   return (
     <div>
+      <div className="flex flex-wrap gap-2 py-2">
+        {filesContent.map((file, index) => {
+          console.log("path", file.path);
+          return (
+            <FileUpload
+              key={file.path}
+              file={plainFiles[index]}
+              fileName={file.name}
+              fileContent={file.content}
+              onRemove={() => removeFileByIndex(index)}
+              url={uploadedImages[index]}
+              onClientUploadComplete={(url) => {
+                setUploadedImage((old) => ({ ...old, [index]: url }));
+              }}
+            />
+          );
+        })}
+      </div>
       <div className="relative">
         <div ref={containerRef}></div>
         <Hint label="Gửi tin nhắn">
@@ -95,7 +138,12 @@ const Editor = ({ innerRef, defaultValue = [] }: EditorProps) => {
             </Button>
           </EmojiPopover>
           <Hint label="Thêm hình ảnh">
-            <Button variant="outline" size="icon" className="rounded-full">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full"
+              onClick={openFilePicker}
+            >
               <ImageIcon />
             </Button>
           </Hint>
