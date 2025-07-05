@@ -7,23 +7,29 @@ import { Header } from "./header";
 import { ChatInput } from "./chat-input";
 import { useGetMessages } from "@/modules/slack/features/messages/api/use-get-messages";
 import { Button } from "@/components/ui/button";
+import { MessageList } from "@/modules/slack/features/messages/ui/components/message-list";
+import { useState } from "react";
 
 export const ChannelView = () => {
   const workspaceId = useWorkspaceId();
   const channelId = useChannelId();
+  const [editingId, setEditingId] = useState<string | null>(null);
+
   const { data: channel, isLoading } = useGetChannel({
     workspaceId,
     channelId,
   });
 
   const {
-    data: messages,
+    data: pages,
     fetchNextPage,
     hasNextPage,
   } = useGetMessages({
     param: { workspaceId },
     query: { channelId },
   });
+
+  const messages = pages?.pages.flatMap((page) => page.messages) ?? [];
 
   if (isLoading) {
     return (
@@ -50,10 +56,12 @@ export const ChannelView = () => {
           <Button onClick={() => fetchNextPage()}>load more</Button>
         )}
       </div>
-      <div className="flex-1">
-        {messages?.pages
-          ?.flatMap((page) => page.messages)
-          .map((item) => <div key={item.id}>{item.content}</div>)}
+      <div className="flex-1 relative">
+        <MessageList
+          messages={messages}
+          editingId={editingId}
+          setEditingId={setEditingId}
+        />
       </div>
       <ChatInput />
     </div>

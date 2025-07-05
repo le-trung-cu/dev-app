@@ -1,3 +1,4 @@
+import { Message as MessageModel } from "@/generated/prisma-jira-database/jira-database-client-types";
 import { z } from "zod";
 
 export const createMessageSchema = z.object({
@@ -6,4 +7,9 @@ export const createMessageSchema = z.object({
   conversationId: z.string().nullish(),
   parentMessageId: z.string().nullish(),
   content: z.string(),
-})
+});
+
+export type Message = Omit<MessageModel, "createdAt" | "updatedAt"> & {
+  createdAt: string;
+  updatedAt: string;
+};

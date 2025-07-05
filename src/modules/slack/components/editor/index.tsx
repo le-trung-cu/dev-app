@@ -26,17 +26,21 @@ interface EditorValue {
 }
 
 interface EditorProps {
+  variant?: "create" | "edit";
   innerRef?: RefObject<Quill | null>;
   defaultValue?: Delta | Op[];
   disabled?: boolean;
   onSubmit?: (value: EditorValue) => void;
+  onCancelEdit?: () => void;
 }
 // Editor is an uncontrolled React component
 const Editor = ({
+  variant = "create",
   innerRef,
   defaultValue = [],
   disabled = false,
   onSubmit,
+  onCancelEdit,
 }: EditorProps) => {
   const submitRef = useRef(onSubmit);
 
@@ -190,30 +194,44 @@ const Editor = ({
               <MdOutlineAddReaction className="size-5" />
             </Button>
           </EmojiPopover>
-          <Hint label="Thêm hình ảnh">
-            <Button
-              disabled={disabled}
-              variant="outline"
-              size="icon"
-              className="rounded-full"
-              onClick={openFilePicker}
-            >
-              <ImageIcon />
+          {variant === "create" && (
+            <Hint label="Thêm hình ảnh">
+              <Button
+                disabled={disabled}
+                variant="outline"
+                size="icon"
+                className="rounded-full"
+                onClick={openFilePicker}
+              >
+                <ImageIcon />
+              </Button>
+            </Hint>
+          )}
+        </div>
+        {variant === "create" && (
+          <div className="text-muted-foreground text-sm text-right select-none">
+            Nhấn{" "}
+            <span className="inline-flex items-baseline gap-1">
+              <BsShift /> Shift
+            </span>
+            <Plus className="inline-block size-4 mx-2" />
+            <span className="inline-flex items-baseline gap-1">
+              <BsArrowReturnLeft />
+              Enter
+            </span>{" "}
+            để xuống dòng
+          </div>
+        )}
+        {variant === "edit" && (
+          <div className="flex gap-2">
+            <Button variant="outline" className="rounded-full" onClick={onCancelEdit}>
+              Huỷ
             </Button>
-          </Hint>
-        </div>
-        <div className="text-muted-foreground text-sm text-right select-none">
-          Nhấn{" "}
-          <span className="inline-flex items-baseline gap-1">
-            <BsShift /> Shift
-          </span>
-          <Plus className="inline-block size-4 mx-2" />
-          <span className="inline-flex items-baseline gap-1">
-            <BsArrowReturnLeft />
-            Enter
-          </span>{" "}
-          để xuống dòng
-        </div>
+            <Button variant="outline" className="rounded-full bg-blue-500 text-gray-200">
+              Cập nhật
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
