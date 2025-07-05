@@ -12,6 +12,7 @@ import { DotIcon, Pencil, SmilePlusIcon, Trash2 } from "lucide-react";
 import { RefObject, useRef, useState } from "react";
 import { Message as MessageType } from "../../types";
 import dynamic from "next/dynamic";
+import { useUpdateMessage } from "../../api/use-update-message";
 
 const Editor = dynamic(() => import("@/modules/slack/components/editor"), {
   ssr: false,
@@ -26,6 +27,22 @@ type MessageProps = MessageType & {
 };
 
 export const Message = (props: MessageProps) => {
+  const { mutate: updateApi } = useUpdateMessage();
+
+  const onUpdateSubmit = ({ content }: { content: string }) => {
+    updateApi(
+      {
+        param: { workspaceId: props.workspaceId, messageId: props.id },
+        form: { content },
+      },
+      {
+        onSuccess: () => {
+          props.setEditingId(null);
+        },
+      }
+    );
+  };
+
   return (
     <>
       {props.isCompact ? (
@@ -33,15 +50,26 @@ export const Message = (props: MessageProps) => {
           {...props}
           isEditing={props.isEditing}
           setEditingId={props.setEditingId}
+          onUpdateSubmit={onUpdateSubmit}
         />
       ) : (
-        <BaseMessage {...props} isEditing={props.isEditing} />
+        <BaseMessage
+          {...props}
+          isEditing={props.isEditing}
+          setEditingId={props.setEditingId}
+          onUpdateSubmit={onUpdateSubmit}
+        />
       )}
     </>
   );
 };
 
-const BaseMessage = (props: MessageProps) => {
+const BaseMessage = (
+  props: MessageProps & {
+    onEdit?: (edit: boolean) => void;
+    onUpdateSubmit: ({ content }: { content: string }) => void;
+  }
+) => {
   return (
     <div
       className={cn(
@@ -76,6 +104,7 @@ const BaseMessage = (props: MessageProps) => {
               props.content ? [{ insert: props.content }] : undefined
             }
             onCancelEdit={() => props.setEditingId(null)}
+            onSubmit={props.onUpdateSubmit}
           />
         ) : (
           <HoverCard>
@@ -110,6 +139,7 @@ const BaseMessage = (props: MessageProps) => {
 const CompactMessage = (
   props: MessageProps & {
     onEdit?: (edit: boolean) => void;
+    onUpdateSubmit: ({ content }: { content: string }) => void;
   }
 ) => {
   return (
@@ -129,7 +159,7 @@ const CompactMessage = (
               props.content ? [{ insert: props.content }] : undefined
             }
             onCancelEdit={() => props.setEditingId(null)}
-
+            onSubmit={props.onUpdateSubmit}
           />
         ) : (
           <HoverCard>

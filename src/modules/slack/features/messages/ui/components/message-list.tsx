@@ -4,14 +4,17 @@ import { Message } from "./message";
 interface MessageListProps {
   messages: MessageType[];
   editingId: string | null;
+  memberId?: string;
   setEditingId: (messageId: string | null) => void;
 }
 
 export const MessageList = ({
   messages,
   editingId,
+  memberId,
   setEditingId,
 }: MessageListProps) => {
+
   return (
     <div className="absolute inset-0">
       <ScrollArea className="h-full w-full">
@@ -24,7 +27,7 @@ export const MessageList = ({
               <Message
                 {...message}
                 key={message.id}
-                isAuthor
+                isAuthor={memberId === message.memberId}
                 setEditingId={setEditingId}
                 isEditing={editingId === message.id}
                 isCompact={isCompact}

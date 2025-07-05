@@ -5,7 +5,7 @@ import { jiraDBPrismaClient } from "@/lib/jira-prisma-client";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { Message } from "@/generated/prisma-jira-database/jira-database-client-types";
-import { createMessageSchema } from "../types";
+import { createMessageSchema, updateMessageSchema } from "../types";
 
 const MESSAGES_BATCH = 10;
 
@@ -159,61 +159,64 @@ const app = new Hono()
 
       return c.json({ isSuccess: true, message });
     }
+  )
+  .patch(
+    "/workspaces/:workspaceId/messages/:messageId",
+    zValidator(
+      "param",
+      z.object({ workspaceId: z.string(), messageId: z.string() })
+    ),
+    zValidator("form", updateMessageSchema),
+    async (c) => {
+      const session = await auth.api.getSession({
+        headers: await headers(),
+      });
+      if (!session) return c.json({ error: "Unauthorized" }, 401);
+
+      const data = c.req.valid("form");
+
+      const { workspaceId, messageId } = c.req.valid("param");
+      const userId = session.user.id;
+
+      const workspace = await jiraDBPrismaClient.workspace.findFirst({
+        where: {
+          id: workspaceId,
+        },
+        include: {
+          members: {
+            where: {
+              userId,
+            },
+          },
+        },
+      });
+
+      let message = await jiraDBPrismaClient.message.findFirst({
+        where: {
+          workspaceId,
+          id: messageId,
+        },
+      });
+
+      if (!workspace || !message) return c.json({ error: "NotFound" }, 404);
+      if (
+        workspace.members.length === 0 ||
+        message.memberId !== workspace.members[0].id
+      )
+        return c.json({ error: "Unauthorized" }, 401);
+
+      message = await jiraDBPrismaClient.message.update({
+        where: {
+          id: messageId,
+        },
+        data: {
+          ...data,
+        },
+      });
+
+      return c.json({ isSuccess: true, message });
+    }
   );
-// .patch(
-//   "/workspaces/:workspaceId/channels/:channelId",
-//   zValidator(
-//     "param",
-//     z.object({ workspaceId: z.string(), channelId: z.string() })
-//   ),
-//   zValidator("form", updateChannelSchema),
-//   async (c) => {
-//     const session = await auth.api.getSession({
-//       headers: await headers(),
-//     });
-//     if (!session) return c.json({ error: "Unauthorized" }, 401);
-
-//     const data = c.req.valid("form");
-
-//     const { workspaceId, channelId } = c.req.valid("param");
-//     const userId = session.user.id;
-
-//     const workspace = await jiraDBPrismaClient.workspace.findFirst({
-//       where: {
-//         id: workspaceId,
-//       },
-//       include: {
-//         members: {
-//           where: {
-//             userId,
-//           },
-//         },
-//         channels: {
-//           where: {
-//             id: channelId,
-//           },
-//         },
-//       },
-//     });
-
-//     if (!workspace || workspace.channels.length === 0)
-//       return c.json({ error: "NotFound" }, 404);
-//     if (workspace.members.length === 0)
-//       return c.json({ error: "Unauthorized" }, 401);
-
-//     const channel = await jiraDBPrismaClient.channel.update({
-//       where: {
-//         id: channelId,
-//         workspaceId,
-//       },
-//       data: {
-//         ...data,
-//       },
-//     });
-
-//     return c.json({ isSuccess: true, channel });
-//   }
-// )
 // .delete(
 //   "/workspaces/:workspaceId/channels/:channelId",
 //   zValidator(

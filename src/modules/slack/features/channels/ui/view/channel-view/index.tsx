@@ -9,13 +9,14 @@ import { useGetMessages } from "@/modules/slack/features/messages/api/use-get-me
 import { Button } from "@/components/ui/button";
 import { MessageList } from "@/modules/slack/features/messages/ui/components/message-list";
 import { useState } from "react";
+import { useGetCurrentMember } from "@/modules/jira/features/members/api/use-get-current-member";
 
 export const ChannelView = () => {
   const workspaceId = useWorkspaceId();
   const channelId = useChannelId();
   const [editingId, setEditingId] = useState<string | null>(null);
-
-  const { data: channel, isLoading } = useGetChannel({
+  const {data: currentMember, isLoading: isLoadingMember} = useGetCurrentMember({workspaceId});
+  const { data: channel, isLoading: isLoadingChannel } = useGetChannel({
     workspaceId,
     channelId,
   });
@@ -24,6 +25,7 @@ export const ChannelView = () => {
     data: pages,
     fetchNextPage,
     hasNextPage,
+    isLoading: isLoadingMessages,
   } = useGetMessages({
     param: { workspaceId },
     query: { channelId },
@@ -31,7 +33,7 @@ export const ChannelView = () => {
 
   const messages = pages?.pages.flatMap((page) => page.messages) ?? [];
 
-  if (isLoading) {
+  if (isLoadingChannel) {
     return (
       <div className="h-full flex-1 flex items-center justify-center">
         <Loader className="animate-spin size-5 text-muted-foreground" />
@@ -61,6 +63,7 @@ export const ChannelView = () => {
           messages={messages}
           editingId={editingId}
           setEditingId={setEditingId}
+          memberId={currentMember?.id}
         />
       </div>
       <ChatInput />

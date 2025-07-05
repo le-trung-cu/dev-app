@@ -9,6 +9,10 @@ export const createMessageSchema = z.object({
   content: z.string(),
 });
 
+export const updateMessageSchema = z.object({
+  content: z.string(),
+});
+
 export type Message = Omit<MessageModel, "createdAt" | "updatedAt"> & {
   createdAt: string;
   updatedAt: string;
