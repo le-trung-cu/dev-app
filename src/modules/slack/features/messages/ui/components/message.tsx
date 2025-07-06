@@ -130,7 +130,7 @@ const BaseMessage = (
             onSubmit={props.onUpdateSubmit}
           />
         ) : (
-          <HoverCard>
+          <HoverCard {...(props.deleted ? { open: false } : {})}>
             <HoverCardTrigger asChild>
               <div
                 className={cn(
@@ -187,7 +187,7 @@ const CompactMessage = (
             onSubmit={props.onUpdateSubmit}
           />
         ) : (
-          <HoverCard open={props.deleted ? false : undefined}>
+          <HoverCard {...(props.deleted ? { open: false } : {})}>
             <HoverCardTrigger asChild>
               <div
                 className={cn(
