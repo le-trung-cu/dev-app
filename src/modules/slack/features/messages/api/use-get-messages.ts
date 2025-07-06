@@ -4,6 +4,7 @@ import { InferRequestType, InferResponseType } from "hono";
 import { Message } from "../types";
 import { useCallback } from "react";
 import { Reaction } from "@/generated/prisma-jira-database/jira-database-client-types";
+import { useGetMessage } from "./use-get-message";
 
 type RequestType = InferRequestType<
   (typeof client.api.chats.workspaces)[":workspaceId"]["messages"]["$get"]
@@ -181,14 +182,8 @@ export const useSetQueryDataMessages = () => {
               messages: page.messages.map((message) => {
                 if (message.id === reaction.messageId) {
                   message = { ...message, reactions: { ...message.reactions } };
-                  if (!message.reactions[reaction.symbol]) {
-                    message.reactions[reaction.symbol] = {
-                      count: 0,
-                      memberIds: [],
-                    };
-                  }
-                  const oldReaction = message.reactions[reaction.symbol];
-                  const memberIds = new Set(oldReaction.memberIds);
+                 
+                  const memberIds = new Set(message.reactions?.[reaction.symbol]?.memberIds ?? []);
                   if (reaction.isNew) {
                     memberIds.add(reaction.memberId);
                   } else {
@@ -218,6 +213,30 @@ export const useSetQueryDataMessages = () => {
           return newData;
         }
       );
+
+      queryClient.setQueryData<ReturnType<typeof useGetMessage>["data"]>(
+        ["message", reaction.workspaceId ?? null, reaction.messageId ?? null],
+        (oldData) => {
+          if(!oldData) return;
+          const reactions = {...oldData.reactions} 
+          const memberIds = new Set(reactions[reaction.symbol]?.memberIds ?? []);
+          if(reaction.isNew) {
+            memberIds.add(reaction.memberId);
+          }else {
+            memberIds.delete(reaction.memberId);
+          }
+          const newReactons  = {...oldData.reactions};
+
+          if(memberIds.size === 0) {
+            delete newReactons[reaction.symbol];
+          }
+
+          return {
+            ...oldData,
+            reactions: newReactons
+          }
+        }
+      )
     },
     [queryClient]
   );

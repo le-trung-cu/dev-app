@@ -11,6 +11,7 @@ import { MemberAvatar } from "@/modules/jira/features/members/ui/components/memb
 import {
   DotIcon,
   MessageSquareTextIcon,
+  MessagesSquareIcon,
   Pencil,
   SmilePlusIcon,
   Trash2,
@@ -256,8 +257,17 @@ const CompactMessage = (
                 <Actions {...props} />
               </HoverCardContent>
             </HoverCard>
-            {reactions.length > 0 ? (
-              <div className="gap-1 flex flex-wrap">
+            {reactions.length > 0 ||
+            (props.replies && props.replies.length > 0) ? (
+              <div className="gap-1 flex flex-row-reverse items-center flex-wrap">
+                {props.replies && props.replies.length > 0 && (
+                  <Hint label={`Có ${props.replies.length} tin nhắn trả lời`}>
+                    <Badge variant="outline" className="mt-1 [&>svg]:size-5 text-zinc-500 dark:text-zinc-400">
+                      <MessagesSquareIcon className=""/>
+                      {props.replies.length}
+                    </Badge>
+                  </Hint>
+                )}
                 {reactions.map((reaction) => (
                   <Badge
                     key={reaction.symbol}

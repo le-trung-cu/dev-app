@@ -90,6 +90,12 @@ const app = new Hono()
           include: {
             member: true,
             reactions: true,
+            replies: {
+              select: {
+                id: true,
+                memberId: true,
+              }
+            }
           },
           orderBy: {
             createdAt: "desc",

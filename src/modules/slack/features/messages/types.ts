@@ -22,4 +22,8 @@ export type Message = Omit<MessageModel, "createdAt" | "updatedAt"> & {
       memberIds: string[];
     };
   };
+  replies?: {
+    id: string;
+    memberId: string;
+  }[]
 };

@@ -1,7 +1,5 @@
 import { client } from "@/lib/rpc";
-import {
-  useQuery,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
 
 type RequestType = InferRequestType<
@@ -17,7 +15,7 @@ export const useGetMessage = ({ param }: RequestType) => {
   const { workspaceId, messageId } = param;
   const infiniteQuery = useQuery({
     enabled: !!workspaceId && !!messageId,
-    queryKey: ["message", workspaceId, messageId],
+    queryKey: ["message", workspaceId ?? null, messageId ?? null],
     queryFn: async () => {
       const response = await client.api.chats.workspaces[
         ":workspaceId"
