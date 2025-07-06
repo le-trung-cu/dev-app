@@ -1,7 +1,6 @@
 import { client } from "@/lib/rpc";
 import {
   useInfiniteQuery,
-  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";

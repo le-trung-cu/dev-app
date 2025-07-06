@@ -8,13 +8,20 @@ import {
 } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
 import { MemberAvatar } from "@/modules/jira/features/members/ui/components/member-avatar";
-import { DotIcon, Pencil, SmilePlusIcon, Trash2 } from "lucide-react";
+import {
+  DotIcon,
+  MessageSquareTextIcon,
+  Pencil,
+  SmilePlusIcon,
+  Trash2,
+} from "lucide-react";
 import { RefObject, useRef, useState } from "react";
 import { Message as MessageType } from "../../types";
 import dynamic from "next/dynamic";
 import { useUpdateMessage } from "../../api/use-update-message";
 import { useDeleteMessage } from "../../api/use-delete-message";
 import { useConfirm } from "@/hooks/use-confirm";
+import { useThreadId } from "../../../threads/hooks/use-thread-id";
 
 const Editor = dynamic(() => import("@/modules/slack/components/editor"), {
   ssr: false,
@@ -222,6 +229,8 @@ const Actions = (
     onDeleteSubmit: () => void;
   }
 ) => {
+  const [_, setThreadId] = useThreadId();
+
   return (
     <div className="flex">
       {props.isAuthor && (
@@ -238,6 +247,16 @@ const Actions = (
         <Hint label="Xoá tin nhắn">
           <Button variant="ghost" onClick={props.onDeleteSubmit}>
             <Trash2 />
+          </Button>
+        </Hint>
+      )}
+      {!props.parentMessageId && (
+        <Hint label="Trả lời">
+          <Button
+            variant="ghost"
+            onClick={() => setThreadId(props.id)}
+          >
+            <MessageSquareTextIcon />
           </Button>
         </Hint>
       )}

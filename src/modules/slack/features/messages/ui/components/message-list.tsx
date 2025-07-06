@@ -3,6 +3,7 @@ import { Message as MessageType } from "../../types";
 import { Message } from "./message";
 interface MessageListProps {
   messages: MessageType[];
+  parentMessage?: MessageType;
   editingId: string | null;
   memberId?: string;
   setEditingId: (messageId: string | null) => void;
@@ -10,11 +11,11 @@ interface MessageListProps {
 
 export const MessageList = ({
   messages,
+  parentMessage,
   editingId,
   memberId,
   setEditingId,
 }: MessageListProps) => {
-
   return (
     <div className="absolute inset-0">
       <ScrollArea className="h-full w-full">
@@ -34,6 +35,15 @@ export const MessageList = ({
               />
             );
           })}
+          {!!parentMessage && (
+            <Message
+              {...parentMessage}
+              key={parentMessage.id}
+              isAuthor={memberId === parentMessage.memberId}
+              setEditingId={setEditingId}
+              isEditing={editingId === parentMessage.id}
+            />
+          )}
         </div>
         <ScrollBar orientation="vertical" />
       </ScrollArea>

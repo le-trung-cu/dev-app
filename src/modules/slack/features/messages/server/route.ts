@@ -28,7 +28,7 @@ const app = new Hono()
       });
       if (!session) return c.json({ error: "Unauthorized" }, 401);
       const { workspaceId } = c.req.valid("param");
-      const { channelId, conversationId, parentMessageId, cursor } =
+      let { channelId, conversationId, parentMessageId, cursor } =
         c.req.valid("query");
       const userId = session.user.id;
       const workspace = await jiraDBPrismaClient.workspace.findFirst({
@@ -48,13 +48,17 @@ const app = new Hono()
       if (workspace.members.length === 0)
         return c.json({ error: "Unauthorized" }, 401);
 
+      if (!!parentMessageId) {
+        channelId = undefined;
+        conversationId = undefined;
+      }
       let messages: Message[] = [];
       if (cursor) {
         messages = await jiraDBPrismaClient.message.findMany({
           where: {
             channelId,
             conversationId,
-            parentMessageId,
+            parentMessageId: parentMessageId ?? null,
           },
           cursor: {
             id: cursor,
@@ -73,7 +77,7 @@ const app = new Hono()
           where: {
             channelId,
             conversationId,
-            parentMessageId,
+            parentMessageId: parentMessageId ?? null,
           },
           take: MESSAGES_BATCH,
           include: {
@@ -91,6 +95,52 @@ const app = new Hono()
       }
 
       return c.json({ isSuccess: true, messages, nextCursor });
+    }
+  )
+  .get(
+    "/workspaces/:workspaceId/messages/:messageId",
+    zValidator(
+      "param",
+      z.object({ workspaceId: z.string(), messageId: z.string() })
+    ),
+    async (c) => {
+      const session = await auth.api.getSession({
+        headers: await headers(),
+      });
+      if (!session) return c.json({ error: "Unauthorized" }, 401);
+      const { workspaceId, messageId } = c.req.valid("param");
+      const userId = session.user.id;
+      const workspace = await jiraDBPrismaClient.workspace.findFirst({
+        where: {
+          id: workspaceId,
+        },
+        include: {
+          members: {
+            where: {
+              userId,
+            },
+          },
+        },
+      });
+
+      if (!workspace) return c.json({ error: "NotFound" }, 404);
+      if (workspace.members.length === 0)
+        return c.json({ error: "Unauthorized" }, 401);
+
+      const message = await jiraDBPrismaClient.message.findFirst({
+        where: {
+          workspaceId,
+          id: messageId,
+        },
+        include: {
+          member: true,
+        },
+      });
+
+      if (!message) {
+        return c.json({ error: "NotFound" }, 404);
+      }
+      return c.json({ isSuccess: true, message });
     }
   )
   .post(
@@ -156,7 +206,7 @@ const app = new Hono()
           memberId: workspace.members[0].id,
         },
       });
-      
+
       return c.json({ isSuccess: true, message });
     }
   )

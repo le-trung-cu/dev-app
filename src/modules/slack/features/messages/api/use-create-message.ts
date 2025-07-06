@@ -14,6 +14,7 @@ export const useCreateMessage = () => {
       query: {
         workspaceId: string;
         channelId: string;
+        parentMessageId?: string;
       };
       form: {
         content: string;
