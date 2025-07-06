@@ -9,19 +9,14 @@ type RequestType = InferRequestType<
   (typeof client.api.chats.workspaces)[":workspaceId"]["messages"][":messageId"]["$patch"]
 >;
 
-export const useUpdateMessage = () => {
+export const useDeleteMessage = () => {
   const mutation = useMutation({
     mutationFn: async ({
       query,
-      form,
     }: {
       query: {
         workspaceId: string;
         messageId: string;
-      };
-      form: {
-        content: string;
-        fileUrl?: string | null;
       };
     }) => {
       const { messageId, ...newQuery } = query;
@@ -30,7 +25,7 @@ export const useUpdateMessage = () => {
         url: `${process.env.NEXT_PUBLIC_APP_URL!}/api/socket/messages/${messageId}`,
         query: newQuery,
       });
-      const response = await axios.patch<{ isSuccess: true }>(url, form);
+      const response = await axios.delete<{ isSuccess: true }>(url);
       if (!response.data.isSuccess) {
         throw new Error("Failed to update message");
       }

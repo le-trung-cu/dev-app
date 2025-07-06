@@ -13,6 +13,8 @@ import { RefObject, useRef, useState } from "react";
 import { Message as MessageType } from "../../types";
 import dynamic from "next/dynamic";
 import { useUpdateMessage } from "../../api/use-update-message";
+import { useDeleteMessage } from "../../api/use-delete-message";
+import { useConfirm } from "@/hooks/use-confirm";
 
 const Editor = dynamic(() => import("@/modules/slack/components/editor"), {
   ssr: false,
@@ -28,11 +30,16 @@ type MessageProps = MessageType & {
 
 export const Message = (props: MessageProps) => {
   const { mutate: updateApi } = useUpdateMessage();
+  const { mutate: deleteApi } = useDeleteMessage();
+  const [ConfirmDialog, confirm] = useConfirm();
 
   const onUpdateSubmit = ({ content }: { content: string }) => {
     updateApi(
       {
-        param: { workspaceId: props.workspaceId, messageId: props.id },
+        query: {
+          workspaceId: props.workspaceId,
+          messageId: props.id,
+        },
         form: { content },
       },
       {
@@ -43,14 +50,28 @@ export const Message = (props: MessageProps) => {
     );
   };
 
+  const onDeleteSubmit = async () => {
+    const ok = await confirm({
+      title: "Xoá tin nhắn",
+      description: "Tin nhắn sẽ bị xoá khỏi cuộc trò chuyện",
+    });
+    if (!ok) return;
+
+    deleteApi({
+      query: { workspaceId: props.workspaceId, messageId: props.id },
+    });
+  };
+
   return (
     <>
+      <ConfirmDialog />
       {props.isCompact ? (
         <CompactMessage
           {...props}
           isEditing={props.isEditing}
           setEditingId={props.setEditingId}
           onUpdateSubmit={onUpdateSubmit}
+          onDeleteSubmit={onDeleteSubmit}
         />
       ) : (
         <BaseMessage
@@ -58,6 +79,7 @@ export const Message = (props: MessageProps) => {
           isEditing={props.isEditing}
           setEditingId={props.setEditingId}
           onUpdateSubmit={onUpdateSubmit}
+          onDeleteSubmit={onDeleteSubmit}
         />
       )}
     </>
@@ -68,6 +90,7 @@ const BaseMessage = (
   props: MessageProps & {
     onEdit?: (edit: boolean) => void;
     onUpdateSubmit: ({ content }: { content: string }) => void;
+    onDeleteSubmit: () => void;
   }
 ) => {
   return (
@@ -114,7 +137,8 @@ const BaseMessage = (
                   "bg-gray-100 p-3 rounded-xl",
                   props.isAuthor ? "rounded-tr-none" : "rounded-tl-none",
                   props.isAuthor && "bg-blue-200/90",
-                  props.isEditing && "bg-white"
+                  props.isEditing && "bg-white",
+                  props.deleted && "opacity-55 text-xs"
                 )}
               >
                 {props.content}
@@ -140,6 +164,7 @@ const CompactMessage = (
   props: MessageProps & {
     onEdit?: (edit: boolean) => void;
     onUpdateSubmit: ({ content }: { content: string }) => void;
+    onDeleteSubmit: () => void;
   }
 ) => {
   return (
@@ -162,13 +187,14 @@ const CompactMessage = (
             onSubmit={props.onUpdateSubmit}
           />
         ) : (
-          <HoverCard>
+          <HoverCard open={props.deleted ? false : undefined}>
             <HoverCardTrigger asChild>
               <div
                 className={cn(
                   "bg-gray-100 p-3 rounded-xl",
                   props.isAuthor ? "rounded-tr-none" : "rounded-tl-none",
-                  props.isAuthor && "bg-blue-200/90"
+                  props.isAuthor && "bg-blue-200/90",
+                  props.deleted && "opacity-55 text-xs"
                 )}
               >
                 {props.content}
@@ -193,6 +219,7 @@ const CompactMessage = (
 const Actions = (
   props: MessageProps & {
     emojiContenRef?: RefObject<HTMLDivElement | null>;
+    onDeleteSubmit: () => void;
   }
 ) => {
   return (
@@ -209,7 +236,7 @@ const Actions = (
       )}
       {props.isAuthor && (
         <Hint label="Xoá tin nhắn">
-          <Button variant="ghost">
+          <Button variant="ghost" onClick={props.onDeleteSubmit}>
             <Trash2 />
           </Button>
         </Hint>

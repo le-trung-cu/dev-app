@@ -101,7 +101,6 @@ const Editor = ({
               key: "Enter",
               handler: () => {
                 //TODO send message
-                console.log("send message");
                 const text = quill.getText();
                 const fileUrl =
                   imagesRef.current.length > 0

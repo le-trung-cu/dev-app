@@ -10,10 +10,14 @@ import { Button } from "@/components/ui/button";
 import { MessageList } from "@/modules/slack/features/messages/ui/components/message-list";
 import { useState } from "react";
 import { useGetCurrentMember } from "@/modules/jira/features/members/api/use-get-current-member";
+import { useChatSocket } from "@/modules/slack/hooks/use-chat-socket";
 
 export const ChannelView = () => {
   const workspaceId = useWorkspaceId();
   const channelId = useChannelId();
+  
+  useChatSocket({roomId: workspaceId, queryKey: "", updateKey: ""});
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const {data: currentMember, isLoading: isLoadingMember} = useGetCurrentMember({workspaceId});
   const { data: channel, isLoading: isLoadingChannel } = useGetChannel({

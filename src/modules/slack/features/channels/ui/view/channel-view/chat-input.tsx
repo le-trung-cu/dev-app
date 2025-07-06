@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import Quill from "quill";
 import { useCallback, useRef } from "react";
 import { useChannelId } from "../../../hooks/use-channelId";
+import qs from "query-string";
+import axios from "axios";
 
 const Editor = dynamic(() => import("@/modules/slack/components/editor"), {
   ssr: false,
@@ -19,28 +21,21 @@ export const ChatInput = () => {
   const { mutate, isPending } = useCreateMessage();
 
   const onSubmit = useCallback(
-    ({
+    async ({
       content,
       fileUrl,
     }: {
       content: string;
       fileUrl: string | undefined;
     }) => {
-      mutate(
-        { param: { workspaceId }, form: { content, fileUrl, channelId } },
-        {
-          onSuccess: () => {
-            quillRef.current?.setContents([]);
-            setTimeout(() => {
-              quillRef.current?.focus();
-            }, 200);
-          },
-        }
-      );
+      mutate({ query: { workspaceId, channelId }, form: { content, fileUrl } });
+      quillRef.current?.setContents([]);
+      setTimeout(() => {
+        quillRef.current?.focus();
+      }, 200);
     },
-    [mutate, workspaceId, channelId]
+    [workspaceId, channelId]
   );
-
   return (
     <Editor innerRef={quillRef} onSubmit={onSubmit} disabled={isPending} />
   );

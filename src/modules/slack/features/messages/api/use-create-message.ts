@@ -1,50 +1,42 @@
 import { client } from "@/lib/rpc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import { InferRequestType, InferResponseType } from "hono";
+import qs from "query-string";
 import { toast } from "sonner";
 
-type RequestType = InferRequestType<
-  (typeof client.api.chats.workspaces)[":workspaceId"]["messages"]["$post"]
->;
-type ResponseType = InferResponseType<
-  (typeof client.api.chats.workspaces)[":workspaceId"]["messages"]["$post"],
-  200
->;
-
 export const useCreateMessage = () => {
-  const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async ({ param, form }: RequestType) => {
+    mutationFn: async ({
+      query,
+      form,
+    }: {
+      query: {
+        workspaceId: string;
+        channelId: string;
+      };
+      form: {
+        content: string;
+        fileUrl: string | undefined | null;
+      };
+    }) => {
       form = { ...form };
       if (!form.fileUrl) {
         delete form["fileUrl"];
       }
-      const response = await client.api.chats.workspaces[
-        ":workspaceId"
-      ].messages.$post({
-        param,
-        form,
+
+      const url = qs.stringifyUrl({
+        url: `${process.env.NEXT_PUBLIC_APP_URL!}/api/socket/messages`,
+        query,
       });
-
-      if (!response.ok) {
-        throw new Error("Something went wrong");
+      const response = await axios.post<{isSuccess: true}>(url, form);
+      if(!response.data.isSuccess) {
+         throw new Error("Failed to create message");
       }
-
-      return await response.json();
+      return true;
     },
     onSuccess: (data) => {
       toast.success("Message created");
-      const { workspaceId, channelId, conversationId, parentMessageId } =
-        data.message;
-      queryClient.invalidateQueries({
-        queryKey: [
-          "messages",
-          workspaceId,
-          channelId,
-          conversationId,
-          parentMessageId,
-        ],
-      });
     },
     onError: () => {
       toast.error("Failed to create message");
@@ -53,3 +45,4 @@ export const useCreateMessage = () => {
 
   return mutation;
 };
+
