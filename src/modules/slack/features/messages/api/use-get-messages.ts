@@ -73,20 +73,12 @@ export const useSetQueryDataMessages = () => {
           message.parentMessageId ?? null,
         ],
         (oldData) => {
-          console.log("setCreatedMessage message:", message);
-          console.log("setCreatedMessage queryKey", [
-            "messages",
-            message.workspaceId,
-            message.channelId ?? null,
-            message.conversationId ?? null,
-            message.parentMessageId ?? null,
-          ]);
-          console.log({ oldData });
           if (!oldData || !oldData.pages || oldData.pages.length === 0) {
             return oldData;
           }
 
-          const pages = [...oldData.pages];
+          const pages = [...oldData.pages]
+
           pages[0] = {
             ...pages[0],
             messages: [message, ...pages[0].messages],
@@ -100,6 +92,57 @@ export const useSetQueryDataMessages = () => {
           return newData;
         }
       );
+      if (!!message.parentMessageId) {
+        queryClient.setQueryData<ReturnType<typeof useGetMessages>["data"]>(
+          [
+            "messages",
+            message.workspaceId,
+            message.channelId ?? null,
+            message.conversationId ?? null,
+            null,
+          ],
+          (oldData) => {
+            if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+              return oldData;
+            }
+
+            const pages = oldData.pages.map((page) => {
+              if (!message.parentMessageId) return page;
+              if (!page.messages || page.messages.length === 0) return page;
+              const index = page.messages.findIndex(
+                (m) => m.id === message.parentMessageId
+              );
+              if (index === -1) {
+                return page;
+              }
+
+              return {
+                ...page,
+                messages: page.messages.map((m) => {
+                  if (m.id === message.parentMessageId) {
+                    return {
+                      ...m,
+                      replies: [
+                        ...m.replies,
+                        { id: message.id, memberId: message.memberId },
+                      ],
+                    };
+                  }
+
+                  return m;
+                }),
+              };
+            });
+
+            const newData = {
+              ...oldData,
+              pages,
+            };
+
+            return newData;
+          }
+        );
+      }
     },
     [queryClient]
   );
@@ -115,15 +158,6 @@ export const useSetQueryDataMessages = () => {
           message.parentMessageId ?? null,
         ],
         (oldData) => {
-          console.log("setUpdatedMessage message:", message);
-          console.log("setUpdatedMessage queryKey", [
-            "messages",
-            message.workspaceId,
-            message.channelId ?? null,
-            message.conversationId ?? null,
-            message.parentMessageId ?? null,
-          ]);
-          console.log({ oldData });
           if (!oldData || !oldData.pages || oldData.pages.length === 0) {
             return oldData;
           }
@@ -171,7 +205,6 @@ export const useSetQueryDataMessages = () => {
           reaction.parentMessageId ?? null,
         ],
         (oldData) => {
-          console.log({ oldData });
           if (!oldData || !oldData.pages || oldData.pages.length === 0) {
             return oldData;
           }
@@ -182,8 +215,10 @@ export const useSetQueryDataMessages = () => {
               messages: page.messages.map((message) => {
                 if (message.id === reaction.messageId) {
                   message = { ...message, reactions: { ...message.reactions } };
-                 
-                  const memberIds = new Set(message.reactions?.[reaction.symbol]?.memberIds ?? []);
+
+                  const memberIds = new Set(
+                    message.reactions?.[reaction.symbol]?.memberIds ?? []
+                  );
                   if (reaction.isNew) {
                     memberIds.add(reaction.memberId);
                   } else {
@@ -217,26 +252,28 @@ export const useSetQueryDataMessages = () => {
       queryClient.setQueryData<ReturnType<typeof useGetMessage>["data"]>(
         ["message", reaction.workspaceId ?? null, reaction.messageId ?? null],
         (oldData) => {
-          if(!oldData) return;
-          const reactions = {...oldData.reactions} 
-          const memberIds = new Set(reactions[reaction.symbol]?.memberIds ?? []);
-          if(reaction.isNew) {
+          if (!oldData) return;
+          const reactions = { ...oldData.reactions };
+          const memberIds = new Set(
+            reactions[reaction.symbol]?.memberIds ?? []
+          );
+          if (reaction.isNew) {
             memberIds.add(reaction.memberId);
-          }else {
+          } else {
             memberIds.delete(reaction.memberId);
           }
-          const newReactons  = {...oldData.reactions};
+          const newReactons = { ...oldData.reactions };
 
-          if(memberIds.size === 0) {
+          if (memberIds.size === 0) {
             delete newReactons[reaction.symbol];
           }
 
           return {
             ...oldData,
-            reactions: newReactons
-          }
+            reactions: newReactons,
+          };
         }
-      )
+      );
     },
     [queryClient]
   );

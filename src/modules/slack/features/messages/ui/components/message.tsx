@@ -179,8 +179,19 @@ const BaseMessage = (
                 <Actions {...props} />
               </HoverCardContent>
             </HoverCard>
-            {reactions.length > 0 ? (
-              <div className="gap-1 flex flex-wrap">
+            {props.replies && props.replies.length > 0 ? (
+              <div className="gap-1 flex flex-row-reverse items-center flex-wrap">
+                {props.replies && props.replies.length > 0 && (
+                  <Hint label={`Có ${props.replies.length} tin nhắn trả lời`}>
+                    <Badge
+                      variant="outline"
+                      className="mt-1 [&>svg]:size-5 text-zinc-500 dark:text-zinc-400"
+                    >
+                      <MessagesSquareIcon className="" />
+                      {props.replies.length}
+                    </Badge>
+                  </Hint>
+                )}
                 {reactions.map((reaction) => (
                   <Badge
                     key={reaction.symbol}
@@ -262,8 +273,11 @@ const CompactMessage = (
               <div className="gap-1 flex flex-row-reverse items-center flex-wrap">
                 {props.replies && props.replies.length > 0 && (
                   <Hint label={`Có ${props.replies.length} tin nhắn trả lời`}>
-                    <Badge variant="outline" className="mt-1 [&>svg]:size-5 text-zinc-500 dark:text-zinc-400">
-                      <MessagesSquareIcon className=""/>
+                    <Badge
+                      variant="outline"
+                      className="mt-1 [&>svg]:size-5 text-zinc-500 dark:text-zinc-400"
+                    >
+                      <MessagesSquareIcon className="" />
                       {props.replies.length}
                     </Badge>
                   </Hint>

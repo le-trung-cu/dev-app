@@ -89,6 +89,7 @@ export default async function handler(
 
     initSocketServer((res as any).socket.server);
     const io = getSocketServer();
+    console.log("IO")
     io.to(`chat-room:${workspaceId}`).emit("update-reaction", {
       reaction: {
         ...result,

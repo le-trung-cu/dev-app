@@ -74,6 +74,15 @@ export default async function handler(
         deleted: false,
         memberId: workspace.members[0].id,
       },
+      include: {
+          reactions: true,
+          replies: {
+            select: {
+              id: true,
+              memberId: true,
+            }
+          }
+        }
     });
 
     initSocketServer((res as any).socket.server);

@@ -57,6 +57,7 @@ const app = new Hono()
       }
       let messages: (Message & {
         reactions: Reaction[];
+        replies: Pick<Message,  "id" | "memberId">[];
       })[] = [];
 
       if (cursor) {
@@ -74,6 +75,12 @@ const app = new Hono()
           include: {
             member: true,
             reactions: true,
+            replies: {
+              select: {
+                id: true,
+                memberId: true,
+              }
+            }
           },
           orderBy: {
             createdAt: "desc",
@@ -236,6 +243,15 @@ const app = new Hono()
           deleted: false,
           memberId: workspace.members[0].id,
         },
+        include: {
+          reactions: true,
+          replies: {
+            select: {
+              id: true,
+              memberId: true,
+            }
+          }
+        }
       });
 
       return c.json({ isSuccess: true, message });
