@@ -4,7 +4,10 @@ import { auth } from "@/lib/auth";
 import { jiraDBPrismaClient } from "@/lib/jira-prisma-client";
 import { headers } from "next/headers";
 import { z } from "zod";
-import { Message } from "@/generated/prisma-jira-database/jira-database-client-types";
+import {
+  Message,
+  Reaction,
+} from "@/generated/prisma-jira-database/jira-database-client-types";
 import { createMessageSchema, updateMessageSchema } from "../types";
 
 const MESSAGES_BATCH = 10;
@@ -52,7 +55,10 @@ const app = new Hono()
         channelId = undefined;
         conversationId = undefined;
       }
-      let messages: Message[] = [];
+      let messages: (Message & {
+        reactions: Reaction[];
+      })[] = [];
+
       if (cursor) {
         messages = await jiraDBPrismaClient.message.findMany({
           where: {
@@ -67,6 +73,7 @@ const app = new Hono()
           take: MESSAGES_BATCH,
           include: {
             member: true,
+            reactions: true,
           },
           orderBy: {
             createdAt: "desc",
@@ -82,6 +89,7 @@ const app = new Hono()
           take: MESSAGES_BATCH,
           include: {
             member: true,
+            reactions: true,
           },
           orderBy: {
             createdAt: "desc",
@@ -89,12 +97,21 @@ const app = new Hono()
         });
       }
 
+      const messagesResult = messages.map((message) => {
+        const reactions = reduceReactions(message.reactions);
+
+        return {
+          ...message,
+          reactions,
+        };
+      });
+
       let nextCursor = null;
       if (messages.length === MESSAGES_BATCH) {
         nextCursor = messages[MESSAGES_BATCH - 1].id;
       }
 
-      return c.json({ isSuccess: true, messages, nextCursor });
+      return c.json({ isSuccess: true, messages: messagesResult, nextCursor });
     }
   )
   .get(
@@ -134,13 +151,21 @@ const app = new Hono()
         },
         include: {
           member: true,
+          reactions: true,
         },
       });
+
+      const messageResult = !message
+        ? null
+        : {
+            ...message,
+            reactions: reduceReactions(message?.reactions),
+          };
 
       if (!message) {
         return c.json({ error: "NotFound" }, 404);
       }
-      return c.json({ isSuccess: true, message });
+      return c.json({ isSuccess: true, message: messageResult });
     }
   )
   .post(
@@ -317,3 +342,21 @@ const app = new Hono()
 // );
 
 export default app;
+
+function reduceReactions(reactions: Reaction[]) {
+  return reactions.reduce(
+    (result, item) => {
+      if (!result[item.symbol]) {
+        result[item.symbol] = {
+          count: 0,
+          memberIds: [],
+        };
+      }
+      result[item.symbol].count += 1;
+      result[item.symbol].memberIds.push(item.memberId);
+
+      return result;
+    },
+    {} as Record<string, { count: number; memberIds: string[] }>
+  );
+}

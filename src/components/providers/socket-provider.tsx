@@ -27,18 +27,18 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     socket.on("connect", () => {
-      console.log("connect WS")
+      console.log("connect WS");
       setIsConnected(true);
     });
 
     socket.on("disconnect", () => {
-      console.log("disconnect WS")
+      console.log("disconnect WS");
       setIsConnected(false);
     });
 
     socket.on("error", (e) => {
-      console.log("error WS", e)
-    })
+      console.log("error WS", e);
+    });
 
     setSocket(socket);
 

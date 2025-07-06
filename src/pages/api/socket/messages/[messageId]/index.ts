@@ -4,7 +4,6 @@ import { auth } from "@/lib/auth";
 import { fromNodeHeaders } from "better-auth/node";
 import { getSocketServer, initSocketServer } from "@/lib/socket";
 import { jiraDBPrismaClient } from "@/lib/jira-prisma-client";
-import { Message } from "@/generated/prisma-jira-database/jira-database-client-types";
 
 export default async function handler(
   req: NextApiRequest,

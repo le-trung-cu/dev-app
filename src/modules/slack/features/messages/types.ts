@@ -16,4 +16,10 @@ export const updateMessageSchema = z.object({
 export type Message = Omit<MessageModel, "createdAt" | "updatedAt"> & {
   createdAt: string;
   updatedAt: string;
+  reactions?: {
+    [x: string]: {
+      count: number;
+      memberIds: string[];
+    };
+  };
 };

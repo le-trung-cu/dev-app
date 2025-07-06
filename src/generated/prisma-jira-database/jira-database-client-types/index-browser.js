@@ -203,6 +203,12 @@ exports.Prisma.ConversationScalarFieldEnum = {
   memberTwoId: 'memberTwoId'
 };
 
+exports.Prisma.ReactionScalarFieldEnum = {
+  messageId: 'messageId',
+  memberId: 'memberId',
+  symbol: 'symbol'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -245,7 +251,8 @@ exports.Prisma.ModelName = {
   CanvasProject: 'CanvasProject',
   Channel: 'Channel',
   Message: 'Message',
-  Conversation: 'Conversation'
+  Conversation: 'Conversation',
+  Reaction: 'Reaction'
 };
 
 /**

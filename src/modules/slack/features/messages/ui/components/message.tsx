@@ -15,13 +15,16 @@ import {
   SmilePlusIcon,
   Trash2,
 } from "lucide-react";
-import { RefObject, useRef, useState } from "react";
+import { RefObject, useMemo, useRef, useState } from "react";
 import { Message as MessageType } from "../../types";
 import dynamic from "next/dynamic";
 import { useUpdateMessage } from "../../api/use-update-message";
 import { useDeleteMessage } from "../../api/use-delete-message";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useThreadId } from "../../../threads/hooks/use-thread-id";
+import { useUpdateReaction } from "../../api/use-update-reaction";
+import { symbol } from "zod/v4";
+import { Badge } from "@/components/ui/badge";
 
 const Editor = dynamic(() => import("@/modules/slack/components/editor"), {
   ssr: false,
@@ -37,6 +40,7 @@ type MessageProps = MessageType & {
 
 export const Message = (props: MessageProps) => {
   const { mutate: updateApi } = useUpdateMessage();
+  const { mutate: reactionApi } = useUpdateReaction();
   const { mutate: deleteApi } = useDeleteMessage();
   const [ConfirmDialog, confirm] = useConfirm();
 
@@ -69,6 +73,13 @@ export const Message = (props: MessageProps) => {
     });
   };
 
+  const onEmojiSelect = (symbol: string) => {
+    reactionApi({
+      query: { workspaceId: props.workspaceId, messageId: props.id },
+      form: { symbol },
+    });
+  };
+
   return (
     <>
       <ConfirmDialog />
@@ -79,6 +90,7 @@ export const Message = (props: MessageProps) => {
           setEditingId={props.setEditingId}
           onUpdateSubmit={onUpdateSubmit}
           onDeleteSubmit={onDeleteSubmit}
+          onEmojiSelect={onEmojiSelect}
         />
       ) : (
         <BaseMessage
@@ -87,6 +99,7 @@ export const Message = (props: MessageProps) => {
           setEditingId={props.setEditingId}
           onUpdateSubmit={onUpdateSubmit}
           onDeleteSubmit={onDeleteSubmit}
+          onEmojiSelect={onEmojiSelect}
         />
       )}
     </>
@@ -98,8 +111,11 @@ const BaseMessage = (
     onEdit?: (edit: boolean) => void;
     onUpdateSubmit: ({ content }: { content: string }) => void;
     onDeleteSubmit: () => void;
+    onEmojiSelect?: (value: string) => void;
   }
 ) => {
+  const reactions = useTransformReactions(props.reactions);
+
   return (
     <div
       className={cn(
@@ -137,30 +153,49 @@ const BaseMessage = (
             onSubmit={props.onUpdateSubmit}
           />
         ) : (
-          <HoverCard {...(props.deleted ? { open: false } : {})}>
-            <HoverCardTrigger asChild>
-              <div
-                className={cn(
-                  "bg-gray-100 p-3 rounded-xl",
-                  props.isAuthor ? "rounded-tr-none" : "rounded-tl-none",
-                  props.isAuthor && "bg-blue-200/90",
-                  props.isEditing && "bg-white",
-                  props.deleted && "opacity-55 text-xs"
-                )}
+          <div className={cn("flex flex-col", props.isAuthor && "items-end")}>
+            <HoverCard {...(props.deleted ? { open: false } : {})}>
+              <HoverCardTrigger asChild>
+                <div
+                  className={cn(
+                    "bg-gray-100 p-3 rounded-xl w-fit",
+                    props.isAuthor ? "rounded-tr-none" : "rounded-tl-none",
+                    props.isAuthor && "bg-blue-200/90",
+                    props.isEditing && "bg-white",
+                    props.deleted && "opacity-55 text-xs"
+                  )}
+                >
+                  {props.content}
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent
+                align="start"
+                side="right"
+                sideOffset={-220}
+                alignOffset={-100}
+                className="p-0.5 flex w-auto"
               >
-                {props.content}
+                <Actions {...props} />
+              </HoverCardContent>
+            </HoverCard>
+            {reactions.length > 0 ? (
+              <div className="gap-1 flex flex-wrap">
+                {reactions.map((reaction) => (
+                  <Badge
+                    key={reaction.symbol}
+                    variant="outline"
+                    className="cursor-pointer"
+                    onClick={() => props.onEmojiSelect?.(reaction.symbol)}
+                  >
+                    {reaction.symbol}
+                    <span className="text-xs text-muted-foreground">
+                      ({reaction.memberIds.length})
+                    </span>
+                  </Badge>
+                ))}
               </div>
-            </HoverCardTrigger>
-            <HoverCardContent
-              align="start"
-              side="right"
-              sideOffset={-220}
-              alignOffset={-100}
-              className="p-0.5 flex w-auto"
-            >
-              <Actions {...props} />
-            </HoverCardContent>
-          </HoverCard>
+            ) : null}
+          </div>
         )}
       </div>
     </div>
@@ -172,8 +207,11 @@ const CompactMessage = (
     onEdit?: (edit: boolean) => void;
     onUpdateSubmit: ({ content }: { content: string }) => void;
     onDeleteSubmit: () => void;
+    onEmojiSelect?: (value: string) => void;
   }
 ) => {
+  const reactions = useTransformReactions(props.reactions);
+
   return (
     <div
       className={cn(
@@ -194,29 +232,48 @@ const CompactMessage = (
             onSubmit={props.onUpdateSubmit}
           />
         ) : (
-          <HoverCard {...(props.deleted ? { open: false } : {})}>
-            <HoverCardTrigger asChild>
-              <div
-                className={cn(
-                  "bg-gray-100 p-3 rounded-xl",
-                  props.isAuthor ? "rounded-tr-none" : "rounded-tl-none",
-                  props.isAuthor && "bg-blue-200/90",
-                  props.deleted && "opacity-55 text-xs"
-                )}
+          <div className={cn("flex flex-col", props.isAuthor && "items-end")}>
+            <HoverCard {...(props.deleted ? { open: false } : {})}>
+              <HoverCardTrigger asChild>
+                <div
+                  className={cn(
+                    "bg-gray-100 p-3 rounded-xl",
+                    props.isAuthor ? "rounded-tr-none" : "rounded-tl-none",
+                    props.isAuthor && "bg-blue-200/90",
+                    props.deleted && "opacity-55 text-xs"
+                  )}
+                >
+                  {props.content}
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent
+                align="start"
+                side="right"
+                sideOffset={-220}
+                alignOffset={-100}
+                className="p-0.5 flex w-auto"
               >
-                {props.content}
+                <Actions {...props} />
+              </HoverCardContent>
+            </HoverCard>
+            {reactions.length > 0 ? (
+              <div className="gap-1 flex flex-wrap">
+                {reactions.map((reaction) => (
+                  <Badge
+                    key={reaction.symbol}
+                    variant="outline"
+                    className="cursor-pointer"
+                    onClick={() => props.onEmojiSelect?.(reaction.symbol)}
+                  >
+                    {reaction.symbol}
+                    <span className="text-xs text-muted-foreground">
+                      ({reaction.memberIds.length})
+                    </span>
+                  </Badge>
+                ))}
               </div>
-            </HoverCardTrigger>
-            <HoverCardContent
-              align="start"
-              side="right"
-              sideOffset={-220}
-              alignOffset={-100}
-              className="p-0.5 flex w-auto"
-            >
-              <Actions {...props} />
-            </HoverCardContent>
-          </HoverCard>
+            ) : null}
+          </div>
         )}
       </div>
     </div>
@@ -227,6 +284,7 @@ const Actions = (
   props: MessageProps & {
     emojiContenRef?: RefObject<HTMLDivElement | null>;
     onDeleteSubmit: () => void;
+    onEmojiSelect?: (value: string) => void;
   }
 ) => {
   const [_, setThreadId] = useThreadId();
@@ -252,19 +310,31 @@ const Actions = (
       )}
       {!props.parentMessageId && (
         <Hint label="Trả lời">
-          <Button
-            variant="ghost"
-            onClick={() => setThreadId(props.id)}
-          >
+          <Button variant="ghost" onClick={() => setThreadId(props.id)}>
             <MessageSquareTextIcon />
           </Button>
         </Hint>
       )}
-      <EmojiPopover contenRef={props.emojiContenRef} hint="Thêm trạng thái">
+      <EmojiPopover
+        contenRef={props.emojiContenRef}
+        hint="Thêm trạng thái"
+        onEmojiSelect={props.onEmojiSelect}
+      >
         <Button variant="ghost">
           <SmilePlusIcon />
         </Button>
       </EmojiPopover>
     </div>
   );
+};
+
+const useTransformReactions = (reactions: MessageProps["reactions"]) => {
+  const _reactions = useMemo(() => {
+    if (!reactions) return [];
+    return Object.keys(reactions)
+      .map((symbol) => ({ ...reactions![symbol], symbol }))
+      .sort();
+  }, [reactions]);
+
+  return _reactions;
 };

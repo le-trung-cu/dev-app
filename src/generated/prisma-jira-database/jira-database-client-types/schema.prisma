@@ -78,20 +78,19 @@ model Task {
 }
 
 model Member {
-  id          String    @id @default(uuid())
-  userId      String
-  workspaceId String
-  workspace   Workspace @relation(fields: [workspaceId], references: [id])
-  role        Role
-  tasks       Task[]
-  joined      Boolean   @default(false)
-
-  message                Message[]
+  id                     String         @id @default(uuid())
+  userId                 String
+  workspaceId            String
+  workspace              Workspace      @relation(fields: [workspaceId], references: [id])
+  role                   Role
+  tasks                  Task[]
+  joined                 Boolean        @default(false)
+  messages               Message[]
   conversationsInitiated Conversation[] @relation("MemberOne")
   conversationsReceived  Conversation[] @relation("MemberTwo")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  reactions              Reaction[]
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
 
   @@index([userId])
   @@index([workspaceId])
@@ -137,6 +136,7 @@ model Message {
   parentMessageId String?
   parentMessage   Message?      @relation("MessageToReplies", fields: [parentMessageId], references: [id], onDelete: Cascade)
   replies         Message[]     @relation("MessageToReplies")
+  reactions       Reaction[]
   deleted         Boolean       @default(false)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
@@ -157,4 +157,14 @@ model Conversation {
   @@unique([memberOneId, memberTwoId])
   @@unique([workspaceId, memberOneId, memberTwoId])
   @@index([memberTwoId])
+}
+
+model Reaction {
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id])
+  memberId  String
+  member    Member  @relation(fields: [memberId], references: [id])
+  symbol    String  @map("symbol")
+
+  @@id([messageId, memberId, symbol])
 }

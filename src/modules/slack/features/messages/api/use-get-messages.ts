@@ -1,11 +1,9 @@
 import { client } from "@/lib/rpc";
-import {
-  useInfiniteQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { InferRequestType, InferResponseType } from "hono";
 import { Message } from "../types";
 import { useCallback } from "react";
+import { Reaction } from "@/generated/prisma-jira-database/jira-database-client-types";
 
 type RequestType = InferRequestType<
   (typeof client.api.chats.workspaces)[":workspaceId"]["messages"]["$get"]
@@ -64,7 +62,7 @@ export const useSetQueryDataMessages = () => {
   const queryClient = useQueryClient();
 
   const setCreatedMessage = useCallback(
-    (message: Message) => {
+    (message: Required<Message>) => {
       queryClient.setQueryData<ReturnType<typeof useGetMessages>["data"]>(
         [
           "messages",
@@ -106,7 +104,7 @@ export const useSetQueryDataMessages = () => {
   );
 
   const setUpdatedMessage = useCallback(
-    (message: Message) => {
+    (message: Required<Message>) => {
       queryClient.setQueryData<ReturnType<typeof useGetMessages>["data"]>(
         [
           "messages",
@@ -153,5 +151,76 @@ export const useSetQueryDataMessages = () => {
     [queryClient]
   );
 
-  return { setCreatedMessage, setUpdatedMessage };
+  const setUpdateReaction = useCallback(
+    (
+      reaction: Reaction & {
+        workspaceId: string;
+        channelId: string;
+        conversationId: string;
+        parentMessageId: string;
+        isNew: boolean;
+      }
+    ) => {
+      queryClient.setQueryData<ReturnType<typeof useGetMessages>["data"]>(
+        [
+          "messages",
+          reaction.workspaceId,
+          reaction.channelId ?? null,
+          reaction.conversationId ?? null,
+          reaction.parentMessageId ?? null,
+        ],
+        (oldData) => {
+          console.log({ oldData });
+          if (!oldData || !oldData.pages || oldData.pages.length === 0) {
+            return oldData;
+          }
+
+          const pages = oldData.pages.map((page) => {
+            return {
+              ...page,
+              messages: page.messages.map((message) => {
+                if (message.id === reaction.messageId) {
+                  message = { ...message, reactions: { ...message.reactions } };
+                  if (!message.reactions[reaction.symbol]) {
+                    message.reactions[reaction.symbol] = {
+                      count: 0,
+                      memberIds: [],
+                    };
+                  }
+                  const oldReaction = message.reactions[reaction.symbol];
+                  const memberIds = new Set(oldReaction.memberIds);
+                  if (reaction.isNew) {
+                    memberIds.add(reaction.memberId);
+                  } else {
+                    memberIds.delete(reaction.memberId);
+                  }
+                  if (memberIds.size === 0) {
+                    delete message.reactions[reaction.symbol];
+                  } else {
+                    message.reactions[reaction.symbol] = {
+                      count: memberIds.size,
+                      memberIds: [...memberIds],
+                    };
+                  }
+
+                  return message;
+                }
+                return message;
+              }),
+            };
+          });
+
+          const newData = {
+            ...oldData,
+            pages,
+          };
+
+          return newData;
+        }
+      );
+    },
+    [queryClient]
+  );
+
+  return { setCreatedMessage, setUpdatedMessage, setUpdateReaction };
 };
