@@ -29,6 +29,8 @@ export const ThreadView = () => {
     fetchNextPage,
     hasNextPage,
     isLoading: isLoadingMessages,
+    isPending,
+    isFetching,
   } = useGetMessages({
     param: { workspaceId },
     query: { channelId, parentMessageId: threadId },
@@ -69,6 +71,9 @@ export const ThreadView = () => {
             setEditingId={setEditingId}
             memberId={currentMember?.id}
             parentMessage={parentMessage}
+            shouldLoadMore={!isFetching && hasNextPage}
+            loadMore={fetchNextPage}
+            isFetching={isFetching}
           />
         </div>
       </div>

@@ -27,8 +27,12 @@ import { useUpdateReaction } from "../../api/use-update-reaction";
 import { Badge } from "@/components/ui/badge";
 import { useGetMembersMap } from "@/modules/jira/features/members/api/use-get-members";
 import { formatDistanceToNow } from "date-fns";
+import Image from "next/image";
 
 const Editor = dynamic(() => import("@/modules/slack/components/editor"), {
+  ssr: false,
+});
+const Renderer = dynamic(() => import("@/modules/slack/components/renderer"), {
   ssr: false,
 });
 
@@ -82,6 +86,11 @@ export const Message = (props: MessageProps) => {
       form: { symbol },
     });
   };
+  const reactions = useTransformReactions(props.reactions);
+
+  const showBottomTool =
+    (reactions && reactions.length > 0) ||
+    (props.replies && props.replies.length > 0)!;
 
   return (
     <>
@@ -94,6 +103,8 @@ export const Message = (props: MessageProps) => {
           onUpdateSubmit={onUpdateSubmit}
           onDeleteSubmit={onDeleteSubmit}
           onEmojiSelect={onEmojiSelect}
+          showBottomTool={showBottomTool}
+          reactions={reactions}
         />
       ) : (
         <BaseMessage
@@ -103,6 +114,8 @@ export const Message = (props: MessageProps) => {
           onUpdateSubmit={onUpdateSubmit}
           onDeleteSubmit={onDeleteSubmit}
           onEmojiSelect={onEmojiSelect}
+          showBottomTool={showBottomTool}
+          reactions={reactions}
         />
       )}
     </>
@@ -110,14 +123,19 @@ export const Message = (props: MessageProps) => {
 };
 
 const BaseMessage = (
-  props: MessageProps & {
+  props: Omit<MessageProps, "reactions"> & {
     onEdit?: (edit: boolean) => void;
     onUpdateSubmit: ({ content }: { content: string }) => void;
     onDeleteSubmit: () => void;
     onEmojiSelect?: (value: string) => void;
+    showBottomTool: boolean;
+    reactions: {
+      symbol: string;
+      count: number;
+      memberIds: string[];
+    }[];
   }
 ) => {
-  const reactions = useTransformReactions(props.reactions);
   const member = props.members?.[props.memberId];
   return (
     <div
@@ -145,17 +163,16 @@ const BaseMessage = (
             )}
           />
           <Hint label={formatFullTime(new Date(props.createdAt))}>
-
-          <span className="text-muted-foreground text-sm font-light">
-            {formatDistanceToNow(props.createdAt, { addSuffix: true })}
-          </span>
+            <span className="text-muted-foreground text-sm font-light">
+              {formatDistanceToNow(props.createdAt, { addSuffix: true })}
+            </span>
           </Hint>
         </div>
         {props.isEditing ? (
           <Editor
             variant={props.isEditing ? "edit" : "create"}
             defaultValue={
-              props.content ? [{ insert: props.content }] : undefined
+              props.content ? JSON.parse(props.content) : undefined
             }
             onCancelEdit={() => props.setEditingId(null)}
             onSubmit={props.onUpdateSubmit}
@@ -173,7 +190,7 @@ const BaseMessage = (
                     props.deleted && "opacity-55 text-xs"
                   )}
                 >
-                  {props.content}
+                  <Renderer value={props.content} />
                 </div>
               </HoverCardTrigger>
               <HoverCardContent
@@ -186,7 +203,18 @@ const BaseMessage = (
                 <Actions {...props} />
               </HoverCardContent>
             </HoverCard>
-            {props.replies && props.replies.length > 0 ? (
+            {props.fileUrl && (
+              <div className="p-1">
+                <Image
+                  className="shadow border-muted-foreground"
+                  src={props.fileUrl}
+                  alt=""
+                  width={300}
+                  height={300}
+                />
+              </div>
+            )}
+            {props.showBottomTool ? (
               <div className="gap-1 flex flex-row-reverse items-center flex-wrap">
                 {props.replies && props.replies.length > 0 && (
                   <Hint label={`Có ${props.replies.length} tin nhắn trả lời`}>
@@ -199,7 +227,7 @@ const BaseMessage = (
                     </Badge>
                   </Hint>
                 )}
-                {reactions.map((reaction) => (
+                {props.reactions.map((reaction) => (
                   <Badge
                     key={reaction.symbol}
                     variant="outline"
@@ -222,15 +250,19 @@ const BaseMessage = (
 };
 
 const CompactMessage = (
-  props: MessageProps & {
+  props: Omit<MessageProps, "reactions"> & {
     onEdit?: (edit: boolean) => void;
     onUpdateSubmit: ({ content }: { content: string }) => void;
     onDeleteSubmit: () => void;
     onEmojiSelect?: (value: string) => void;
+    showBottomTool: boolean;
+    reactions: {
+      symbol: string;
+      count: number;
+      memberIds: string[];
+    }[];
   }
 ) => {
-  const reactions = useTransformReactions(props.reactions);
-
   return (
     <div
       className={cn(
@@ -245,7 +277,7 @@ const CompactMessage = (
           <Editor
             variant={props.isEditing ? "edit" : "create"}
             defaultValue={
-              props.content ? [{ insert: props.content }] : undefined
+              props.content ? JSON.parse(props.content) : undefined
             }
             onCancelEdit={() => props.setEditingId(null)}
             onSubmit={props.onUpdateSubmit}
@@ -262,7 +294,7 @@ const CompactMessage = (
                     props.deleted && "opacity-55 text-xs"
                   )}
                 >
-                  {props.content}
+                  <Renderer value={props.content} />
                 </div>
               </HoverCardTrigger>
               <HoverCardContent
@@ -275,8 +307,18 @@ const CompactMessage = (
                 <Actions {...props} />
               </HoverCardContent>
             </HoverCard>
-            {reactions.length > 0 ||
-            (props.replies && props.replies.length > 0) ? (
+            {props.fileUrl && (
+              <div className="p-1">
+                <Image
+                  className="shadow border-muted-foreground"
+                  src={props.fileUrl}
+                  alt=""
+                  width={300}
+                  height={300}
+                />
+              </div>
+            )}
+            {props.showBottomTool ? (
               <div className="gap-1 flex flex-row-reverse items-center flex-wrap">
                 {props.replies && props.replies.length > 0 && (
                   <Hint label={`Có ${props.replies.length} tin nhắn trả lời`}>
@@ -289,7 +331,7 @@ const CompactMessage = (
                     </Badge>
                   </Hint>
                 )}
-                {reactions.map((reaction) => (
+                {props.reactions.map((reaction) => (
                   <Badge
                     key={reaction.symbol}
                     variant="outline"
@@ -312,7 +354,7 @@ const CompactMessage = (
 };
 
 const Actions = (
-  props: MessageProps & {
+  props: Omit<MessageProps, "reactions"> & {
     emojiContenRef?: RefObject<HTMLDivElement | null>;
     onDeleteSubmit: () => void;
     onEmojiSelect?: (value: string) => void;

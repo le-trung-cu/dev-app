@@ -14,6 +14,7 @@ const Editor = dynamic(() => import("@/modules/slack/components/editor"), {
 export const ChatInput = () => {
   // Use a ref to access the quill instance directly
   const quillRef = useRef<Quill>(null);
+  const editorRef = useRef<{ clear: () => void; focus: () => void }>(null);
   const workspaceId = useWorkspaceId();
   const [threadId] = useThreadId();
   const channelId = useChannelId();
@@ -28,15 +29,23 @@ export const ChatInput = () => {
       content: string;
       fileUrl: string | undefined;
     }) => {
-      mutate({ query: { workspaceId, channelId, parentMessageId: threadId }, form: { content, fileUrl } });
-      quillRef.current?.setContents([]);
+      mutate({
+        query: { workspaceId, channelId, parentMessageId: threadId },
+        form: { content, fileUrl },
+      });
+      editorRef.current?.clear();
       setTimeout(() => {
-        quillRef.current?.focus();
+        editorRef.current?.focus();
       }, 200);
     },
     [workspaceId, channelId]
   );
   return (
-    <Editor innerRef={quillRef} onSubmit={onSubmit} disabled={isPending} />
+    <Editor
+      editorRef={editorRef}
+      innerRef={quillRef}
+      onSubmit={onSubmit}
+      disabled={isPending}
+    />
   );
 };

@@ -2,23 +2,21 @@ import Quill, { Delta, Op, QuillOptions } from "quill";
 import React, {
   RefObject,
   useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
 
 import "quill/dist/quill.snow.css";
-import { PiArrowElbowDownLeftThin } from "react-icons/pi";
 import { BsArrowReturnLeft, BsShift } from "react-icons/bs";
-import { ImageIcon, Plus, SendIcon, XIcon } from "lucide-react";
+import { ImageIcon, Plus, SendIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmojiPopover } from "@/components/emoji-popover";
 import { MdOutlineAddReaction } from "react-icons/md";
 import { Hint } from "@/components/hint";
 import { useImperativeFilePicker } from "use-file-picker";
-import Image from "next/image";
 import { FileUpload } from "./file-upload";
-import { useCreateMessage } from "../../features/messages/api/use-create-message";
 
 interface EditorValue {
   content: string;
@@ -27,15 +25,25 @@ interface EditorValue {
 
 interface EditorProps {
   variant?: "create" | "edit";
+  editorRef?: RefObject<{
+    clear: () => void;
+    focus: () => void;
+  } | null>;
   innerRef?: RefObject<Quill | null>;
   defaultValue?: Delta | Op[];
   disabled?: boolean;
-  onSubmit?: (value: EditorValue) => void;
+  onSubmit?: (
+    value: EditorValue,
+    options?: {
+      onSuccess?: () => void;
+    }
+  ) => void;
   onCancelEdit?: () => void;
 }
 // Editor is an uncontrolled React component
 const Editor = ({
   variant = "create",
+  editorRef,
   innerRef,
   defaultValue = [],
   disabled = false,
@@ -60,12 +68,25 @@ const Editor = ({
     removeFileByIndex,
   } = useImperativeFilePicker({
     readAs: "DataURL",
-    multiple: true,
+    multiple: false,
     onFileRemoved: (removedFile, removedIndex) => {
       // this callback is called when a file is removed from the list of selected files
       console.log("onFileRemoved", removedFile, removedIndex);
     },
   });
+
+  useImperativeHandle(editorRef, () => {
+    return {
+      ...innerRef?.current,
+      clear() {
+        quillRef.current?.setContents([]);
+        clear();
+      },
+      focus() {
+        quillRef.current?.focus();
+      },
+    };
+  }, []);
 
   const imagesRef = useRef<string[]>([]);
 
@@ -106,7 +127,13 @@ const Editor = ({
                   imagesRef.current.length > 0
                     ? imagesRef.current.join("\n")
                     : undefined;
-                submitRef.current?.({ content: text, fileUrl });
+                const isEmpty =
+                  !fileUrl &&
+                  text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
+
+                if (isEmpty) return;
+                const content = JSON.stringify(quill.getContents());
+                submitRef.current?.({ content, fileUrl });
               },
             },
             shift_enter: {
@@ -148,6 +175,19 @@ const Editor = ({
     }
   }, [disabled]);
 
+  const onSubmitHandler = () => {
+    if (!quillRef.current || !onSubmit) return;
+    const text = quillRef.current.getText();
+    const fileUrl =
+      imagesRef.current.length > 0 ? imagesRef.current.join("\n") : undefined;
+    const isEmpty =
+      !fileUrl && text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
+
+    if (isEmpty) return;
+    const content = JSON.stringify(quillRef.current.getContents());
+    onSubmit({ content, fileUrl });
+  };
+
   return (
     <div>
       <div className="flex flex-wrap gap-2 py-2">
@@ -176,6 +216,7 @@ const Editor = ({
             variant="outline"
             size="icon"
             className="absolute right-1 bottom-1 rounded-xs"
+            onClick={onSubmitHandler}
           >
             <SendIcon />
           </Button>
@@ -223,10 +264,18 @@ const Editor = ({
         )}
         {variant === "edit" && (
           <div className="flex gap-2">
-            <Button variant="outline" className="rounded-full" onClick={onCancelEdit}>
+            <Button
+              variant="outline"
+              className="rounded-full"
+              onClick={onCancelEdit}
+            >
               Huỷ
             </Button>
-            <Button variant="outline" className="rounded-full bg-blue-500 text-gray-200">
+            <Button
+              variant="outline"
+              className="rounded-full bg-blue-500 text-gray-200"
+              onClick={onSubmitHandler}
+            >
               Cập nhật
             </Button>
           </div>

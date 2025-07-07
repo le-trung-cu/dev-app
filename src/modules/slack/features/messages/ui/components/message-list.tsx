@@ -51,7 +51,7 @@ export const MessageList = ({
 
   return (
     <div className="absolute inset-0">
-      <div ref={chatRef} className="h-full w-full overflow-y-auto">
+      <ScrollArea ref={chatRef} className="h-full w-full">
         <div className="flex flex-col-reverse">
           {messages.map((message, index) => {
             // const prevMessage = index < messages.length - 1? undefined : messages[index + 1];
@@ -96,8 +96,8 @@ export const MessageList = ({
           <div ref={loadMoreRef} className="h-1"></div>
         </div>
         <div ref={bottomRef} className="h-1"></div>
-        {/* <ScrollBar orientation="vertical" /> */}
-      </div>
+        <ScrollBar orientation="vertical" />
+      </ScrollArea>
       {haveNewMessages && (
         <Button
           variant="outline"
