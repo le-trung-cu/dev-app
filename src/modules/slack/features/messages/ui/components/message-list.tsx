@@ -7,12 +7,19 @@ import { useRef } from "react";
 import { useChatScroll } from "@/modules/slack/hooks/use-chat-scroll";
 import { Button } from "@/components/ui/button";
 import { MessageCircleMoreIcon } from "lucide-react";
+import { differenceInMinutes } from "date-fns";
+
+const TIME_THRESHOLD = 2;
+
 interface MessageListProps {
   messages: MessageType[];
   parentMessage?: MessageType;
   editingId: string | null;
   memberId?: string;
   setEditingId: (messageId: string | null) => void;
+  shouldLoadMore: boolean;
+  loadMore: () => void;
+  isFetching: boolean;
 }
 
 export const MessageList = ({
@@ -21,6 +28,9 @@ export const MessageList = ({
   editingId,
   memberId,
   setEditingId,
+  shouldLoadMore,
+  loadMore,
+  isFetching,
 }: MessageListProps) => {
   const workspaceId = useWorkspaceId();
   const chatRef = useRef<HTMLDivElement>(null);
@@ -30,20 +40,37 @@ export const MessageList = ({
     workspaceId,
   });
 
-  const { haveNewMessages, scrollToBottom } = useChatScroll({
+  const { haveNewMessages, scrollToBottom, loadMoreRef } = useChatScroll({
     chatRef,
     bottomRef,
     count: messages.length,
+    shouldLoadMore,
+    loadMore,
+    isFetching,
   });
 
   return (
     <div className="absolute inset-0">
-      <ScrollArea viewPortRef={chatRef} className="h-full w-full">
+      <div ref={chatRef} className="h-full w-full overflow-y-auto">
         <div className="flex flex-col-reverse">
           {messages.map((message, index) => {
+            // const prevMessage = index < messages.length - 1? undefined : messages[index + 1];
+            // const isCompact =
+            //   prevMessage &&
+            //   prevMessage.memberId === message.memberId &&
+            //   differenceInMinutes(
+            //     new Date(prevMessage.createdAt),
+            //     new Date(message.createdAt)
+            //   ) < TIME_THRESHOLD;
+            const prevMessage = messages[index + 1];
             const isCompact =
-              index < messages.length - 1 &&
-              messages[index].memberId == messages[index + 1].memberId;
+              prevMessage &&
+              message.memberId === prevMessage.memberId &&
+              differenceInMinutes(
+                new Date(message.createdAt),
+                new Date(prevMessage.createdAt)
+              ) < TIME_THRESHOLD;
+
             return (
               <Message
                 {...message}
@@ -66,10 +93,11 @@ export const MessageList = ({
               members={members}
             />
           )}
+          <div ref={loadMoreRef} className="h-1"></div>
         </div>
         <div ref={bottomRef} className="h-1"></div>
-        <ScrollBar orientation="vertical" />
-      </ScrollArea>
+        {/* <ScrollBar orientation="vertical" /> */}
+      </div>
       {haveNewMessages && (
         <Button
           variant="outline"

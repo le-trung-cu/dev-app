@@ -31,14 +31,6 @@ export const useGetMessages = ({ param, query }: RequestType) => {
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     queryFn: async ({ pageParam }): Promise<ResponseType> => {
-      console.log("useGetMessages queryKey", [
-        "messages",
-        workspaceId,
-        channelId ?? null,
-        conversationId ?? null,
-        parentMessageId ?? null,
-      ]);
-
       const response = await client.api.chats.workspaces[
         ":workspaceId"
       ].messages.$get({

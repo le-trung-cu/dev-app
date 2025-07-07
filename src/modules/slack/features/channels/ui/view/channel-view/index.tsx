@@ -25,7 +25,7 @@ export const ChannelView = () => {
   const channelId = useChannelId();
   const [threadId] = useThreadId();
 
-  useChatSocket({ roomId: workspaceId});
+  useChatSocket({ roomId: workspaceId });
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const { data: currentMember, isLoading: isLoadingMember } =
@@ -40,6 +40,8 @@ export const ChannelView = () => {
     fetchNextPage,
     hasNextPage,
     isLoading: isLoadingMessages,
+    isPending,
+    isFetching
   } = useGetMessages({
     param: { workspaceId },
     query: { channelId },
@@ -69,17 +71,15 @@ export const ChannelView = () => {
       <ResizablePanel>
         <div className="flex flex-col h-full">
           <Header channel={channel} />
-          <div className="flex justify-center">
-            {hasNextPage && (
-              <Button onClick={() => fetchNextPage()}>load more</Button>
-            )}
-          </div>
           <div className="flex-1 relative">
             <MessageList
               messages={messages}
               editingId={editingId}
               setEditingId={setEditingId}
               memberId={currentMember?.id}
+              shouldLoadMore={!isFetching && hasNextPage}
+              loadMore={fetchNextPage}
+              isFetching={isFetching}
             />
           </div>
           <ChatInput />
@@ -89,7 +89,7 @@ export const ChannelView = () => {
         <>
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={60}>
-            <ThreadView/>
+            <ThreadView />
           </ResizablePanel>
         </>
       )}

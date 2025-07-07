@@ -1,18 +1,29 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface UseChatScrollProps {
   chatRef: React.RefObject<HTMLDivElement | null>;
   bottomRef: React.RefObject<HTMLDivElement | null>;
   count: number;
+  shouldLoadMore?: boolean;
+  isFetching?: boolean;
+  loadMore?: () => void;
 }
 
 export const useChatScroll = ({
   chatRef,
   bottomRef,
   count,
+  shouldLoadMore = false,
+  isFetching,
+  loadMore,
 }: UseChatScrollProps) => {
   const [hasInitialized, setHasInitialized] = useState(false);
   const [haveNewMessages, setHaveNewMessages] = useState(false);
+  const shouldLoadMoreRef = useRef(shouldLoadMore);
+  const loadMoreRef = useRef(loadMore);
+
+  shouldLoadMoreRef.current = shouldLoadMore;
+  loadMoreRef.current = loadMore;
 
   useEffect(() => {
     const topDiv = chatRef.current;
@@ -29,12 +40,6 @@ export const useChatScroll = ({
       const distinaceFromBottom =
         topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight;
 
-      console.log({
-        distinaceFromBottom,
-        scrollHeight: topDiv.scrollHeight,
-        scrollTop: topDiv.scrollTop,
-        clientHeight: topDiv.clientHeight,
-      });
       return distinaceFromBottom <= 100;
     };
 
@@ -51,27 +56,49 @@ export const useChatScroll = ({
   }, [chatRef, bottomRef, count]);
 
   useEffect(() => {
+    if (!chatRef.current) return;
+    const scroll = chatRef.current.scrollHeight;
+    if (isFetching) {
+      return () => {
+        chatRef.current?.scrollTo(0, chatRef.current.scrollHeight - scroll);
+      };
+    }
+  }, [isFetching, chatRef]);
+
+  useEffect(() => {
     if (!bottomRef.current) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHaveNewMessages(false);
-        console.log("setHaveNewMessages", false);
-
-        }
-        console.log("observer", entry);
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setHaveNewMessages(false);
       }
-      // { threshold:  }
-    );
+    });
 
     observer.observe(bottomRef.current);
 
     return () => {
       observer.disconnect();
-      console.log("observer.disconnect");
     };
   }, [bottomRef]);
+
+  const onLoadMore = useCallback((el: HTMLDivElement) => {
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        shouldLoadMore = shouldLoadMoreRef.current;
+        loadMore = loadMoreRef.current;
+        if (entry.isIntersecting && shouldLoadMore && loadMore) {
+          loadMore();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
 
   const scrollToBottom = () => {
     bottomRef.current?.scrollIntoView({
@@ -79,5 +106,5 @@ export const useChatScroll = ({
     });
   };
 
-  return { haveNewMessages, scrollToBottom };
+  return { haveNewMessages, scrollToBottom, loadMoreRef: onLoadMore };
 };
