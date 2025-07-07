@@ -161,9 +161,9 @@ model Conversation {
 
 model Reaction {
   messageId String
-  message   Message @relation(fields: [messageId], references: [id])
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
   memberId  String
-  member    Member  @relation(fields: [memberId], references: [id])
+  member    Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
   symbol    String  @map("symbol")
 
   @@id([messageId, memberId, symbol])
