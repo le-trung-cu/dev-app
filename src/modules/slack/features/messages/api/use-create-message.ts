@@ -1,7 +1,5 @@
-import { client } from "@/lib/rpc";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { InferRequestType, InferResponseType } from "hono";
 import qs from "query-string";
 import { toast } from "sonner";
 
@@ -37,7 +35,7 @@ export const useCreateMessage = () => {
       return true;
     },
     onSuccess: (data) => {
-      toast.success("Message created");
+      // toast.success("Message created");
     },
     onError: () => {
       toast.error("Failed to create message");

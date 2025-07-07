@@ -18,13 +18,14 @@ import {
 } from "@/components/ui/resizable";
 import { useThreadId } from "@/modules/slack/features/threads/hooks/use-thread-id";
 import { ThreadView } from "@/modules/slack/features/threads/ui/view";
+import { useGetMembersMap } from "@/modules/jira/features/members/api/use-get-members";
 
 export const ChannelView = () => {
   const workspaceId = useWorkspaceId();
   const channelId = useChannelId();
   const [threadId] = useThreadId();
 
-  useChatSocket({ roomId: workspaceId, queryKey: "", updateKey: "" });
+  useChatSocket({ roomId: workspaceId});
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const { data: currentMember, isLoading: isLoadingMember } =

@@ -6,7 +6,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { cn } from "@/lib/utils";
+import { cn, formatFullTime } from "@/lib/utils";
 import { MemberAvatar } from "@/modules/jira/features/members/ui/components/member-avatar";
 import {
   DotIcon,
@@ -24,8 +24,9 @@ import { useDeleteMessage } from "../../api/use-delete-message";
 import { useConfirm } from "@/hooks/use-confirm";
 import { useThreadId } from "../../../threads/hooks/use-thread-id";
 import { useUpdateReaction } from "../../api/use-update-reaction";
-import { symbol } from "zod/v4";
 import { Badge } from "@/components/ui/badge";
+import { useGetMembersMap } from "@/modules/jira/features/members/api/use-get-members";
+import { formatDistanceToNow } from "date-fns";
 
 const Editor = dynamic(() => import("@/modules/slack/components/editor"), {
   ssr: false,
@@ -36,6 +37,7 @@ type MessageProps = MessageType & {
   isCompact?: boolean;
   isOnline?: boolean;
   isEditing?: boolean;
+  members?: ReturnType<typeof useGetMembersMap>["data"];
   setEditingId: (messageId: string | null) => void;
 };
 
@@ -116,7 +118,7 @@ const BaseMessage = (
   }
 ) => {
   const reactions = useTransformReactions(props.reactions);
-
+  const member = props.members?.[props.memberId];
   return (
     <div
       className={cn(
@@ -125,14 +127,16 @@ const BaseMessage = (
         props.isEditing && "max-w-full"
       )}
     >
-      <MemberAvatar name="A" className="rounded-full mt-2" />
+      <MemberAvatar name={member?.name ?? "U"} className="rounded-full mt-2" />
       <div className={cn(props.isEditing && "flex-1")}>
         <div
           className={cn(
             props.isAuthor && "text-right flex flex-row-reverse items-center"
           )}
         >
-          <span className="font-semibold text-sm">user name</span>
+          <span className="font-semibold text-sm">
+            {member?.name ?? "unknow"}
+          </span>
           <DotIcon
             className={cn(
               "inline-block size-8 text-muted-foreground/50",
@@ -140,9 +144,12 @@ const BaseMessage = (
               props.isAuthor && "size-2 invisible"
             )}
           />
+          <Hint label={formatFullTime(new Date(props.createdAt))}>
+
           <span className="text-muted-foreground text-sm font-light">
-            17 min
+            {formatDistanceToNow(props.createdAt, { addSuffix: true })}
           </span>
+          </Hint>
         </div>
         {props.isEditing ? (
           <Editor
