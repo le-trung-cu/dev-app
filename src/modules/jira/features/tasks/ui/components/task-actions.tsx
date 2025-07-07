@@ -10,8 +10,8 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { useDeleteTask } from "../../api/use-delete-task";
 
 interface Props {
-  workspaceId: number;
-  taskId: number;
+  workspaceId: string;
+  taskId: string;
   children: React.ReactNode;
 }
 export const TaskActions = ({ workspaceId, taskId, children }: Props) => {

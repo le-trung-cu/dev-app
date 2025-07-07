@@ -58,7 +58,7 @@ const CreateTaskModalContent = ({ projectOptions, assigneeOptions }: Props) => {
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
       name: "",
-      projectId: 0,
+      projectId: "",
       assigneeId: null,
       endDate: null,
       status: TaskStatus.InReview as any,
@@ -107,15 +107,15 @@ const CreateTaskModalContent = ({ projectOptions, assigneeOptions }: Props) => {
                   <FormControl>
                     <Select
                       {...field}
-                      value={field.value?.toString()}
-                      onValueChange={(value) => field.onChange(parseInt(value))}
+                      value={field.value ?? undefined}
+                      onValueChange={(value) => field.onChange(value)}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Chọn dự án" />
                       </SelectTrigger>
                       <SelectContent>
                         {projectOptions.map((item) => (
-                          <SelectItem key={item.id} value={item.id.toString()}>
+                          <SelectItem key={item.id} value={item.id}>
                             {item.name}
                           </SelectItem>
                         ))}
@@ -133,15 +133,15 @@ const CreateTaskModalContent = ({ projectOptions, assigneeOptions }: Props) => {
                   <FormLabel>Người thực hiện</FormLabel>
                   <FormControl>
                     <Select
-                      value={field.value?.toString()}
-                      onValueChange={(v) => field.onChange(parseInt(v))}
+                      value={field.value ?? undefined}
+                      onValueChange={(v) => field.onChange(v)}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Chọn người được giao công việc" />
                       </SelectTrigger>
                       <SelectContent>
                         {assigneeOptions.map((item) => (
-                          <SelectItem key={item.id} value={item.id.toString()}>
+                          <SelectItem key={item.id} value={item.id}>
                             {item.name}
                           </SelectItem>
                         ))}

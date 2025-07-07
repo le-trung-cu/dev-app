@@ -1,7 +1,7 @@
-import { useQueryState, parseAsInteger } from "nuqs";
+import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 
 export const useEditTaskModal = () => {
-  const [taskId, setTaskId] = useQueryState("edit-task", parseAsInteger);
+  const [taskId, setTaskId] = useQueryState("edit-task", parseAsString);
 
   return {
     isOpen: taskId !== null,

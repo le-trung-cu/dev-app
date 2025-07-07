@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader, UserPlus2, Users2 } from "lucide-react";
+import { Loader, UserPlus2 } from "lucide-react";
 import { useWorkspaceId } from "../../../workspaces/hooks/use-workspace-id";
 import { useGetCurrentMember } from "../../api/use-get-current-member";
 import { useGetMembers } from "../../api/use-get-members";
@@ -9,7 +9,6 @@ import { Role } from "@/generated/prisma-jira-database/jira-database-client-type
 import { Button } from "@/components/ui/button";
 import { InviteMemberModal } from "../components/invite-member-modal";
 import { useInviteMemberModal } from "../../hooks/use-invite-member-modal";
-import { truncate } from "fs/promises";
 
 export const MembersView = () => {
   const { setOpen } = useInviteMemberModal();

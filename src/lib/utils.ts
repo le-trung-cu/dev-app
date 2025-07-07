@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import rgba from "color-rgba";
+import { format, isToday, isYesterday } from "date-fns";
 import { RGBColor } from "react-color";
 import { twMerge } from "tailwind-merge";
 
@@ -35,3 +36,7 @@ export function stringToRGBObject(color: string) {
 
   return { r, g, b, a } as RGBColor;
 }
+
+export function formatFullTime (date: Date) {
+  return `${isToday(date) ? "Hôm nay" : isYesterday(date) ? "Hôm qua" : format(date, "MMM d, yyyy")} vào lúc ${format(date, "h:mm:ss a")}`;
+};

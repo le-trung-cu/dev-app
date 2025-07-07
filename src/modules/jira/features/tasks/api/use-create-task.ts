@@ -27,11 +27,14 @@ export const useCreateTask = () => {
 
       return await response.json();
     },
-    onSuccess: (_, { workspaceId }) => {
+    onSuccess: (_, { workspaceId, projectId }) => {
       toast.success("Task created");
       queryClient.invalidateQueries({ queryKey: ["tasks", workspaceId] });
       queryClient.invalidateQueries({
         queryKey: ["workspace-analytics", workspaceId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["project-analytics", workspaceId],
       });
     },
     onError: () => {
@@ -41,4 +44,3 @@ export const useCreateTask = () => {
 
   return mutation;
 };
-

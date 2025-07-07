@@ -6,8 +6,8 @@ export const useGetTask = ({
   workspaceId,
   taskId,
 }: {
-  workspaceId: string | number;
-  taskId?: string | number | null;
+  workspaceId: string;
+  taskId: string;
 }) => {
   const query = useQuery({
     enabled: !!workspaceId && !!taskId,
@@ -17,8 +17,8 @@ export const useGetTask = ({
         ":taskId"
       ].$get({
         param: {
-          workspaceId: workspaceId as string,
-          taskId: taskId as string,
+          workspaceId,
+          taskId,
         },
       });
 

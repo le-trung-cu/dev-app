@@ -173,6 +173,42 @@ exports.Prisma.CanvasProjectScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ChannelScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  workspaceId: 'workspaceId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  content: 'content',
+  fileUrl: 'fileUrl',
+  memberId: 'memberId',
+  channelId: 'channelId',
+  conversationId: 'conversationId',
+  parentMessageId: 'parentMessageId',
+  deleted: 'deleted',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ConversationScalarFieldEnum = {
+  id: 'id',
+  workspaceId: 'workspaceId',
+  memberOneId: 'memberOneId',
+  memberTwoId: 'memberTwoId'
+};
+
+exports.Prisma.ReactionScalarFieldEnum = {
+  messageId: 'messageId',
+  memberId: 'memberId',
+  symbol: 'symbol'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -201,12 +237,22 @@ exports.Role = exports.$Enums.Role = {
   Member: 'Member'
 };
 
+exports.ChannelType = exports.$Enums.ChannelType = {
+  TEXT: 'TEXT',
+  AUDIO: 'AUDIO',
+  VIDEO: 'VIDEO'
+};
+
 exports.Prisma.ModelName = {
   Workspace: 'Workspace',
   Project: 'Project',
   Task: 'Task',
   Member: 'Member',
-  CanvasProject: 'CanvasProject'
+  CanvasProject: 'CanvasProject',
+  Channel: 'Channel',
+  Message: 'Message',
+  Conversation: 'Conversation',
+  Reaction: 'Reaction'
 };
 
 /**

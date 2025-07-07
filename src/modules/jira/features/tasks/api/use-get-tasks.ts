@@ -9,8 +9,8 @@ export const useGetTasks = ({
   endDate,
   assigneeId,
 }: {
-  workspaceId: string | number | null;
-  projectId?: string | number | null;
+  workspaceId: string;
+  projectId?: string | null;
   status?: TaskStatus | null;
   endDate?: string | null;
   assigneeId?: string | null;
@@ -23,7 +23,7 @@ export const useGetTasks = ({
         ":workspaceId"
       ].tasks.$get({
         param: {
-          workspaceId: workspaceId as string,
+          workspaceId,
         },
         query: {
           projectId: !projectId ? undefined : projectId,
@@ -31,7 +31,7 @@ export const useGetTasks = ({
           endDate: !endDate ? undefined : endDate,
           assigneeId: !assigneeId ? undefined : assigneeId,
         },
-      } as { param: any });
+      });
 
       if (!response.ok) {
         throw new Error("Failed to get tasks");

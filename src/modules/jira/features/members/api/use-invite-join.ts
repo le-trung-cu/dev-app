@@ -5,11 +5,11 @@ import { toast } from "sonner";
 export const useInviteJoin = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: async ({ workspaceId }: { workspaceId: string | number }) => {
+    mutationFn: async ({ workspaceId }: { workspaceId: string }) => {
       const response = await client.api.jira.workspaces[
         ":workspaceId"
       ].join.$put({
-        param: { workspaceId: workspaceId as string },
+        param: { workspaceId },
       });
       if (!response.ok) {
         throw new Error("Failed to join workspace");

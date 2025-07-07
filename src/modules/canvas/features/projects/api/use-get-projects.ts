@@ -10,7 +10,7 @@ export type ResponseType = InferResponseType<
 export const useGetProjects = ({
   workspaceId,
 }: {
-  workspaceId: string | number;
+  workspaceId: string;
 }) => {
   const query = useInfiniteQuery<ResponseType, Error>({
     enabled: !!workspaceId?.toString(),
@@ -22,7 +22,7 @@ export const useGetProjects = ({
         ":workspaceId"
       ].projects.$get({
         param: {
-          workspaceId: workspaceId as string,
+          workspaceId,
         },
         query: {
           page: (pageParam as number).toString(),
