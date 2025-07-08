@@ -22,6 +22,7 @@ import { useCreateWorkspaceModal } from "../../hooks/use-create-workspace-modal"
 // import { NEXT_PUBLIC_API_HOST_ADDRESS } from "@/constant";
 import { Plus } from "lucide-react";
 import { ButtonJoin } from "./button-join";
+import { usePathname } from "next/navigation";
 
 export function WorkspaceSwitcher() {
   const { isMobile } = useSidebar();
@@ -29,9 +30,15 @@ export function WorkspaceSwitcher() {
   const workspaceId = useWorkspaceId();
   const activeWorkspace = workspaces?.find((x) => x.id == workspaceId);
   const { setOpen } = useCreateWorkspaceModal();
-
+  const pathname = usePathname();
   if (!activeWorkspace) {
     return null;
+  }
+  let app = "/jira";
+  if (pathname?.startsWith("/canvas")) {
+    app = "/canvas";
+  } else if (pathname?.startsWith("/chats")) {
+    app = "/chats";
   }
 
   return (
@@ -56,7 +63,7 @@ export function WorkspaceSwitcher() {
           {workspaces?.map((item, index) => {
             return item.member!.joined ? (
               <DropdownMenuItem key={item.id} className="gap-2 p-2" asChild>
-                <Link href={`/jira/workspaces/${item.id}`}>
+                <Link href={`${app}/workspaces/${item.id}`}>
                   <WorkspaceAvatar name={item.name} />
                   {item.name}
                 </Link>
@@ -66,7 +73,7 @@ export function WorkspaceSwitcher() {
                 <div className="">
                   <WorkspaceAvatar name={item.name} />
                   {item.name}
-                  <ButtonJoin workspaceId={item.id}/>
+                  <ButtonJoin workspaceId={item.id} />
                 </div>
               </DropdownMenuItem>
             );

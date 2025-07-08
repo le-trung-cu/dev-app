@@ -38,6 +38,7 @@ export const CreateProjectModal = () => {
     mutate({...data, workspaceId}, {
       onSuccess: () => {
         setOpen(false);
+        form.reset();
       },
     });
   };

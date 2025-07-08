@@ -171,9 +171,7 @@ const BaseMessage = (
         {props.isEditing ? (
           <Editor
             variant={props.isEditing ? "edit" : "create"}
-            defaultValue={
-              props.content ? JSON.parse(props.content) : undefined
-            }
+            defaultValue={props.content ? JSON.parse(props.content) : undefined}
             onCancelEdit={() => props.setEditingId(null)}
             onSubmit={props.onUpdateSubmit}
           />
@@ -190,7 +188,11 @@ const BaseMessage = (
                     props.deleted && "opacity-55 text-xs"
                   )}
                 >
-                  <Renderer value={props.content} />
+                  {props.deleted ? (
+                    props.content
+                  ) : (
+                    <Renderer value={props.content} />
+                  )}
                 </div>
               </HoverCardTrigger>
               <HoverCardContent
@@ -276,9 +278,7 @@ const CompactMessage = (
         {props.isEditing ? (
           <Editor
             variant={props.isEditing ? "edit" : "create"}
-            defaultValue={
-              props.content ? JSON.parse(props.content) : undefined
-            }
+            defaultValue={props.content ? JSON.parse(props.content) : undefined}
             onCancelEdit={() => props.setEditingId(null)}
             onSubmit={props.onUpdateSubmit}
           />
@@ -294,7 +294,11 @@ const CompactMessage = (
                     props.deleted && "opacity-55 text-xs"
                   )}
                 >
-                  <Renderer value={props.content} />
+                   {props.deleted ? (
+                    props.content
+                  ) : (
+                    <Renderer value={props.content} />
+                  )}
                 </div>
               </HoverCardTrigger>
               <HoverCardContent
