@@ -8,6 +8,8 @@ interface EmojiPopoverProps {
   hint?: string;
   onEmojiSelect?: (value: string) => void;
   contenRef?: RefObject<HTMLDivElement | null>;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export const EmojiPopover = ({
@@ -15,9 +17,11 @@ export const EmojiPopover = ({
   hint = "Emoji",
   onEmojiSelect,
   contenRef,
+  open,
+  onOpenChange,
 }: EmojiPopoverProps) => {
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={onOpenChange}>
       <Tooltip>
         <PopoverTrigger asChild>
           <TooltipTrigger asChild>{children}</TooltipTrigger>
@@ -27,6 +31,9 @@ export const EmojiPopover = ({
         </TooltipContent>
       </Tooltip>
       <PopoverContent
+        side="left"
+        align="end"
+        alignOffset={100}
         ref={contenRef}
         className="p-0 w-full border-none shadow-none"
       >
