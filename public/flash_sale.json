@@ -1,9 +1,9 @@
 {
-	"version": "5.3.0",
+	"version": "5.5.2",
 	"objects": [
 		{
 			"type": "rect",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": 175.5,
@@ -48,7 +48,7 @@
 		},
 		{
 			"type": "textbox",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": 319.33685515,
@@ -104,7 +104,7 @@
 		},
 		{
 			"type": "textbox",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": 329.33685515,
@@ -160,7 +160,7 @@
 		},
 		{
 			"type": "circle",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": 713.29149494,
@@ -198,7 +198,7 @@
 		},
 		{
 			"type": "circle",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": -718.03385705,
@@ -236,7 +236,7 @@
 		},
 		{
 			"type": "circle",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": -618.1125382,
@@ -274,7 +274,7 @@
 		},
 		{
 			"type": "circle",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": -659.81729654,
@@ -312,7 +312,7 @@
 		},
 		{
 			"type": "circle",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": 536.13624411,
@@ -350,7 +350,7 @@
 		},
 		{
 			"type": "circle",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": 568.61657383,
@@ -388,7 +388,7 @@
 		},
 		{
 			"type": "textbox",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": 451.17501325,
@@ -444,7 +444,7 @@
 		},
 		{
 			"type": "textbox",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": 461.17501325,
@@ -500,7 +500,7 @@
 		},
 		{
 			"type": "textbox",
-			"version": "5.3.0",
+			"version": "5.5.2",
 			"originX": "left",
 			"originY": "top",
 			"left": 493.65534296,
@@ -557,7 +557,7 @@
 	],
 	"clipPath": {
 		"type": "rect",
-		"version": "5.3.0",
+		"version": "5.5.2",
 		"originX": "left",
 		"originY": "top",
 		"left": 175.5,

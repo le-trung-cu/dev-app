@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import Image from "next/image";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -31,6 +32,7 @@ const formSchema = z.object({
 
 export const SignInView = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,6 +58,7 @@ export const SignInView = () => {
       {
         onSuccess: () => {
           setPending(false);
+          queryClient.invalidateQueries({queryKey: ["current"]});
           router.push("/");
         },
         onError: ({ error }) => {
@@ -78,6 +81,7 @@ export const SignInView = () => {
       {
         onSuccess: () => {
           setPending(false);
+          queryClient.invalidateQueries({queryKey: ["current"]});
         },
         onError: ({ error }) => {
           setPending(false);

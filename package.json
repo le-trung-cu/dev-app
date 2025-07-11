@@ -1,12 +1,17 @@
 {
+  "type": "module",
   "name": "dev-app-nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "bun run migrate && next start",
+    "lint": "next lint",
+    "generate": "bunx prisma generate --schema ./prisma-user-database/schema.prisma && bunx prisma generate --schema ./prisma-jira-database/schema.prisma",
+    "dev-migrate": "bunx prisma migrate dev --schema ./prisma-user-database/schema.prisma && bunx prisma migrate dev --schema ./prisma-jira-database/schema.prisma",
+    "migrate": "bunx prisma migrate deploy --schema ./prisma-user-database/schema.prisma && bunx prisma migrate deploy --schema ./prisma-jira-database/schema.prisma",
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
@@ -84,6 +89,7 @@
     "socket.io-client": "^4.8.1",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.0",
+    "ts-node": "^10.9.2",
     "unsplash-js": "^7.0.19",
     "uploadthing": "^7.7.2",
     "use-file-picker": "^2.1.4",

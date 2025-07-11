@@ -8,6 +8,7 @@ import { useChatScroll } from "@/modules/slack/hooks/use-chat-scroll";
 import { Button } from "@/components/ui/button";
 import { MessageCircleMoreIcon } from "lucide-react";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const TIME_THRESHOLD = 2;
 
@@ -120,7 +121,7 @@ export const MessageList = ({
           <div className="flex justify-center py-5">
             <div
               ref={loadMoreRef}
-              className="relative inline-block bg-white px-4 py-1 rounded-full text-xs border border-gray-300 shadow-sm"
+              className={cn("relative inline-block bg-white px-4 py-1 rounded-full text-xs border border-gray-300 shadow-sm", !isFetching && !shouldLoadMore && "opacity-0"  )}
               onClick={() => {
                 console.log({shouldLoadMore})
                 if(shouldLoadMore && loadMore) {

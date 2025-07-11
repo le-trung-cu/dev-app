@@ -16,3 +16,6 @@ bunx prisma generate --schema ./prisma-jira-database/schema.prisma
 
 bunx prisma migrate dev --schema ./prisma-user-database/schema.prisma
 bunx prisma migrate dev --schema ./prisma-jira-database/schema.prisma
+
+bunx prisma generate --schema ./prisma-user-database/schema.prisma && bunx prisma generate --schema ./prisma-jira-database/schema.prisma
+bunx prisma migrate dev --schema ./prisma-user-database/schema.prisma && bunx prisma migrate dev --schema ./prisma-jira-database/schema.prisma
