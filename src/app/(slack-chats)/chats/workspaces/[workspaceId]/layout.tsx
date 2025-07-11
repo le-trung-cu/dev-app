@@ -7,11 +7,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { CreateWorkspaceModal } from "@/modules/jira/features/workspaces/ui/components/create-workspace-modal";
-import { CreateProjectModal } from "@/modules/jira/features/projects/ui/components/create-project-modal";
-import { CreateTaskModal } from "@/modules/jira/features/tasks/ui/components/create-task-modal";
 import { EditTaskModal } from "@/modules/jira/features/tasks/ui/components/edit-task-modal";
 import { MenuApps } from "@/components/menu-apps";
-import { JiraSidebar } from "@/modules/jira/components/jira-sidebar";
 import { SlackSidebar } from "@/modules/slack/components/slack-sidebar";
 import { CreateChannelModal } from "@/modules/slack/features/channels/ui/components/create-channel-modal";
 import { EditChannelModal } from "@/modules/slack/features/channels/ui/components/edit-channel-modal";

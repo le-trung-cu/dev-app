@@ -57,18 +57,18 @@ const getListStyle = (isDraggingOver: boolean) => ({
 });
 
 interface Props {
-  data: (Omit<Task, "endDate"> & {
+  data: (Omit<Task, "endDate" | "createdAt" | "updatedAt"> & {
     endDate?: string | null;
-    project?: Project | null;
+    project?: Omit<Project, "createdAt" | "updatedAt"> | null;
     assignee?:
-      | (Member & {
+      | (Omit<Member, "createdAt" | "updatedAt"> & {
           name: string;
           email: string;
           image: string | null;
         })
       | null;
   })[];
-  onChange: (tasks: { id: number; status: TaskStatus; position: number }[]) => void;
+  onChange: (tasks: { id: string; status: TaskStatus; position: number }[]) => void;
 }
 
 export const DataKanban = ({ data, onChange }: Props) => {
@@ -112,7 +112,7 @@ export const DataKanban = ({ data, onChange }: Props) => {
       const destStatus = destination.droppableId as TaskStatus;
 
       let updatesPayload: {
-        id: number;
+        id: string;
         status: TaskStatus;
         position: number;
       }[] = [];

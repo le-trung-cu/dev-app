@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 
 const DEV_MODE = process.env.NODE_ENV === "development";
 declare global {
+  // @ts-nocheck
   var canvas: fabric.Canvas | undefined;
 }
 

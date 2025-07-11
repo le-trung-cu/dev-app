@@ -1,5 +1,4 @@
 import {
-  Ref,
   RefObject,
   useCallback,
   useEffect,
@@ -62,7 +61,7 @@ export const useEditor = ({
   const setEditorProperty = useCallback(
     <K extends keyof EditorProperties>(name: K, value: EditorProperties[K]) => {
       if (editorProperties.current[name] === value) return;
-      editorProperties.current[name] = value as any;
+      editorProperties.current[name] = value;
       watchers.current[name]?.forEach((cb) => cb());
     },
     []

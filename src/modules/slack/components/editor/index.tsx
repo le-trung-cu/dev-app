@@ -50,7 +50,10 @@ const Editor = ({
   onSubmit,
   onCancelEdit,
 }: EditorProps) => {
+  const [text, setText] = useState("");
+
   const submitRef = useRef(onSubmit);
+  const [openEmoji, setOpenEmoji] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const defaultValueRef = useRef(defaultValue);
@@ -155,15 +158,23 @@ const Editor = ({
       innerRef.current = quill;
     }
 
-    if (defaultValueRef.current) {
-      quill.setContents(defaultValueRef.current);
-    }
+    quill.setContents(defaultValueRef.current);
+    setText(quill.getText());
+    quill.on(Quill.events.TEXT_CHANGE, () => {
+      setText(quill.getText());
+    });
 
     return () => {
+      quill.off(Quill.events.TEXT_CHANGE);
+      if (container) {
+        container.innerHTML = "";
+      }
+      if (quillRef.current) {
+        quillRef.current = null;
+      }
       if (innerRef) {
         innerRef.current = null;
       }
-      container.innerHTML = "";
     };
   }, [innerRef]);
 
@@ -174,6 +185,13 @@ const Editor = ({
       quillRef.current?.enable();
     }
   }, [disabled]);
+
+  const onEmojiSelect = (emoji: string) => {
+    const quill = quillRef.current;
+    quill?.insertText(quill?.getSelection(true)?.index || 0, emoji, "user");
+    quill?.setSelection({index: (quill?.getSelection(true)?.index || 0)  + emoji.length, length: 0});
+    setOpenEmoji(true);
+  };
 
   const onSubmitHandler = () => {
     if (!quillRef.current || !onSubmit) return;
@@ -224,7 +242,12 @@ const Editor = ({
       </div>
       <div className="flex justify-between items-center pt-2">
         <div className="flex gap-2">
-          <EmojiPopover hint="Thêm trạng thái">
+          <EmojiPopover
+            hint="Thêm trạng thái"
+            open={openEmoji}
+            onOpenChange={setOpenEmoji}
+            onEmojiSelect={onEmojiSelect}
+          >
             <Button
               disabled={disabled}
               variant="outline"

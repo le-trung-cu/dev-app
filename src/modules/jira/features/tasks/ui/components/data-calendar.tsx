@@ -28,11 +28,11 @@ const localizer = dateFnsLocalizer({
 });
 
 interface DataCalendarProps {
-  data: (Omit<Task, "endDate"> & {
+  data: (Omit<Task, "endDate" | "createdAt" | "updatedAt"> & {
     endDate?: string | null;
-    project?: Project | null;
+    project?: Omit<Project, "createdAt" | "updatedAt"> | null;
     assignee?:
-      | (Member & {
+      | (Omit<Member, "createdAt" | "updatedAt"> & {
           name: string;
           email: string;
           image: string | null;

@@ -13,7 +13,7 @@ import { SidebarSettings } from "./sidebar-settings";
 import { useUpdateProject } from "../../../projects/api/use-update-project";
 import debounce from "lodash.debounce";
 import { useWorkspaceId } from "@/modules/jira/features/workspaces/hooks/use-workspace-id";
-import { useProjectId } from "@/modules/jira/features/tasks/hooks/use-project-id";
+import { useProjectId } from "@/modules/jira/features/projects/hooks/use-project-id";
 
 // Layout editort, resize canvas
 interface Props {

@@ -72,6 +72,7 @@ const CreateTaskModalContent = ({ projectOptions, assigneeOptions }: Props) => {
       {
         onSuccess: () => {
           setOpen(false);
+          form.reset();
         },
       }
     );

@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 interface Props {
-  initialValues: Workspace;
+  initialValues: Omit<Workspace, "createdAt" | "updatedAt">;
 }
 export const EditWorkspace = ({ initialValues }: Props) => {
   const form = useForm({

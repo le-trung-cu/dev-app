@@ -39,7 +39,12 @@ export const useChatScroll = ({
 
       const distinaceFromBottom =
         topDiv.scrollHeight - topDiv.scrollTop - topDiv.clientHeight;
-
+      // console.log({
+      //   distinaceFromBottom,
+      //   scrollHeight: topDiv.scrollHeight,
+      //   scrollTop: topDiv.scrollTop,
+      //   clientHeight: topDiv.clientHeight,
+      // });
       return distinaceFromBottom <= 100;
     };
 
@@ -89,6 +94,7 @@ export const useChatScroll = ({
         shouldLoadMore = shouldLoadMoreRef.current;
         loadMore = loadMoreRef.current;
         if (entry.isIntersecting && shouldLoadMore && loadMore) {
+          console.log("isIntersecting");
           loadMore();
         }
       },
@@ -96,6 +102,7 @@ export const useChatScroll = ({
     );
 
     observer.observe(el);
+    // loadMore?.();
 
     return () => observer.disconnect();
   }, []);

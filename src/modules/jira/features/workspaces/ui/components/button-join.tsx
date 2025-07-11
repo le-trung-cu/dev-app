@@ -4,7 +4,7 @@ import { useInviteJoin } from "../../../members/api/use-invite-join";
 export const ButtonJoin = ({
   workspaceId,
 }: {
-  workspaceId: string | number;
+  workspaceId: string;
 }) => {
   const { mutate, isPending } = useInviteJoin();
   const onJoinHandler = () => {

@@ -22,6 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import Image from "next/image";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -72,7 +73,7 @@ export const SignInView = () => {
     authClient.signIn.social(
       {
         provider: provider,
-        callbackURL: "/"
+        callbackURL: "/",
       },
       {
         onSuccess: () => {
@@ -188,9 +189,9 @@ export const SignInView = () => {
           </Form>
 
           <div className="bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <img src="/logo.svg" alt="Image" className="h-[92px] w-[92px]" />
+            <Image height={150} width={200} src="/logo.png" alt="Image" className="h-[150px] w-[200px]" />
             <p className="text-2xl font-semibold text-white">
-              Meet.AI
+              Multiple dev apps
             </p>
           </div>
         </CardContent>

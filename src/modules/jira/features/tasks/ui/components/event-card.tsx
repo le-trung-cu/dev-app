@@ -15,11 +15,11 @@ import { MemberAvatar } from "../../../members/ui/components/member-avatar";
 import { ProjectAvatar } from "../../../projects/ui/components/project-avatar";
 
 interface EventCardProps {
-  task: Omit<Task, "endDate"> & {
+  task: Omit<Task, "endDate" | "createdAt" | "updatedAt"> & {
     endDate?: string | null;
-    project?: Project | null;
+    project?: Omit<Project, "createdAt" | "updatedAt"> | null;
     assignee?:
-      | (Member & {
+      | (Omit<Member, "createdAt" | "updatedAt"> & {
           name: string;
           email: string;
           image: string | null;

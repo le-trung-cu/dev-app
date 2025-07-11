@@ -8,7 +8,7 @@ import { MemberActions } from "./member-actions";
 import { useInviteJoin } from "../../api/use-invite-join";
 
 interface Props {
-  member: Member & {
+  member: Omit<Member, "createdAt" | "updatedAt"> & {
     name: string;
     email: string;
     image: string | null;
@@ -29,7 +29,7 @@ export const MemberRow = ({ member, isAdmin, isCurrent }: Props) => {
         </div>
         <div className="text-xs text-muted-foreground">{member.email}</div>
       </div>
-      {!member.joined && (
+      {!member?.joined && (
         <Badge variant="secondary">lời mời đang chờ chấp nhận</Badge>
       )}
       <MemberActions member={member} isAdmin={isAdmin} isCurrent={isCurrent} />

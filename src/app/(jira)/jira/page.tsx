@@ -1,21 +1,35 @@
-"use client";
-import { useGetWorkspaces } from "@/modules/jira/features/workspaces/api/use-get-workspaces";
-import { useCreateWorkspaceModal } from "@/modules/jira/features/workspaces/hooks/use-create-workspace-modal";
-import { CreateWorkspaceModal } from "@/modules/jira/features/workspaces/ui/components/create-workspace-modal";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { auth } from "@/lib/auth";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { ClientRender } from "./client-render";
+import { getWorkspaces } from "@/modules/jira/features/workspaces/server/queries";
 
-export default function Home() {
-  const { data, isLoading } = useGetWorkspaces();
-  const { open, setOpen } = useCreateWorkspaceModal();
-  const router = useRouter();
-  useEffect(() => {
-    if (data && !isLoading && data.length == 0) {
-      setOpen(true);
-    } else if (data && data.length > 0) {
-      router.push(`/jira/workspaces/${data[0].id}`);
-    }
-  }, [data, isLoading]);
-  return <CreateWorkspaceModal />;
+
+
+export default async function Home() {
+  const current = await auth.api.getSession({
+    headers: await headers(),
+  });
+  if (!current?.user?.id) return redirect("/sign-in");
+
+  const queryClient = new QueryClient();
+  const workspaces = await queryClient.fetchQuery({
+    queryKey: ["workspaces"],
+    queryFn: () => getWorkspaces(current.user.id),
+  });
+
+  if(workspaces?.length > 0) {
+    redirect(`/jira/workspaces/${workspaces[0].id}`)
+  }
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ClientRender />
+    </HydrationBoundary>
+  );
 }

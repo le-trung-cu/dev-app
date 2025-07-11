@@ -6,7 +6,7 @@ import { UpcomingTasks } from "../../../../tasks/ui/components/upcoming-tasks";
 import { StatsCard } from "./stat-card";
 import { useWorkspaceId } from "@/modules/jira/features/workspaces/hooks/use-workspace-id";
 import { useGetProjectAnalytics } from "../../../api/use-get-project-analytics";
-import { useProjectId } from "../../../hooks/use-project-id";
+import { useProjectId } from "../../../../projects/hooks/use-project-id";
 import { TasksView } from "../tasks-view";
 import { TasksViewSwitcher } from "../../components/tasks-view-switcher";
 

@@ -32,7 +32,7 @@ import { Editor } from "../../hooks/use-editor";
 import { Separator } from "@/components/ui/separator";
 import { useMutationState } from "@tanstack/react-query";
 import { useWorkspaceId } from "@/modules/jira/features/workspaces/hooks/use-workspace-id";
-import { useProjectId } from "@/modules/jira/features/tasks/hooks/use-project-id";
+import { useProjectId } from "@/modules/jira/features/projects/hooks/use-project-id";
 
 interface Props {
   editor?: Editor | null;

@@ -20,8 +20,8 @@ import { camelCaseToTitleCase } from "@/lib/utils";
 interface Props {
   hiddenProjects?: boolean;
   filterOnProject?: boolean;
-  projects: Project[];
-  members: (Member & {
+  projects: Omit<Project, "createdAt" | "updatedAt">[];
+  members: (Omit<Member, "createdAt" | "updatedAt"> & {
     name: string;
     email: string;
     image: string | null;

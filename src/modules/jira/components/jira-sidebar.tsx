@@ -16,7 +16,7 @@ import {
   Users2,
 } from "lucide-react";
 
-import { NavUser } from "@/modules/jira/components/nav-user";
+import { NavUser } from "@/modules/auth/ui/components/nav-user";
 import { Label } from "@/components/ui/label";
 import {
   SidebarContent,
@@ -79,7 +79,7 @@ export const JiraSidebar = () => {
   const workspaceId = useWorkspaceId();
   const workspace = workspaces?.find((x) => x.id == workspaceId);
   const { data: projects } = useGetProjects({ workspaceId: workspace?.id });
-  const { data: member } = useGetCurrentMember({ workspaceId: workspace?.id });
+  const { data: member } = useGetCurrentMember({ workspaceId: workspace?.id! });
 
   if(!workspace) return null;
   

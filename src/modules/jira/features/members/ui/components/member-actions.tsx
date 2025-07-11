@@ -16,7 +16,7 @@ import { useUpdateRole } from "../../api/use-update-role";
 import { useConfirm } from "@/hooks/use-confirm";
 
 interface Props {
-  member: Member & {
+  member: Omit<Member, "createdAt" | "updatedAt"> & {
     name: string;
     email: string;
     image: string | null;

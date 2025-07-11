@@ -8,7 +8,7 @@ export default async function ProjectIdPage() {
     headers: await headers(),
   });
 
-  if (!current) redirect("sign-in");
+  if (!current) redirect("/sign-in");
   return (
     <div>
       <ProjectHome />

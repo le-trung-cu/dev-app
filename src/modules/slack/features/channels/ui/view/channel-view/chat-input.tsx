@@ -4,7 +4,7 @@ import { useCreateMessage } from "@/modules/slack/features/messages/api/use-crea
 import dynamic from "next/dynamic";
 import Quill from "quill";
 import { useCallback, useRef } from "react";
-import { useChannelId } from "../../../hooks/use-channelId";
+import { useChannelId } from "../../../hooks/use-channel-id";
 import qs from "query-string";
 import axios from "axios";
 

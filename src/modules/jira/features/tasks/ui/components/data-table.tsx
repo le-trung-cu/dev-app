@@ -14,9 +14,9 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface Props {
-  data: (Omit<Task, "endDate"> & {
+  data: (Omit<Task, "endDate" | "createdAt" | "updatedAt"> & {
     endDate: string | null;
-    project?: Project | null;
+    project?: Omit<Project, "createdAt" | "updatedAt"> | null;
   })[];
 }
 export const DataTable = ({ data }: Props) => {
