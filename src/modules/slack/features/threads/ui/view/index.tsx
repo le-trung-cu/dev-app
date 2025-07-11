@@ -1,6 +1,6 @@
 import { useWorkspaceId } from "@/modules/jira/features/workspaces/hooks/use-workspace-id";
 import { Header } from "./header";
-import { useChannelId } from "../../../channels/hooks/use-channelId";
+import { useChannelId } from "../../../channels/hooks/use-channel-id";
 import { useThreadId } from "../../hooks/use-thread-id";
 import { useState } from "react";
 import { useGetCurrentMember } from "@/modules/jira/features/members/api/use-get-current-member";

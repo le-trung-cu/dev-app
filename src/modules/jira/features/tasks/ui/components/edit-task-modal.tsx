@@ -263,7 +263,7 @@ export const EditTaskModal = () => {
 
   const { data: task, isLoading: isPendingTask } = useGetTask({
     workspaceId,
-    taskId,
+    taskId: taskId!,
   });
 
   if (!isOpen) return null;

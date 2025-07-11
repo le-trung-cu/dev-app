@@ -42,7 +42,7 @@ export const TasksViewSwitcher = ({
   const { mutate: bulkUpdate } = useBulkUpdateTasks();
 
   const onKanbanChange = useCallback(
-    (tasks: { id: number; status: TaskStatus; position: number }[]) => {
+    (tasks: { id: string; status: TaskStatus; position: number }[]) => {
       bulkUpdate({
         workspaceId,
         data: { tasks },

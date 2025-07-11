@@ -11,12 +11,12 @@ export const useCreateProject = () => {
       workspaceId,
       ...data
     }: z.infer<typeof createProjectSchema> & {
-      workspaceId: string | number;
+      workspaceId: string;
     }) => {
       const response = await client.api.jira.workspaces[
         ":workspaceId"
       ].projects.$post({
-        param: { workspaceId: workspaceId as string },
+        param: { workspaceId: workspaceId! },
         form: {
           ...data,
         },

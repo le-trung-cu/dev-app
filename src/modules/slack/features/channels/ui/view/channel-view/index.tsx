@@ -1,6 +1,6 @@
 "use client";
 import { useWorkspaceId } from "@/modules/jira/features/workspaces/hooks/use-workspace-id";
-import { useChannelId } from "../../../hooks/use-channelId";
+import { useChannelId } from "../../../hooks/use-channel-id";
 import { useGetChannel } from "../../../api/use-get-channel";
 import { Loader, TriangleAlert } from "lucide-react";
 import { Header } from "./header";
@@ -19,6 +19,8 @@ import {
 import { useThreadId } from "@/modules/slack/features/threads/hooks/use-thread-id";
 import { ThreadView } from "@/modules/slack/features/threads/ui/view";
 import { useGetMembersMap } from "@/modules/jira/features/members/api/use-get-members";
+import { ChannelType } from "@/generated/prisma-jira-database/jira-database-client-types";
+import { MediaRoom } from "@/modules/slack/components/media-toom";
 
 export const ChannelView = () => {
   const workspaceId = useWorkspaceId();
@@ -41,7 +43,7 @@ export const ChannelView = () => {
     hasNextPage,
     isLoading: isLoadingMessages,
     isPending,
-    isFetching
+    isFetching,
   } = useGetMessages({
     param: { workspaceId },
     query: { channelId },
@@ -71,18 +73,28 @@ export const ChannelView = () => {
       <ResizablePanel>
         <div className="flex flex-col h-full">
           <Header channel={channel} />
-          <div className="flex-1 relative">
-            <MessageList
-              messages={messages}
-              editingId={editingId}
-              setEditingId={setEditingId}
-              memberId={currentMember?.id}
-              shouldLoadMore={!isFetching && hasNextPage}
-              loadMore={fetchNextPage}
-              isFetching={isFetching}
-            />
-          </div>
-          <ChatInput />
+          {channel.type === ChannelType.TEXT && (
+            <>
+              <div className="flex-1 relative">
+                <MessageList
+                  messages={messages}
+                  editingId={editingId}
+                  setEditingId={setEditingId}
+                  memberId={currentMember?.id}
+                  shouldLoadMore={!isFetching && hasNextPage}
+                  loadMore={fetchNextPage}
+                  isFetching={isFetching}
+                />
+              </div>
+              <ChatInput />
+            </>
+          )}
+          {channel.type === ChannelType.AUDIO && (
+            <MediaRoom chatId={channelId} audio />
+          )}
+          {channel.type === ChannelType.VIDEO && (
+            <MediaRoom chatId={channelId} video />
+          )}
         </div>
       </ResizablePanel>
       {!!threadId && (

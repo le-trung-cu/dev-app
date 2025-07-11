@@ -8,7 +8,7 @@ import { MemberActions } from "./member-actions";
 import { useInviteJoin } from "../../api/use-invite-join";
 
 interface Props {
-  member: Member & {
+  member: Omit<Member, "createdAt" | "updatedAt"> & {
     name: string;
     email: string;
     image: string | null;

@@ -4,7 +4,7 @@ import { useCreateMessage } from "@/modules/slack/features/messages/api/use-crea
 import dynamic from "next/dynamic";
 import Quill from "quill";
 import { useCallback, useRef } from "react";
-import { useChannelId } from "../../../channels/hooks/use-channelId";
+import { useChannelId } from "../../../channels/hooks/use-channel-id";
 import { useThreadId } from "../../hooks/use-thread-id";
 
 const Editor = dynamic(() => import("@/modules/slack/components/editor"), {

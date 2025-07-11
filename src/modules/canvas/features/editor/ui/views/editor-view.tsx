@@ -5,7 +5,7 @@ import { Editor } from "../components";
 import { AppStore, makeStore } from "@/modules/canvas/store";
 import { useGetProject } from "../../../projects/api/use-get-project";
 import { useWorkspaceId } from "@/modules/jira/features/workspaces/hooks/use-workspace-id";
-import { useProjectId } from "@/modules/jira/features/tasks/hooks/use-project-id";
+import { useProjectId } from "@/modules/jira/features/projects/hooks/use-project-id";
 import { Loader } from "lucide-react";
 
 export default function EditorView() {

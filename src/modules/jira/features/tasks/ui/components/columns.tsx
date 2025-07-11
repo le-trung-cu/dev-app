@@ -14,10 +14,10 @@ import { Badge } from "@/components/ui/badge";
 import { TaskActions } from "./task-actions";
 
 const columnHelper = createColumnHelper<
-  Omit<Task, "endDate"> & {
+  Omit<Task, "endDate" | "createdAt" | "updatedAt"> & {
     endDate: string | null;
-    project?: Project | null;
-    assignee?: Member & {
+    project?: Omit<Project, "createdAt" | "updatedAt"> | null;
+    assignee?: Omit<Member, "createdAt" | "updatedAt"> & {
       name: string;
       email: string;
       image: string;

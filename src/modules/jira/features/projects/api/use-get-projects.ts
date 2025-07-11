@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export const useGetProjects = ({
   workspaceId,
 }: {
-  workspaceId?: string | number;
+  workspaceId?: string;
 }) => {
   const query = useQuery({
     enabled: !!workspaceId,
@@ -13,7 +13,7 @@ export const useGetProjects = ({
       const response = await client.api.jira.workspaces[
         ":workspaceId"
       ].projects.$get({
-        param: { workspaceId: workspaceId as string },
+        param: { workspaceId: workspaceId! },
       });
 
        if (!response.ok) {
