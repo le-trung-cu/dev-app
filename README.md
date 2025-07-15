@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Dev App - Fullstack Project
+## Giới thiệu
 
-## Getting Started
+Đây là một dự án fullstack mô phỏng hệ thống quản lý công việc, Tạo file thiết kế canvas, chat nhóm.
 
-First, run the development server:
+### Video demo
+[![Video Demo](https://img.youtube.com/vi/QQwTvX-13AU/hqdefault.jpg)](https://youtu.be/QQwTvX-13AU)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Backend**
+- nextjs app router, nextjs api, socket.io, honojs, prisma, sqlite.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Frontend**
+- **Sử dụng các thư viện tốt nhất trong react**:
+  - Typescript, Nextjs, Tanstack Query , Tailwind CSS, shadcn/ui, date-fns (làm việc với date), nuqs (quản lý trạng thái thông qua url), quản lý trạng thái Zustand, Jotai (vì cho mục đích học tập nên các công nghệ có cùng chức năng sẽ được áp dụng, nhưng code được splitting để không bao ngồm 2 thư viện Zustand và Jotail trong cùng 1 root router)
+  - React hook form, zod
+- **Vertical slice archirecture**
+  - Tách biệt logic vào bên trong các react hook.
+- Bao gồm Server Side Rendering và Client Side Rendering
+- Tổ chức mã thành từng feature folders.
+- **Bao gồm nhiều use-case thực tế**:
+  - Ininite scroll, search, filtering
+  - Chức năng auto save (với debounce)
+  - Chức năng Undo / Redo
+  - Với ứng dụng nhắn tin:
+    - Cập nhật cache, state real-time thông qua kết nối socket
+    - tự động scroll đến tin nhắn mới
+    - tự động tải thêm dữ tin nhắn cũ khi scroll lên trên cùng.

@@ -75,22 +75,22 @@ export default async function handler(
         memberId: workspace.members[0].id,
       },
       include: {
-          reactions: true,
-          replies: {
-            select: {
-              id: true,
-              memberId: true,
-            }
-          }
-        }
+        reactions: true,
+        replies: {
+          select: {
+            id: true,
+            memberId: true,
+          },
+        },
+      },
     });
 
     initSocketServer((res as any).socket.server);
     const io = getSocketServer();
-    io.to(`chat-room:${workspaceId}`).emit("new-message", {
+    io?.to(`chat-room:${workspaceId}`).emit("new-message", {
       message,
     });
-    
+
     return res.status(200).json({ isSuccess: true, message });
   } catch (error) {
     console.log("[MESSAGES_POST]", error);

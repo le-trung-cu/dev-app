@@ -92,7 +92,7 @@ export default async function handler(
 
     initSocketServer((res as any).socket.server);
     const io = getSocketServer();
-    io.to(`chat-room:${workspaceId}`).emit("update-message", {
+    io?.to(`chat-room:${workspaceId}`).emit("update-message", {
       message,
     });
 
